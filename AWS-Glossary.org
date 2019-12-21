@@ -1,0 +1,211 @@
+# -*- mode:org; -*-
+
+#+title:AWS Glossary
+#+author:Pinecone062
+#+date:2019-12-21 07:14
+#+macro:version Version 0.0.0
+
+
+* AWS Glossary
+
+https://docs.aws.amazon.com/general/latest/gr/glos-chap.html
+
+** Identity and Access Management---IAM
+
+#+cindex:Identity and Access Management
+#+cindex:IAM
+
+https://docs.aws.amazon.com/iam/index.html
+
+AWS Identity and Access Management (IAM) is a web service for securely
+controlling access to AWS services. With IAM, you can centrally manage
+users, security credentials such as access keys, and permissions that
+control which AWS resources users and applications can access.
+
+*** IAM User Guide
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
+
+Introduces you to AWS Identity and Access Management, helps you set up
+users and groups, and shows you how to protect your resources with
+access control policies. Also shows how to connect to other identity
+services to grant external users access to your AWS resources.
+
+*** IAM API Reference
+
+https://docs.aws.amazon.com/IAM/latest/APIReference/Welcome.html
+
+Describes all the API operations for AWS Identity and Access
+Management in detail. Also provides sample requests, responses, and
+errors for the supported web services protocols.
+
+*** IAM CLI Reference
+
+https://docs.aws.amazon.com/cli/latest/reference/iam/
+
+Describes the AWS CLI commands that you can use to administer
+IAM. Provides syntax, options, and usage examples for each command.
+
+*** AWS IAM Access Analyzer
+
+https://docs.aws.amazon.com/access-analyzer/latest/APIReference/Welcome.html
+
+Describes the API operations for IAM Access Analyzer. Also provides
+sample requests, responses, and errors for the supported web services
+protocols.
+
+*** Security Token Service---STS API Reference
+
+https://docs.aws.amazon.com/STS/latest/APIReference/Welcome.html
+
+Describes all the API operations for AWS STS in detail. Also provides
+sample requests, responses, and errors for the supported web services
+protocols.
+
+*** Security Token Service---STS in the AWS CLI Reference
+
+https://docs.aws.amazon.com/cli/latest/reference/sts/
+
+Describes the AWS CLI commands that you can use to generate temporary
+security credentials. Provides syntax, options, and usage examples for
+each command.
+
+** Security Credentials
+
+#+cindex:security credentials
+
+https://docs.aws.amazon.com/general/latest/gr/aws-security-credentials.html
+
+#+cindex:authenticate
+#+cindex:authorize
+When you interact with AWS, you specify your AWS /security
+credentials/ to verify who you are and whether you have permission to
+access the resources that you are requesting.  AWS uses the /security
+credentials/ to *authenticate* and *authorize* your requests.
+
+#+begin_cartouche
+For example, if you want to download a specific file from an Amazon
+Simple Storage Service (Amazon S3) bucket, your credentials must allow
+that access. If your credentials aren't authorized to download the
+file, AWS denies your request.
+#+end_cartouche
+
+*** Root User Credentials
+
+#+cindex:root user credentials
+
+https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html
+
+All AWS accounts have /root user credentials/ (that is, the credentials
+of the account owner).  These credentials allow full access to all
+resources in the account.
+
+You cannot use policies within your account to explicitly deny access
+to the root user.  You can only use an [[*Organizations Service Control Policy---SCP][AWS Organizations service
+control policy (SCP)]] to limit permissions to an account, including
+the root user, that is a member of an organization or organizational
+unit (OU).
+
+Because of this, we recommend that you delete your root user access
+keys and then create AWS Identity and Access Management (IAM) user
+credentials for everyday interaction with AWS.
+
+** Policies
+
+*** Organizations Service Control Policy---SCP
+
+#+cindex:organizations Service Control Policy
+#+cindex:SCP
+
+** Organizations
+
+#+cindex:organizations
+
+“Central governance and management across AWS accounts.”
+
+https://aws.amazon.com/organizations/
+
+[[https://aws.amazon.com/organizations/features/][AWS Organizations Features]]
+
+[[https://aws.amazon.com/organizations/getting-started/][Getting Started with AWS Organizations]]
+
+/AWS Organizations/ helps you centrally govern your environment as you
+grow and scale your workloads on AWS.  Whether you are a growing
+startup or a large enterprise, Organizations helps you to centrally
+manage billing; control access, compliance, and security; and share
+resources across your AWS accounts.
+
+Using AWS Organizations, you can automate account creation, create
+groups of accounts to reflect your business needs, and apply policies
+for these groups for governance.  You can also simplify billing by
+setting up a single payment method for all of your AWS accounts.
+Through integrations with other AWS services, you can use
+Organizations to define central configurations and resource sharing
+across accounts in your organization.  AWS Organizations is available
+to all AWS customers at no additional charge.
+
+#+texinfo:@heading Benefits
+
+- CENTRALLY MANAGE POLICIES ACROSS MULTIPLE AWS ACCOUNTS
+
+- GOVERN ACCESS TO AWS SERVICES, RESOURCES, AND REGIONS
+
+- AUTOMATE AWS ACCOUNT CREATION AND MANAGEMENT
+
+- CONFIGURE AWS SERVICES ACROSS MULTIPLE ACCOUNTS
+
+- CONSOLIDATE BILLING ACROSS MULTIPLE AWS ACCOUNTS
+
+
+#+texinfo:@heading Use Cases
+
+- IMPLEMENT AND ENFORCE CORPORATE SECURITY, AUDIT, AND COMPLIANCE
+  POLICIES
+
+- SHARE RESOURCES ACROSS ACCOUNTS
+
+- AUTOMATE THE CREATION OF AWS ACCOUNTS AND CATEGORIZE WORKLOADS USING
+  GROUPS
+
+
+#+texinfo: @heading Tutorials and Guides
+
+- [[https://aws.amazon.com/documentation/organizations/][Documentation]]
+- [[http://docs.aws.amazon.com/organizations/latest/APIReference/Welcome.html][API Guide]]
+- [[http://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started.html][Getting Started Guide]]
+- [[http://docs.aws.amazon.com/organizations/latest/userguide/orgs_tutorials_basic.html][Tutorial: Creating and Configuring an Organization]]
+- [[http://docs.aws.amazon.com/organizations/latest/userguide/orgs_tutorials_cwe.html][Tutorial: Monitor Important Changes to Your Organization with CloudWatch Events]]
+- [[https://aws.amazon.com/premiumsupport/knowledge-center/iam-policy-service-control-policy/][Differences between a service control policy and an AWS Identity and Access Management (IAM) policy]]
+- [[https://aws.amazon.com/blogs/security/][Security Blog]]
+
+*** Organizational Unit---OU
+
+#+cindex:Organizational Unit
+#+cindex:OU
+
+* Main Index
+:PROPERTIES:
+:unnumbered: t
+:index:    cp
+:END:
+
+* End                                                              :noexport:
+
+
+#+texinfo_filename:aws-glossary.info
+#+texinfo_class: info
+#+texinfo_header:
+#+texinfo_post_header:
+#+subtitle:
+#+subauthor:
+#+texinfo_dir_category:Cloud
+#+texinfo_dir_title:AWS Glossary
+#+texinfo_dir_desc:AWS glossary
+#+texinfo_printed_title:AWS Glossary
+
+
+# Local Variables:
+# fill-column: 79
+# time-stamp-pattern: "8/^\\#\\+date:%:y-%02m-%02d %02H:%02M$"
+# eval: (electric-quote-local-mode)
+# End:
