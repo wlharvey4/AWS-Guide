@@ -2,8 +2,8 @@
 
 #+title:AWS Guide
 #+author:Pinecone062
-#+date:2019-12-23 07:41
-#+macro:version Version 0.0.5
+#+date:2019-12-23 07:52
+#+macro:version Version 0.0.6
 
 
 * AWS Glossary
@@ -476,6 +476,24 @@ identity pools.
 https://docs.aws.amazon.com/index.html
 
 ** Guides and API References
+*** Cognito Documentation
+
+“Amazon Cognito is a service that you can use to create unique identities for
+your users, authenticate these identities with identity providers, and save
+mobile user data in the AWS Cloud.”
+
+#+cindex:Cognito documentation
+https://docs.aws.amazon.com/cognito/index.html
+
+**** Cognito API Reference
+
+“Describes all of the REST API actions for user pools in detail.”
+
+https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/Welcome.html
+
+#+cindex:Cognito API reference
+This API reference provides information about /user pools/ in Amazon Cognito
+User Pools.
 
 ** Tutorials and Projects
 
@@ -601,6 +619,11 @@ account.
 When using an implicit grant, the Login with Amazon SDK for JavaScript can
 return the access token as a URL fragment, rather than a query string.  Why
 does this happen? How is the access token utilized? [[https://developer.amazon.com/blogs/post/Tx2XUFUBNT8PRXE/query-strings-and-url-fragments-in-login-with-amazon-responses][Go]]
+
+** Cognito Developer Guide
+
+#+cindex:Cognito developer guide
+https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html
 
 * Getting Started Resource Center
 
