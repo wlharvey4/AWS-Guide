@@ -1,9 +1,9 @@
 # -*- mode:org; -*-
 
-#+title:AWS Glossary
+#+title:AWS Guide
 #+author:Pinecone062
-#+date:2019-12-22 20:08
-#+macro:version Version 0.0.2
+#+date:2019-12-22 20:19
+#+macro:version Version 0.0.3
 
 
 * AWS Glossary
@@ -370,9 +370,15 @@ https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.htm
 ** General Resources
 
 * AWS Developer Center
+
+“Welcome developers!  The AWS Developer Center is your homepage for the AWS
+developer community.  Build your first application on AWS, dig into our
+technical documentation, or share your ideas with the community worldwide.”
+
 https://aws.amazon.com/developer/
 
 #+texinfo:@heading Build Your First Application
+
 Dive into AWS and build your first web application.  In this tutorial, you'll
 learn to build and deploy a web application on AWS, connect your app to a
 backend database, and capture & analyze data on user behavior.
@@ -381,23 +387,39 @@ backend database, and capture & analyze data on user behavior.
 
 #+texinfo:@heading Choose Your Programming Language
 
-*** Explore Java on AWS
+** Explore Java on AWS
 https://aws.amazon.com/developer/language/java/
 
-*** Explore Javascript on AWS
+** Explore Javascript on AWS
 https://aws.amazon.com/developer/language/javascript/
 
-*** Explore Python on AWS
+** Explore Python on AWS
 https://aws.amazon.com/developer/language/python/
 
-*** Explore Ruby on AWS
+** Explore Ruby on AWS
 https://aws.amazon.com/developer/language/ruby/
 
-*** AWS SDK for Go
+** AWS SDK for Go
 https://aws.amazon.com/sdk-for-go/
 
-*** AWS SDK for C++
+** AWS SDK for C++
 https://aws.amazon.com/sdk-for-cpp/
+
+* Getting Started Resource Center
+
+“Learn AWS fundamentals, connect with the AWS developer community, and advance
+your knowledge with certifications.”
+
+https://aws.amazon.com/getting-started/
+
+** Build Your First Web Application
+
+A great introduction to AWS, this tutorial teaches you how to deploy a static
+website, run a web server, set up a database, authenticate users, and analyze a
+clickstream.  It consists of 5 separate but related modules which can be
+completed individually.
+
+- [[https://aws.amazon.com/getting-started/projects/build-modern-app-fargate-lambda-dynamodb-python/?e=gs&p=gsrc][Build]]
 
 * Main Index
 :PROPERTIES:
