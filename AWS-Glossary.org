@@ -2,8 +2,8 @@
 
 #+title:AWS Glossary
 #+author:Pinecone062
-#+date:2019-12-22 09:27
-#+macro:version Version 0.0.1
+#+date:2019-12-22 20:08
+#+macro:version Version 0.0.2
 
 
 * AWS Glossary
@@ -69,6 +69,26 @@ https://docs.aws.amazon.com/cli/latest/reference/sts/
 Describes the AWS CLI commands that you can use to generate temporary
 security credentials. Provides syntax, options, and usage examples for
 each command.
+
+** Developer Center
+
+“Welcome developers!  The AWS Developer Center is your homepage for the AWS
+developer community.  Build your first application on AWS, dig into our
+technical documentation, or share your ideas with the community worldwide.”
+
+https://aws.amazon.com/developer/
+
+#+texinfo:@heading Build Your First Application
+
+Dive into AWS and build your first web application.  In this tutorial, you'll
+learn to build and deploy a web application on AWS, connect your app to a
+backend database, and capture & analyze data on user behavior.
+
+- [[https://aws.amazon.com/getting-started/projects/build-modern-app-fargate-lambda-dynamodb-python/][Start Tutorial]]
+
+
+#+texinfo:@heading Choose Your Programming Language
+
 ** Organizations
 
 #+cindex:organizations
@@ -287,6 +307,97 @@ Amazon VPC ingress routing allows you to easily deploy network and security
 appliances, including third-party offerings, inline to the inbound or outbound
 Amazon VPC traffic.  Inline traffic inspection helps you screen and secure
 traffic to protect your workloads from malicious actors.
+* AWS Documentation
+
+“Find user guides, developer guides, API references, tutorials, and more.”
+
+- [[https://aws.amazon.com/documentation/][Documentation]]
+
+#+texinfo:@heading Start building with SDKs and tools
+
+#+texinfo:@subheading Access and manage AWS services with your preferred development language or platform
+
+https://docs.aws.amazon.com/index.html
+
+** Guides and API References
+
+** Tutorials and Projects
+
+#+texinfo:@heading Learn with Introductory Tutorials & Projects
+
+- [[https://aws.amazon.com/getting-started/][Tutorials]]
+
+** SDKs and Toolkits
+
+https://aws.amazon.com/getting-started/tools-sdks/
+
+*** Command Line Interface
+https://aws.amazon.com/cli/
+
+*** JavaScript
+https://aws.amazon.com/sdk-for-browser/
+
+*** Python
+https://aws.amazon.com/sdk-for-python/
+
+*** PHP
+https://aws.amazon.com/sdk-for-php/
+
+*** .NET
+https://aws.amazon.com/sdk-for-net/
+
+*** Ruby
+https://aws.amazon.com/sdk-for-ruby/
+
+*** Java
+https://aws.amazon.com/sdk-for-java/
+
+*** Go
+https://aws.amazon.com/sdk-for-go/
+
+*** Node
+https://aws.amazon.com/sdk-for-node-js/
+
+*** C++
+https://aws.amazon.com/sdk-for-cpp/
+
+*** Android
+https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.html
+
+*** iOS
+https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.html
+
+** General Resources
+
+* AWS Developer Center
+https://aws.amazon.com/developer/
+
+#+texinfo:@heading Build Your First Application
+Dive into AWS and build your first web application.  In this tutorial, you'll
+learn to build and deploy a web application on AWS, connect your app to a
+backend database, and capture & analyze data on user behavior.
+
+- [[https://aws.amazon.com/getting-started/projects/build-modern-app-fargate-lambda-dynamodb-python/][Start Tutorial]]
+
+#+texinfo:@heading Choose Your Programming Language
+
+*** Explore Java on AWS
+https://aws.amazon.com/developer/language/java/
+
+*** Explore Javascript on AWS
+https://aws.amazon.com/developer/language/javascript/
+
+*** Explore Python on AWS
+https://aws.amazon.com/developer/language/python/
+
+*** Explore Ruby on AWS
+https://aws.amazon.com/developer/language/ruby/
+
+*** AWS SDK for Go
+https://aws.amazon.com/sdk-for-go/
+
+*** AWS SDK for C++
+https://aws.amazon.com/sdk-for-cpp/
 
 * Main Index
 :PROPERTIES:
