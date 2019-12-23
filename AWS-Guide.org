@@ -2,7 +2,7 @@
 
 #+title:AWS Guide
 #+author:Pinecone062
-#+date:2019-12-22 21:49
+#+date:2019-12-22 21:53
 #+macro:version Version 0.0.4
 
 
@@ -374,6 +374,22 @@ Amazon VPC ingress routing allows you to easily deploy network and security
 appliances, including third-party offerings, inline to the inbound or outbound
 Amazon VPC traffic.  Inline traffic inspection helps you screen and secure
 traffic to protect your workloads from malicious actors.
+** Cognito
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html
+
+Amazon Cognito provides /authentication/, /authorization/, and /user
+management/ for your web and mobile apps.  Your users can sign in directly with
+a user name and password, or through a third party such as Facebook, Amazon,
+Google or Apple.  The two main components of Amazon Cognito are user pools and
+identity pools.
+
+- User pools :: User pools are user directories that provide sign-up and
+                sign-in options for your app users.
+
+- Identity pools :: Identity pools enable you to grant your users access to
+                    other AWS services.
+
 * AWS Documentation
 
 “Find user guides, developer guides, API references, tutorials, and more.”
