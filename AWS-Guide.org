@@ -2,8 +2,8 @@
 
 #+title:AWS Guide
 #+author:Pinecone062
-#+date:2019-12-22 21:53
-#+macro:version Version 0.0.4
+#+date:2019-12-23 07:41
+#+macro:version Version 0.0.5
 
 
 * AWS Glossary
@@ -162,7 +162,80 @@ to all AWS customers at no additional charge.
 #+cindex:organizations Service Control Policy
 #+cindex:SCP
 
-** Security Credentials
+** Security
+
+*** Cross-Site Request Forgery---CSRF
+
+https://developer.amazon.com/docs/login-with-amazon/cross-site-request-forgery.html
+
+#+cindex:cross-site request forgery
+#+cindex:CSRF
+/Cross-site Request Forgery/ happens when an attacker tricks a user into
+clicking on a malicious link, where the link goes to a site where the user is
+currently authenticated.
+
+Any commands embedded in that malicious link might be executed automatically
+because the user is already authenticated on the site, so the user does not see
+a login screen or any other evidence of malicious activity.
+
+In the case of Login with Amazon, Cross-site Request Forgery could be used to
+mimic a client or an authentication server.
+
+#+texinfo:@heading Use the =state= Parameter to Prevent CSRF
+
+Login with Amazon recommends using the =state= parameter to prevent Cross-site
+Request Forgery.
+
+- The client should set the value of the =state= parameter when it initiates an
+  authorization request, and save it to the user’s secure session.
+
+- Unlike the =client_id= and =client_secret= values, in order for the =state=
+  parameter to be useful in preventing attacks it should be unique, and
+  non-guessable, for each and every authorization request.
+
+  #+cindex:authorization server
+- The authorization server returns the same =state= when communicating with the
+  client to deliver authorization codes and access tokens .
+
+- To protect users from attacks, the client must ignore communication if the
+  returned =state= parameter doesn't match the value from the initial call.
+
+
+#+texinfo:@heading Calculating the State Parameter
+
+Clients can calculate the state parameter value in any way they choose;
+however, the value should be secure from forgery.  Login with Amazon recommends
+using a securely-generated random string with at least 256 bits of entropy.
+
+#+texinfo:@subheading To calculate a state value using this method:
+
+use a random number generator suitable for cryptographic operations.
+
+Here is an example in Python:
+
+#+begin_src python :eval no
+def generate_state_parameter():
+random = os.urandom(256)
+state = base64.b64encode(random)
+return (state)
+#+end_src
+
+After generating the =state= parameter value, save it to the user’s session
+information, ensuring the information is communicated securely and saved to a
+secure session.  When the state is returned by an authorization response,
+verify the legitimacy of the user by comparing it with the state value saved to
+their session.  If the values do not match, you should ignore the authorization
+response.
+
+If you’re also using the =state= parameter value to dynamically redirect users
+after authentication, consider concatenating the securely-generated random
+string with the dynamic URL, separated by a space, e.g. 
+: state = state + " " + dynamicURL
+When the authorization server returns the =state=, parse it and split it into
+two values based on the space.  The second value will contain the dynamic URL
+needed to direct the user to the appropriate page after authentication.
+
+*** Security Credentials
 
 #+cindex:security credentials
 
@@ -182,7 +255,7 @@ that access. If your credentials aren't authorized to download the
 file, AWS denies your request.
 #+end_cartouche
 
-*** Root User Credentials
+**** Root User Credentials
 
 #+cindex:root user credentials
 
@@ -468,25 +541,66 @@ backend database, and capture & analyze data on user behavior.
 
 - [[https://aws.amazon.com/getting-started/projects/build-modern-app-fargate-lambda-dynamodb-python/][Start Tutorial]]
 
-#+texinfo:@heading Choose Your Programming Language
-
-** Explore Java on AWS
+** Choose Your Programming Language
+*** Explore Java on AWS
 https://aws.amazon.com/developer/language/java/
 
-** Explore Javascript on AWS
+*** Explore Javascript on AWS
 https://aws.amazon.com/developer/language/javascript/
 
-** Explore Python on AWS
+*** Explore Python on AWS
 https://aws.amazon.com/developer/language/python/
 
-** Explore Ruby on AWS
+*** Explore Ruby on AWS
 https://aws.amazon.com/developer/language/ruby/
 
-** AWS SDK for Go
+*** AWS SDK for Go
 https://aws.amazon.com/sdk-for-go/
 
-** AWS SDK for C++
+*** AWS SDK for C++
 https://aws.amazon.com/sdk-for-cpp/
+
+** Login with Amazon
+
+“Securely connect with millions of Amazon customers and personalize their
+experience”
+
+https://developer.amazon.com/apps-and-games/login-with-amazon
+
+Let customers log in to your site or app in just a few clicks using their
+Amazon accounts.  Leverage a brand customers trust while getting data like
+name, email address, and zip code to build a more personalized experience.
+
+[[https://developer.amazon.com/docs/login-with-amazon/web-docs.html][Getting Started]]
+
+#+texinfo:@heading Benefits
+
+#+texinfo:@subheading Reduce registration friction
+Customers prefer to register and log in with credentials they already know. In
+a head-to-head test, Woot found that customers picked Login with Amazon twice
+as many times as any other identity provider.
+
+#+texinfo:@subheading Leverage security and scalability
+Keep your customer information more secure by leveraging the same user
+authentication system used by Amazon.com. Login with Amazon is based on OAuth
+2.0, which has been broadly adopted for user-authorized exchanges across sites.
+
+#+texinfo:@subheading Reduce infrastructure and operational cost
+By taking advantage of Login with Amazon, you can spend less time building a
+user management system and more time building your product. Login with Amazon
+also allows for faster development cycle by using the OAuth 2.0 protocol.
+
+#+texinfo:@subheading Make Amazon's customers your customers
+When you add Amazon Pay, millions of Amazon buyers can log in and pay on your
+website or mobile devices with the information already stored in their Amazon
+account.
+
+#+texinfo:@heading Blog Posts
+
+#+texinfo:@subheading Query strings and URL fragments in Login with Amazon responses
+When using an implicit grant, the Login with Amazon SDK for JavaScript can
+return the access token as a URL fragment, rather than a query string.  Why
+does this happen? How is the access token utilized? [[https://developer.amazon.com/blogs/post/Tx2XUFUBNT8PRXE/query-strings-and-url-fragments-in-login-with-amazon-responses][Go]]
 
 * Getting Started Resource Center
 
