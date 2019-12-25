@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-25 11:58
-#+macro:version Version 0.0.10
+#+date:2019-12-25 12:11
+#+macro:version Version 0.0.11
 #+texinfo: @insertcopying
 
 
@@ -19,6 +19,16 @@ https://aws.amazon.com/
 “Start Now---Start building with Amazon Web Services”
 
 https://aws.amazon.com/start-now/
+
+#+cindex:Amazon Web Services (AWS)
+#+cindex:AWS (Amazon Web Services)
+Amazon Web Services (AWS) is a collection of digital infrastructure services
+that developers can leverage when developing their applications.  The services
+include computing, storage, database, and application synchronization
+(messaging and queuing).  AWS uses a pay-as-you-go service model.  You are
+charged only for the services that you—or your applications—use.  Also, to make
+AWS more approachable as a platform for prototyping and experimentation, AWS
+offers a free usage tier.
 
 *** TODO Products
 
@@ -1703,6 +1713,61 @@ clickstream.  It consists of 5 separate but related modules which can be
 completed individually.
 
 - [[https://aws.amazon.com/getting-started/projects/build-modern-app-fargate-lambda-dynamodb-python/?e=gs&p=gsrc][Build]]
+
+** Command Line Interface---Getting Started
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html
+
+[[https://github.com/aws/aws-cli][aws-cli GitHub Repository]]
+
+#+cindex:Command Line Interface (CLI)
+#+cindex:CLI (Command Line Interface)
+The AWS Command Line Interface (AWS CLI) is an open source tool that enables
+you to interact with AWS services using commands in your command-line shell.
+
+The AWS CLI is available in two versions:
+
+- Version 1.x :: The generally available version of the AWS CLI that is
+                 suitable for use in production environments.
+
+- Version 2.x :: A preview version of the AWS CLI that is intended for testing
+                 and evaluation.
+
+
+With minimal configuration, the AWS CLI enables you to start running commands
+that implement functionality equivalent to that provided by the browser-based
+AWS Management Console from the command prompt in your favorite terminal
+program:
+
+#+cindex:@code{bash}
+#+cindex:@code{zsh}
+#+cindex:@code{tcsh}
+#+cindex:@code{SSH}
+#+attr_texinfo: :indic @b
+- Linux shells :: Use common shell programs such as ~bash~, ~zsh~, and ~tcsh~
+                  to run commands in Linux or macOS.
+
+- Remotely :: Run commands on Amazon Elastic Compute Cloud (Amazon EC2)
+              instances through a remote terminal program such as PuTTY or SSH,
+              or with AWS Systems Manager.
+
+
+#+cindex:IaaS
+All IaaS (infrastructure as a service) AWS administration, management, and
+access functions in the AWS Management Console are available in the AWS API and
+CLI.
+
+The AWS CLI provides direct access to the public APIs of AWS services.  You can
+explore a service's capabilities with the AWS CLI, and develop shell scripts to
+manage your resources.  Or, you can take what you learn to develop programs in
+other languages by using the AWS SDKs.
+
+In addition to the low-level, API-equivalent commands, several AWS services
+provide customizations for the AWS CLI.  Customizations can include
+higher-level commands that simplify using a service with a complex API.  For
+example, the [[*s3][aws s3 commands]] provide a familiar syntax for managing files in
+Amazon Simple Storage Service (Amazon S3).  Performing the same task with the
+low-level commands (available under [[*s3 API][aws s3api]]) would take a lot more effort.
 
 * Makefile
 :PROPERTIES:
