@@ -2,8 +2,8 @@
 
 #+title:AWS Guide
 #+author:Pinecone062
-#+date:2019-12-23 07:52
-#+macro:version Version 0.0.6
+#+date:2019-12-24 18:29
+#+macro:version Version 0.0.7
 
 
 * AWS Glossary
@@ -163,6 +163,46 @@ to all AWS customers at no additional charge.
 #+cindex:SCP
 
 ** Security
+*** Cognito
+
+“Amazon Cognito is a service that you can use to create unique identities for
+your users, authenticate these identities with identity providers, and save
+mobile user data in the AWS Cloud.”
+
+https://docs.aws.amazon.com/cognito/?id=docs_gateway
+
+[[https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html][What is Amazon Cognito]]
+
+#+cindex:Cognito
+#+cindex:authentication
+#+cindex:authorization
+#+cindex:user management
+/Amazon Cognito/ provides authentication, authorization, and user management for
+your web and mobile apps.  Your users can sign in directly with a user name and
+password, or through a third party such as Facebook, Amazon, Google or Apple.
+
+#+texinfo:@heading Main Components of Cognito
+
+The two main components of Amazon Cognito are user pools and identity pools.
+
+#+cindex:user pools
+#+cindex:identity pools
+#+attr_texinfo: :indic @b
+- User pools :: User pools are user directories that provide sign-up and
+                sign-in options for your app users.
+
+- Identity pools :: Identity pools enable you to grant your users access to
+                    other AWS services.
+
+
+#+caption:An Amazon Cognito user pool and identity pool used together
+#+name:scenario-cup-cib
+#+texinfo:@ifhtml
+[[file:../resources/scenario-cup-cib.png]]
+#+texinfo:@end ifhtml
+#+texinfo:@ifinfo
+[[file:resources/scenario-cup-cib.png]]
+#+texinfo:@end ifinfo
 
 *** Cross-Site Request Forgery---CSRF
 
@@ -447,27 +487,132 @@ Amazon VPC ingress routing allows you to easily deploy network and security
 appliances, including third-party offerings, inline to the inbound or outbound
 Amazon VPC traffic.  Inline traffic inspection helps you screen and secure
 traffic to protect your workloads from malicious actors.
-** Cognito
+** CloudFront
 
-https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html
+“Fast, highly secure and programmable content delivery network (CDN)”
 
-Amazon Cognito provides /authentication/, /authorization/, and /user
-management/ for your web and mobile apps.  Your users can sign in directly with
-a user name and password, or through a third party such as Facebook, Amazon,
-Google or Apple.  The two main components of Amazon Cognito are user pools and
-identity pools.
+https://aws.amazon.com/cloudfront/
 
-- User pools :: User pools are user directories that provide sign-up and
-                sign-in options for your app users.
+#+cindex:CloudFront
+- *CloudFront* :: An AWS content delivery service that helps you improve the
+                  performance, reliability, and availability of your websites
+                  and applications.
 
-- Identity pools :: Identity pools enable you to grant your users access to
-                    other AWS services.
+
+#+cindex:content delivery network (CDN)
+#+cindex:CDN
+*Amazon CloudFront* is a fast /content delivery network/ (CDN) service that
+securely delivers data, videos, applications, and APIs to customers globally
+with low latency, high transfer speeds, all within a developer-friendly
+environment.
+
+CloudFront works seamlessly with services including AWS Shield for DDoS
+mitigation, Amazon S3, Elastic Load Balancing or Amazon EC2 as origins for your
+applications, and =Lambda@Edge= to run custom code closer to customers’ users
+and to customize the user experience.  Lastly, if you use AWS origins such as
+Amazon S3, Amazon EC2 or Elastic Load Balancing, you don’t pay for any data
+transferred between these services and CloudFront.
+
+*** Benefits
+
+#+texinfo:@heading Fast & global
+The Amazon CloudFront content delivery network (CDN) is massively scaled and
+globally distributed.  The CloudFront network has 210 points of presence
+(PoPs), and leverages the highly-resilient Amazon backbone network for superior
+performance and availability for your end users.
+
+#+texinfo:@heading Security at the Edge
+Amazon CloudFront is a highly-secure CDN that provides both network and
+application level protection.  Your traffic and applications benefit through a
+variety of built-in protections such as AWS Shield Standard, at no additional
+cost.  You can also use configurable features such as AWS Certificate Manager
+(ACM) to create and manage custom SSL certificates at no extra cost.
+
+#+texinfo:@heading Highly programmable
+Amazon CloudFront features can be customized for your specific application
+requirements.  =Lambda@Edge= functions, triggered by CloudFront events, extend
+your custom code across AWS locations worldwide, allowing you to move even
+complex application logic closer to your end users to improve responsiveness.
+The CDN also supports integrations with other tools and automation interfaces
+for today's DevOps and CI/CD environments by using native APIs or AWS tools.
+
+#+texinfo:@heading Deep integration with AWS
+Amazon CloudFront is integrated with AWS services such as Amazon S3, Amazon
+EC2, Elastic Load Balancing, Amazon Route 53, and AWS Elemental Media Services.
+They are all accessible via the same console and all features in the CDN can be
+programmatically configured by using APIs or the AWS Management Console.
+
+*** Use Cases
+
+#+texinfo:@heading Static asset caching
+Amazon CloudFront can speed up the delivery of your static content (e.g.,
+images, style sheets, JavaScript, etc.) to viewers across the globe. The
+Content Delivery Network (CDN) offers a multi-tier cache by default, with
+regional Edge caches that improve latency and lower the load on your origin
+servers when the object is not already cached at the Edge. Caching static
+content gives you the performance and scale you need to give your viewers a
+fast and reliable experience when visiting your website.
+
+#+texinfo:@heading Live & on-demand video streaming
+The Amazon CloudFront CDN offers multiple options for streaming your media ---
+both pre-recorded files and live events --- at sustained, high throughput
+required for 4K delivery to global viewers.  For on-demand streaming, you can
+use CloudFront for multi-bitrate adaptive streaming in Microsoft Smooth, HLS,
+HDS, or MPEG-DASH formats to any device.  To broadcast a live stream, you can
+use the Content Delivery Network to cache the media fragments at the edge and
+collapse multiple requests for the manifest file to reduce load to your origin.
+
+#+texinfo:@heading Security
+CloudFront integrates seamlessly with AWS Shield for Layer 3/4 DDoS mitigation
+and AWS WAF for Layer 7 protection.  In addition, CloudFront negotiates TLS
+connections with the highest security ciphers, and authenticates viewers with
+signed URLs.  You can also use our advanced feature Field-Level Encryption to
+protect most sensitive data throughout your enterprise, so the information can
+only be viewed by certain components and services in your application stack.
+CloudFront also integrates with AWS Identity and Access Management (IAM) to
+control access, with AWS CloudTrail to log access to your configuration, and
+with Amazon Certificate Manager (ACM) for automated certificate renewals.
+
+#+texinfo:@heading Customizable content delivery with Lambda@@Edge
+With =Lambda@Edge= you can easily run your code across AWS locations globally,
+allowing you to respond to your end users at the lowest latency and allowing
+you to personalize content.  For example, you can deliver unique content based
+on attributes of your visitors, generate custom responses, or conduct A/B
+testing with your own custom code running on the CloudFront infrastructure.
+
+#+texinfo:@heading Dynamic content & API acceleration
+Amazon CloudFront can be used to secure and accelerate your WebSocket traffic
+as well as API calls.  CloudFront supports proxy methods (POST, PUT, OPTIONS,
+DELETE, and PATCH) and is already integrated with Amazon API Gateway by
+default.  With the Content Delivery Network (CDN), TLS connections with clients
+terminate at a nearby edge location, then CloudFront uses optimized
+AWS-backbone network paths to securely reach your API servers.
+
+#+texinfo:@heading Software distribution
+Amazon CloudFront scales automatically as globally-distributed clients download
+software updates.  You can make your software available right at the edge where
+your users are, via the content delivery network.  The CDN's high data transfer
+rates speed up the delivery of your binaries, improving customer experience
+while lowering your costs.
+
+*** Edge location
+#+cindex:edge location
+#+cindex:CloudFront, edge location
+CloudFront delivers your content through a worldwide network of data centers
+called edge locations.
+
+*** Origin
+#+cindex:origin
+#+cindex:CloudFront, origin
+An Amazon S3 bucket, a MediaPackage channel, or an HTTP server (for example, a
+web server) that you have identified as the source for the definitive version
+of your content.
 
 * AWS Documentation
 
 “Find user guides, developer guides, API references, tutorials, and more.”
 
-- [[https://aws.amazon.com/documentation/][Documentation]]
+- [[https://aws.amazon.com/documentation/][View all Documentation]]
 
 #+texinfo:@heading Start building with SDKs and tools
 
@@ -483,7 +628,7 @@ your users, authenticate these identities with identity providers, and save
 mobile user data in the AWS Cloud.”
 
 #+cindex:Cognito documentation
-https://docs.aws.amazon.com/cognito/index.html
+[[https://docs.aws.amazon.com/cognito/index.html]]
 
 **** Cognito API Reference
 
@@ -494,6 +639,14 @@ https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/Welc
 #+cindex:Cognito API reference
 This API reference provides information about /user pools/ in Amazon Cognito
 User Pools.
+*** CloudFront Documentation
+
+[[https://docs.aws.amazon.com/cloudfront/index.html][CloudFront Documentation]]
+
+Amazon CloudFront speeds up distribution of your static and dynamic web
+content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
+request your content, CloudFront delivers it through a worldwide network of
+edge locations that provide low latency and high performance.
 
 ** Tutorials and Projects
 
@@ -625,6 +778,671 @@ does this happen? How is the access token utilized? [[https://developer.amazon.c
 #+cindex:Cognito developer guide
 https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html
 
+*** Getting Started with Cognito
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-getting-started.html
+
+This section describes the top Amazon Cognito tasks and where to start.
+
+#+texinfo:@heading User Pools
+
+/User pools/ are user directories that provide sign-up and sign-in options for
+your web and mobile app users.
+
+#+texinfo:@heading Identity Pools
+
+/Identity pools/ provide AWS credentials to grant your users access to other
+AWS services.  You can use user pools and identity pools separately or
+together.
+
+*** Add Sign-up and Sign-in with a User Pool
+**** Step 1---Create a User Directory with a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-as-user-directory.html
+
+**** Step 2---Add an App to Enable the Hosted Web UI
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-configuring-app-integration.html
+
+**** Adding Social Identity Providers to a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-social-idp.html
+
+**** Adding SAML Identity Providers to a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html
+
+**** Adding OIDC Identity Providers to a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-oidc-idp.html
+
+**** Integrating Amazon Cognito With Web and Mobile Apps
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-integrate-apps.html
+
+**** Customizing the Built-in Sign-in and Sign-up Webpages
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-app-ui-customization.html
+
+**** Managing Security for Amazon Cognito User Pools
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/managing-security.html
+
+**** Customizing User Pool Workflows with Lambda Triggers
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html
+
+**** Using Amazon Pinpoint Analytics with Amazon Cognito User Pools
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-pinpoint-integration.html
+
+*** Manage Users in a User Pool
+
+**** Signing Up and Confirming User Accounts
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/signing-up-users-in-your-app.html
+
+**** Creating User Accounts as Administrator
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/how-to-create-user-accounts.html
+
+**** Managing and Searching for User Accounts
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/how-to-manage-user-accounts.html
+
+**** Adding Groups to a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-user-groups.html
+
+**** Importing Users into a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-import-users.html
+
+*** Access Resources
+
+**** Authenticate with a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-scenarios.html#scenario-basic-user-pool
+
+**** Access Your Server-side Resources with a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-scenarios.html#scenario-backend
+
+**** Access Resources with API Gateway and Lambda with a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-scenarios.html#scenario-api-gateway
+
+**** Accessing AWS Services Using an Identity Pool After Sign-in
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-integrating-user-pools-with-identity-pools.html
+
+**** Authenticate with a Third Party and Access AWS Services with an Identity Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-scenarios.html#scenario-identity-pool
+
+**** Access AWS AppSync Resources with Amazon Cognito
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-scenarios.html#scenario-appsync
+
+*** Cognito Tutorials
+**** Create a User Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/tutorial-create-user-pool.html
+
+**** Create an Identity Pool
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/tutorial-create-identity-pool.html
+
+**** Cleaning Up Pools
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/tutorial-cleanup-tutorial.html
+
+*** Integrate Cognito with Applications
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-integrate-apps.html
+
+When new users discover your app, or when existing users return to it, their
+first tasks are to sign up or sign in.  By integrating Amazon Cognito with your
+client code, you connect your app to backend AWS functionality that aids
+authentication and authorization workflows.
+
+Your app will use the Amazon Cognito API to, for example:
+
+- create new users in your user pool
+- retrieve user pool tokens
+- obtain temporary credentials from your identity pool
+
+
+To integrate Amazon Cognito with your web or mobile app, use the SDKs and
+libraries that the AWS Amplify framework provides.
+
+#+texinfo:@heading Amazon Cognito Authentication With the AWS Amplify Framework
+
+#+cindex:Amplify
+/AWS Amplify/ provides *services* and *libraries* for web and mobile
+developers.  With AWS Amplify, you can build apps that integrate with backend
+environments that are composed of AWS services.
+
+#+texinfo:@subheading Amplify Framework
+
+#+cindex:Amplify framework
+To provision your backend environment, and to integrate AWS services with your
+client code, you use the /AWS Amplify framework/.
+
+- The framework provides an interactive command line interface (CLI) that helps
+  you configure AWS resources for features that are organized into categories,
+  including analytics, storage, and authentication, among many others.
+
+- The framework also provides high-level SDKs and libraries for web and mobile
+  platforms, including iOS, Android, and JavaScript.
+
+- Supported JavaScript frameworks include:
+
+  #+cindex:React
+  #+cindex:React Native
+  #+cindex:Angular
+  #+cindex:Ionic
+  #+cindex:Vue
+  - React
+
+  - React Native
+
+  - Angular
+
+  - Ionic
+
+  - Vue
+
+
+#+texinfo:@heading Authentication
+
+#+cindex:authentication
+Each of the SDKs and libraries include /authentication/ operations that you can
+use to implement the authentication workflows that Amazon Cognito drives.
+
+#+texinfo:@subheading Use the AWS Amplify Framework for Authentication in your App
+
+To use the AWS Amplify framework to add authentication to your app, see the AWS
+Amplify documentation for your platform:
+
+**** AWS Amplify authentication for JavaScript
+
+https://aws-amplify.github.io/docs/js/authentication
+
+#+cindex:Amplify Authentication
+#+cindex:user authentication
+#+cindex:authentication
+#+cindex:authentication APIs
+AWS Amplify Authentication module provides Authentication APIs and building
+blocks for developers who want to create user authentication experiences.
+
+Amplify interfaces with User Pools to store your user information, including
+federation with other OpenID providers like Facebook & Google, and it leverages
+Federated Identities to manage user access to AWS Resources, for example
+allowing a user to upload a file to an S3 bucket.
+
+The Amplify CLI automates the access control policies for these AWS resources
+as well as provides fine grained access controls via GraphQL for protecting
+data in your APIs.
+
+*** Cognito APIs
+
+**** User Pool API
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-api-reference.html
+
+With Amazon Cognito user pools, you can enable your web and mobile app users to
+sign up and sign in.
+
+You can:
+
+- change passwords for authenticated users
+
+- initiate forgotten password flows for unauthenticated users
+
+
+For a complete user pool API reference see [[https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/][Amazon Cognito User Pools API
+Reference]].
+
+**** User Pool Auth API
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html
+
+#+cindex:authentication server
+#+cindex:sign-up
+#+cindex:sign-in
+Once a domain has been configured for your user pool, Amazon Cognito hosts an
+authentication server that allows you to add sign-up and sign-in webpages to
+your app.
+
+This section contains the HTTPS contract to the Amazon Cognito authentication
+server from a user pool client, including sample requests and responses.  It
+describes the expected behavior from the authentication server for positive and
+negative conditions.
+
+In addition to the server contract REST API, Amazon Cognito also provides Auth
+SDKs for Android, iOS, and JavaScript that make it easier to form requests and
+interact with the server.
+
+***** AUTHORIZATION Endpoint
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/authorization-endpoint.html
+
+#+cindex:authorization endpoint
+The /oauth2/authorize endpoint signs the user in.
+
+: GET /oauth2/authorize
+
+The ~/oauth2/authorize~ endpoint only supports HTTPS =GET=.  The user pool
+client typically makes this request through a browser.  Web browsers include
+Chrome or Firefox.  Android browsers include Custom Chrome Tab.  iOS browsers
+include Safari View Control.
+
+#+cindex:HTTP protocol
+The authorization server requires HTTPS instead of HTTP as the protocol when
+accessing the authorization endpoint.
+
+****** Request Parameters
+
+#+attr_texinfo: :indic @samp
+- response_type :: Required
+
+                   The response type.  Must be =code= or =token=.  Indicates
+                   whether the client wants an authorization code
+                   (authorization code grant flow) for the end user or directly
+                   issues tokens for end user (implicit flow).
+
+- client_id :: Required
+
+               Must be a pre-registered client in the user pool and must be
+               enabled for federation.
+
+- redirect_uri :: Required
+
+                  The URL to which the authentication server redirects the
+                  browser after authorization has been granted by the user.  A
+                  redirect URI must:
+
+  - Be an absolute URI.
+  - Be pre-registered with a client.
+  - Not include a fragment component.
+
+  Amazon Cognito requires HTTPS over HTTP except for ~http://localhost~ for
+                  testing purposes only.  App callback URLs such as
+                  ~myapp://example~ are also supported.
+
+- state :: Optional but recommended
+
+           An opaque value the clients adds to the initial request.  The
+           authorization server includes this value when redirecting back to
+           the client.  This value must be used by the client to prevent [[*Cross-Site Request Forgery---CSRF][CSRF]]
+           attacks.
+
+- identity_provider :: Optional
+
+     Used by the developer to directly authenticate with a specific provider.
+
+  - For social sign-in the valid values are Facebook, Google, and
+    LoginWithAmazon.
+
+  - For Amazon Cognito user pools, the value is =COGNITO=.
+
+  - For other identity providers this would be the name you assigned to the IdP
+    in your user pool.
+
+- idp_identifier :: Optional
+
+                    Used by the developer to map to a provider name without
+                    exposing the provider name.
+
+- scope :: Optional
+
+           Can be a combination of any system-reserved scopes or custom scopes
+           associated with a client.  Scopes must be separated by spaces.  Any
+           scope used must be preassociated with the client or it will be
+           ignored at runtime.  If the client doesn't request any scopes, the
+           authentication server uses all scopes associated with the client.
+
+           System reserved scopes are:
+
+  - openid
+
+    An ID token is only returned if openid scope is requested.  The access
+    token can be only used against Amazon Cognito User Pools if
+    aws.cognito.signin.user.admin scope is requested.  The phone, email, and
+    profile scopes can only be requested if openid scope is also requested.
+    These scopes dictate the claims that go inside the ID token.
+
+  - email
+
+  - phone
+
+  - profile
+
+  - aws.cognito.signin.user.admin
+
+- code_challenge_method :: Optional
+
+     The method used to generate the challenge.  Amazon Cognito authentication
+     server supports only =S256=.
+
+- code_challenge :: Required only when the code_challenge_method is specified.
+
+                    The generated challenge from the code_verifier.
+
+****** Example Requests with Positive Responses
+
+******* Authorization Code Grant
+#+cindex:authorization code grant
+
+#+texinfo:@heading Sample Request
+
+#+begin_example
+GET https://mydomain.auth.us-east-1.amazoncognito.com/oauth2/authorize?
+response_type=code&
+client_id=ad398u21ijw3s9w3939&
+redirect_uri=https://YOUR_APP/redirect_uri&
+state=STATE&
+scope=openid+profile+aws.cognito.signin.user.admin
+#+end_example
+
+#+texinfo:@heading Sample Response
+
+#+cindex:authentication server
+#+cindex:authorization code
+#+cindex:state
+#+cindex:query string
+#+cindex:fragment
+The Amazon Cognito authentication server redirects back to your app with the
+authorization code and state.  The code and state must be returned in the query
+string parameters and not in the fragment.
+
+- A /query string/ :: the part of a web request that appears after a '?'
+     character; the string can contain one or more parameters separated by '&'
+     characters.
+
+- A /fragment/ :: the part of a web request that appears after a '#' character
+                  to specify a subsection of a document.
+
+#+begin_example
+HTTP/1.1 302 Found
+Location: https://YOUR_APP/redirect_uri?code=AUTHORIZATION_CODE&state=STATE
+#+end_example
+
+******* Authorization Code Grant with PKCE
+#+cindex:PKCE authorization code grant
+
+#+texinfo:@heading Sample Request
+
+#+begin_example
+GET https://mydomain.auth.us-east-1.amazoncognito.com/oauth2/authorize?
+response_type=code&
+client_id=ad398u21ijw3s9w3939&
+redirect_uri=https://YOUR_APP/redirect_uri&
+state=STATE&
+scope=aws.cognito.signin.user.admin&
+code_challenge_method=S256&
+code_challenge=CODE_CHALLENGE
+#+end_example
+
+#+texinfo:@heading Sample Response
+
+#+begin_example
+HTTP/1.1 302 Found
+Location: https://YOUR_APP/redirect_uri?code=AUTHORIZATION_CODE&state=STATE
+#+end_example
+
+******* Token grant without openid scope
+#+cindex:token grant without openid scope
+
+#+texinfo:@heading Sample Request
+
+#+begin_example
+GET https://mydomain.auth.us-east-1.amazoncognito.com/oauth2/authorize?
+response_type=token&
+client_id=ad398u21ijw3s9w3939&
+redirect_uri=https://YOUR_APP/redirect_uri&
+state=STATE&
+scope=aws.cognito.signin.user.admin
+#+end_example
+
+#+texinfo:@heading Sample Response
+
+The Amazon Cognito authorization server redirects back to your app with access
+token.  Since =openid= scope was not requested, an ID token is not returned.  A
+refresh token is never returned in this flow.  Token and state are returned in
+the fragment and not in the query string.
+
+#+begin_example
+HTTP/1.1 302 Found
+Location: https://YOUR_APP/redirect_uri#access_token=ACCESS_TOKEN&token_type=bearer&expires_in=3600&state=STATE
+#+end_example
+
+******* Token grant with openid scope
+#+cindex:token grant with openid scope
+
+#+texinfo:@heading Sample Request
+
+#+begin_example
+GET https://mydomain.auth.us-east-1.amazoncognito.com/oauth2/authorize? 
+response_type=token& 
+client_id=ad398u21ijw3s9w3939& 
+redirect_uri=https://YOUR_APP/redirect_uri& 
+state=STATE&
+scope=aws.cognito.signin.user.admin+openid+profile
+#+end_example
+
+#+texinfo:@heading Sample Reqponse
+
+The authorization server redirects back to your app with access token and ID
+token (because =openid= scope was included).
+
+#+begin_example
+HTTP/1.1 302 Found
+Location: https://YOUR_APP/redirect_ur#id_token=ID_TOKEN&access_token=ACCESS_TOKEN&token_type=bearer&expires_in=3600&state=STATE
+#+end_example
+
+****** Examples of Negative Responses
+
+The following are examples of negative responses:
+
+- If client_id and redirect_uri are valid but there are other problems with the
+  request parameters (for example, if response_type is not included; if
+  code_challenge is supplied but code_challenge_method is not supplied; or if
+  code_challenge_method is not 'S256'), the authentication server redirects the
+  error to client's redirect_uri.
+
+  : HTTP 1.1 302 Found Location: https://client_redirect_uri?error=invalid_request
+
+- If the client requests 'code' or 'token' in response_type but does not have
+  permission for these requests, the Amazon Cognito authorization server should
+  return unauthorized_client to client's redirect_uri, as follows:
+
+  : HTTP 1.1 302 Found Location: https://client_redirect_uri?error=unauthorized_client
+
+- If the client requests invalid, unknown, malformed scope, the Amazon Cognito
+  authorization server should return invalid_scope to the client's
+  redirect_uri, as follows:
+
+  : HTTP 1.1 302 Found Location: https://client_redirect_uri?error=invalid_scope
+
+- If there is any unexpected error in the server, the authentication server
+  should return server_error to client's redirect_uri. It should not be the
+  HTTP 500 error displayed to the end user in the browser, because this error
+  doesn't get sent to the client. The following error should return:
+
+  : HTTP 1.1 302 Found Location: https://client_redirect_uri?error=server_error
+
+- When authenticating by federating to third-party identity providers, Cognito
+  may experience connection issues such as the following:
+
+  - If a connection timeout occurs while requesting token from the identity
+    provider, the authentication server redirects the error to the client’s
+    redirect_uri as follows:
+
+    #+begin_example
+    HTTP 1.1 302 Found Location: https://client_redirect_uri?
+    error=invalid_request&
+    error_description=Timeout+occurred+in+calling+IdP+token+endpoint
+    #+end_example
+
+  - If a connection timeout occurs while calling jwks endpoint for id_token
+    validation, the authentication server redirects the error to the client’s
+    redirect_uri as follows:
+
+    #+begin_example
+    HTTP 1.1 302 Found Location: https://client_redirect_uri?
+    error=invalid_request&
+    error_description=error_description=Timeout+in+calling+jwks+uri
+    #+end_example
+
+- When authenticating by federating to third-party identity providers, the
+  providers may return error responses due to configuration errors or otherwise
+  such as the following:
+
+  - If an error response is received from other providers, the authentication
+    server redirects the error to the client’s redirect_uri as follows:
+
+    #+begin_example
+    HTTP 1.1 302 Found Location: https://client_redirect_uri?
+    error=invalid_request&
+    error_description=[IdP name]+Error+-+[status code]+error getting token
+    #+end_example
+
+  - If an error response is received from Google, the authentication server
+    redirects the error to the client’s redirect_uri as follows:
+
+    #+begin_example
+    HTTP 1.1 302 Found Location: https://client_redirect_uri?
+    error=invalid_request&
+    error_description=Google+Error+-+[status code]+[Google provided error code]
+    #+end_example
+
+- In the rare case where Cognito encounters an exception in the communication
+  protocol while making any connection to an external identity provider, the
+  authentication server redirects the error to the client's redirect_uri with
+  either of the following messages:
+
+  : HTTP 1.1 302 Found Location: https://client_redirect_uri?error=invalid_request&error_description=Connection+reset
+
+  : HTTP 1.1 302 Found Location: https://client_redirect_uri?error=invalid_request&error_description=Read+timed+out
+
+***** TOKEN Endpoint
+
+***** USERINFO Endpoint
+
+***** LOGIN Endpoint
+
+https://docs.aws.amazon.com/cognito/latest/developerguide/login-endpoint.html
+
+#+cindex:login endpoint
+#+cindex:login webpage
+The ~/login~ endpoint signs the user in.  It loads the login page and presents
+the authentication options configured for the client to the user.
+
+#+texinfo:@heading GET /login
+
+The ~/login~ endpoint only supports HTTPS GET.  The user pool client makes this
+request through a system browser.  System browsers for JavaScript include
+Chrome or Firefox. Android browsers include Custom Chrome Tab. iOS browsers
+include Safari View Control.
+
+****** Request Parameters
+
+#+attr_texinfo: :indic @samp
+- client_id :: Required.  The app client ID for your app. To obtain an app
+               client ID, register the app in the user pool.
+
+- redirect_uri :: Required.  The URI where the user is redirected after a
+                  successful authentication.  It should be configured on
+                  =response_type= of the specified =client_id=.
+
+- response_type :: Required.  The OAuth response type, which can be code for
+                   code grant flow and token for implicit flow.
+
+- state :: Optional but recommended.  Can be a combination of any
+           system-reserved scopes or custom scopes associated with a client.
+           Scopes must be separated by spaces.  If the client doesn't request
+           any scopes, the authentication server uses all scopes associated
+           with the client.
+
+           System reserved scopes are: 
+  - openid,
+
+    An ID token is only returned if an =openid= scope is requested.  The access
+    token can only be used against Amazon Cognito user pools if an
+    =aws.cognito.signin.user.admin= scope is requested.  The =phone=, =email=,
+    and =profile= scopes can only be requested if an =openid= scope is also
+    requested.  These scopes dictate the claims that go inside the ID token.
+
+  - email,
+
+  - phone,
+
+  - profile, and
+
+  - aws.cognito.signin.user.admin.  
+
+  Any scope used must be preassociated with the client or it is ignored at
+           runtime.
+
+
+#+texinfo:@heading Sample Request
+
+#+cindex:login screen
+This example displays the login screen.
+
+#+begin_example
+GET https://mydomain.auth.us-east-1.amazoncognito.com/login?
+response_type=code&
+client_id=ad398u21ijw3s9w3939&
+redirect_uri=https://YOUR_APP/redirect_uri&
+state=STATE&
+scope=openid+profile+aws.cognito.signin.user.admin
+#+end_example
+
+***** LOGOUT Endpoint
+
+**** Identity Pool API
+
+**** Sync API
+
+** CloudFront Developer Guide
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html
+
+*** What CloudFront Is
+
+#+cindex:edge location
+Amazon CloudFront is a web service that speeds up distribution of your static
+and dynamic web content, such as .html, .css, .js, and image files, to your
+users.  CloudFront delivers your content through a worldwide network of data
+centers called /edge locations/.  When a user requests content that you're
+serving with CloudFront, the user is routed to the edge location that provides
+the lowest latency (time delay), so that content is delivered with the best
+possible performance.
+
+#+cindex:origin
+- If the content is already in the edge location with the lowest latency,
+  CloudFront delivers it immediately.
+
+- If the content is not in that edge location, CloudFront retrieves it from an
+  /origin/ that you've defined---such as an Amazon S3 bucket, a MediaPackage
+  channel, or an HTTP server (for example, a web server) that you have
+  identified as the source for the definitive version of your content.
+
+
+#+cindex:latency
+#+cindex:edge location
+#+cindex:edge server
+CloudFront speeds up the distribution of your content by routing each user
+request through the AWS backbone network to the edge location that can best
+serve your content.  Typically, this is a CloudFront edge server that provides
+the fastest delivery to the viewer.  Using the AWS network dramatically reduces
+the number of networks that your users' requests must pass through, which
+improves performance.  Users get lower /latency/---the time it takes to load
+the first byte of the file—and higher data transfer rates.
+
 * Getting Started Resource Center
 
 “Learn AWS fundamentals, connect with the AWS developer community, and advance
@@ -647,10 +1465,59 @@ completed individually.
 :index:    cp
 :END:
 
+* Makefile
+#+name:Makefile
+#+begin_src makefile :tangle Makefile
+  PROG = AWS-Guide
+  DIR  = aws-guide
+  ORG  = $(PROG).org
+  TEXI = $(PROG).texi
+  INFO = $(PROG).info
+  HTML = $(PROG).html
+  INDEX = index.html
+
+  default: dist-clean open-html
+
+  $(ORG):
+	  @echo 'DISASTER HAS BEFALLEN YOU AS THERE IS NO $(ORG) FILE!!!'
+	  exit 1
+
+  texi: $(ORG)
+	  emacs $(ORG) --batch --eval "(progn(require 'ox-texinfo)(org-texinfo-export-to-texinfo))"
+
+  info: texi
+	  makeinfo $(TEXI)
+
+  html: texi
+	  makeinfo --html $(TEXI)
+
+  open-html: html
+	  open $(DIR)/$(INDEX)
+
+  clean:
+	  -rm *~
+	  -rm *.{texi*,info,html}
+
+  dist-clean: clean
+	  -rm -rf $(DIR)
+
+  help:
+	  @echo '"make texi" makes the .texi file'
+	  @echo '"make info" makes the .info file'
+	  @echo '"make html" makes the html distribution'
+	  @echo '"make open" opens the html index.html file in a web browser'
+	  @echo '"make default" performs the three foregoing commands'
+	  @echo '"make clean" removes .texi, .info, and backup files ("~")'
+	  @echo '"make dist-clean" does the former, and removes the html distribution'
+
+  PHONY: default texi html open-html clean dist-clean
+
+#+end_src
+
 * End                                                              :noexport:
 
 
-#+texinfo_filename:aws-glossary.info
+#+texinfo_filename:aws-guide.info
 #+texinfo_class: info
 #+texinfo_header:
 #+texinfo_post_header:
@@ -664,6 +1531,7 @@ completed individually.
 
 # Local Variables:
 # fill-column: 79
+# indent-tabs-mode: t
 # time-stamp-pattern: "8/^\\#\\+date:%:y-%02m-%02d %02H:%02M$"
 # eval: (electric-quote-local-mode)
 # End:
