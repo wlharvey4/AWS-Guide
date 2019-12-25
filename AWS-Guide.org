@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-24 22:30
-#+macro:version Version 0.0.9
+#+date:2019-12-25 11:58
+#+macro:version Version 0.0.10
 #+texinfo: @insertcopying
 
 
@@ -12,6 +12,195 @@
 
 https://docs.aws.amazon.com/general/latest/gr/glos-chap.html
 
+** Amazon Web Services
+
+https://aws.amazon.com/
+
+“Start Now---Start building with Amazon Web Services”
+
+https://aws.amazon.com/start-now/
+
+*** TODO Products
+
+#+cindex:products
+Amazon Web Services offers a broad set of global cloud-based products including
+compute, storage, databases, analytics, networking, mobile, developer tools,
+management tools, IoT, security and enterprise applications.  These services
+help organizations move faster, lower IT costs, and scale.  AWS is trusted by
+the largest enterprises and the hottest start-ups to power a wide variety of
+workloads including: web and mobile applications, game development, data
+processing and warehousing, storage, archive, and many others.
+
+https://aws.amazon.com/products/
+
+**** Analytics
+
+**** Application Integration
+
+**** AR & VR
+
+**** AWS Cost Managment
+
+**** Blockchain
+
+** CloudFront
+
+“Fast, highly secure and programmable content delivery network (CDN)”
+
+https://aws.amazon.com/cloudfront/
+
+#+cindex:CloudFront
+- *CloudFront* :: An AWS content delivery service that helps you improve the
+                  performance, reliability, and availability of your websites
+                  and applications.
+
+
+#+cindex:content delivery network (CDN)
+#+cindex:CDN
+*Amazon CloudFront* is a fast /content delivery network/ (CDN) service that
+securely delivers data, videos, applications, and APIs to customers globally
+with low latency, high transfer speeds, all within a developer-friendly
+environment.
+
+CloudFront works seamlessly with services including AWS Shield for DDoS
+mitigation, Amazon S3, Elastic Load Balancing or Amazon EC2 as origins for your
+applications, and =Lambda@Edge= to run custom code closer to customers’ users
+and to customize the user experience.  Lastly, if you use AWS origins such as
+Amazon S3, Amazon EC2 or Elastic Load Balancing, you don’t pay for any data
+transferred between these services and CloudFront.
+
+*** Benefits
+
+#+texinfo:@heading Fast & global
+The Amazon CloudFront content delivery network (CDN) is massively scaled and
+globally distributed.  The CloudFront network has 210 points of presence
+(PoPs), and leverages the highly-resilient Amazon backbone network for superior
+performance and availability for your end users.
+
+#+texinfo:@heading Security at the Edge
+Amazon CloudFront is a highly-secure CDN that provides both network and
+application level protection.  Your traffic and applications benefit through a
+variety of built-in protections such as AWS Shield Standard, at no additional
+cost.  You can also use configurable features such as AWS Certificate Manager
+(ACM) to create and manage custom SSL certificates at no extra cost.
+
+#+texinfo:@heading Highly programmable
+Amazon CloudFront features can be customized for your specific application
+requirements.  =Lambda@Edge= functions, triggered by CloudFront events, extend
+your custom code across AWS locations worldwide, allowing you to move even
+complex application logic closer to your end users to improve responsiveness.
+The CDN also supports integrations with other tools and automation interfaces
+for today's DevOps and CI/CD environments by using native APIs or AWS tools.
+
+#+texinfo:@heading Deep integration with AWS
+Amazon CloudFront is integrated with AWS services such as Amazon S3, Amazon
+EC2, Elastic Load Balancing, Amazon Route 53, and AWS Elemental Media Services.
+They are all accessible via the same console and all features in the CDN can be
+programmatically configured by using APIs or the AWS Management Console.
+
+*** Use Cases
+
+#+texinfo:@heading Static asset caching
+Amazon CloudFront can speed up the delivery of your static content (e.g.,
+images, style sheets, JavaScript, etc.) to viewers across the globe. The
+Content Delivery Network (CDN) offers a multi-tier cache by default, with
+regional Edge caches that improve latency and lower the load on your origin
+servers when the object is not already cached at the Edge. Caching static
+content gives you the performance and scale you need to give your viewers a
+fast and reliable experience when visiting your website.
+
+#+texinfo:@heading Live & on-demand video streaming
+The Amazon CloudFront CDN offers multiple options for streaming your media ---
+both pre-recorded files and live events --- at sustained, high throughput
+required for 4K delivery to global viewers.  For on-demand streaming, you can
+use CloudFront for multi-bitrate adaptive streaming in Microsoft Smooth, HLS,
+HDS, or MPEG-DASH formats to any device.  To broadcast a live stream, you can
+use the Content Delivery Network to cache the media fragments at the edge and
+collapse multiple requests for the manifest file to reduce load to your origin.
+
+#+texinfo:@heading Security
+CloudFront integrates seamlessly with AWS Shield for Layer 3/4 DDoS mitigation
+and AWS WAF for Layer 7 protection.  In addition, CloudFront negotiates TLS
+connections with the highest security ciphers, and authenticates viewers with
+signed URLs.  You can also use our advanced feature Field-Level Encryption to
+protect most sensitive data throughout your enterprise, so the information can
+only be viewed by certain components and services in your application stack.
+CloudFront also integrates with AWS Identity and Access Management (IAM) to
+control access, with AWS CloudTrail to log access to your configuration, and
+with Amazon Certificate Manager (ACM) for automated certificate renewals.
+
+#+texinfo:@heading Customizable content delivery with Lambda@@Edge
+With =Lambda@Edge= you can easily run your code across AWS locations globally,
+allowing you to respond to your end users at the lowest latency and allowing
+you to personalize content.  For example, you can deliver unique content based
+on attributes of your visitors, generate custom responses, or conduct A/B
+testing with your own custom code running on the CloudFront infrastructure.
+
+#+texinfo:@heading Dynamic content & API acceleration
+Amazon CloudFront can be used to secure and accelerate your WebSocket traffic
+as well as API calls.  CloudFront supports proxy methods (POST, PUT, OPTIONS,
+DELETE, and PATCH) and is already integrated with Amazon API Gateway by
+default.  With the Content Delivery Network (CDN), TLS connections with clients
+terminate at a nearby edge location, then CloudFront uses optimized
+AWS-backbone network paths to securely reach your API servers.
+
+#+texinfo:@heading Software distribution
+Amazon CloudFront scales automatically as globally-distributed clients download
+software updates.  You can make your software available right at the edge where
+your users are, via the content delivery network.  The CDN's high data transfer
+rates speed up the delivery of your binaries, improving customer experience
+while lowering your costs.
+
+*** Edge location
+#+cindex:edge location
+#+cindex:CloudFront, edge location
+CloudFront delivers your content through a worldwide network of data centers
+called edge locations.
+
+*** Origin
+#+cindex:origin
+#+cindex:CloudFront, origin
+An Amazon S3 bucket, a MediaPackage channel, or an HTTP server (for example, a
+web server) that you have identified as the source for the definitive version
+of your content.
+** Command Line Interface
+
+https://aws.amazon.com/cli/
+
+#+cindex:Command Line Interface (CLI)
+#+cindex:CLI (Command Line Interface)
+The AWS Command Line Interface (CLI) is a unified tool to manage your AWS
+services.  With just one tool to download and configure, you can control
+multiple AWS services from the command line and automate them through scripts.
+
+The AWS CLI introduces a new set of simple file commands for efficient file
+transfers to and from Amazon S3.
+
+*** aws-shell                          :aws:aws:cli:cloud:cloud:management:
+
+“The interactive productivity booster for the AWS CLI”
+
+https://github.com/awslabs/aws-shell
+
+#+cindex:aws-shell
+An integrated shell for working with the AWS CLI.  The aws-shell is currently
+in developer preview.
+
+The ~aws-shell~ accepts the same commands as the AWS CLI, except you don't need
+to provide the ~aws~ prefix.
+
+#+texinfo:@heading Features
+
+- Auto Completion of Commands and Options
+- Shorthand Auto Completion
+- Server Side Auto Completion
+- Fuzzy Searching
+- Inline Documentation
+- Fish-Style Auto Suggestions
+- Command History
+- Toolbar Options
+- Dot Commands
+- Executing Shell Commands
 ** Developer Center
 
 “Welcome developers!  The AWS Developer Center is your homepage for the AWS
@@ -489,127 +678,6 @@ Amazon VPC ingress routing allows you to easily deploy network and security
 appliances, including third-party offerings, inline to the inbound or outbound
 Amazon VPC traffic.  Inline traffic inspection helps you screen and secure
 traffic to protect your workloads from malicious actors.
-** CloudFront
-
-“Fast, highly secure and programmable content delivery network (CDN)”
-
-https://aws.amazon.com/cloudfront/
-
-#+cindex:CloudFront
-- *CloudFront* :: An AWS content delivery service that helps you improve the
-                  performance, reliability, and availability of your websites
-                  and applications.
-
-
-#+cindex:content delivery network (CDN)
-#+cindex:CDN
-*Amazon CloudFront* is a fast /content delivery network/ (CDN) service that
-securely delivers data, videos, applications, and APIs to customers globally
-with low latency, high transfer speeds, all within a developer-friendly
-environment.
-
-CloudFront works seamlessly with services including AWS Shield for DDoS
-mitigation, Amazon S3, Elastic Load Balancing or Amazon EC2 as origins for your
-applications, and =Lambda@Edge= to run custom code closer to customers’ users
-and to customize the user experience.  Lastly, if you use AWS origins such as
-Amazon S3, Amazon EC2 or Elastic Load Balancing, you don’t pay for any data
-transferred between these services and CloudFront.
-
-*** Benefits
-
-#+texinfo:@heading Fast & global
-The Amazon CloudFront content delivery network (CDN) is massively scaled and
-globally distributed.  The CloudFront network has 210 points of presence
-(PoPs), and leverages the highly-resilient Amazon backbone network for superior
-performance and availability for your end users.
-
-#+texinfo:@heading Security at the Edge
-Amazon CloudFront is a highly-secure CDN that provides both network and
-application level protection.  Your traffic and applications benefit through a
-variety of built-in protections such as AWS Shield Standard, at no additional
-cost.  You can also use configurable features such as AWS Certificate Manager
-(ACM) to create and manage custom SSL certificates at no extra cost.
-
-#+texinfo:@heading Highly programmable
-Amazon CloudFront features can be customized for your specific application
-requirements.  =Lambda@Edge= functions, triggered by CloudFront events, extend
-your custom code across AWS locations worldwide, allowing you to move even
-complex application logic closer to your end users to improve responsiveness.
-The CDN also supports integrations with other tools and automation interfaces
-for today's DevOps and CI/CD environments by using native APIs or AWS tools.
-
-#+texinfo:@heading Deep integration with AWS
-Amazon CloudFront is integrated with AWS services such as Amazon S3, Amazon
-EC2, Elastic Load Balancing, Amazon Route 53, and AWS Elemental Media Services.
-They are all accessible via the same console and all features in the CDN can be
-programmatically configured by using APIs or the AWS Management Console.
-
-*** Use Cases
-
-#+texinfo:@heading Static asset caching
-Amazon CloudFront can speed up the delivery of your static content (e.g.,
-images, style sheets, JavaScript, etc.) to viewers across the globe. The
-Content Delivery Network (CDN) offers a multi-tier cache by default, with
-regional Edge caches that improve latency and lower the load on your origin
-servers when the object is not already cached at the Edge. Caching static
-content gives you the performance and scale you need to give your viewers a
-fast and reliable experience when visiting your website.
-
-#+texinfo:@heading Live & on-demand video streaming
-The Amazon CloudFront CDN offers multiple options for streaming your media ---
-both pre-recorded files and live events --- at sustained, high throughput
-required for 4K delivery to global viewers.  For on-demand streaming, you can
-use CloudFront for multi-bitrate adaptive streaming in Microsoft Smooth, HLS,
-HDS, or MPEG-DASH formats to any device.  To broadcast a live stream, you can
-use the Content Delivery Network to cache the media fragments at the edge and
-collapse multiple requests for the manifest file to reduce load to your origin.
-
-#+texinfo:@heading Security
-CloudFront integrates seamlessly with AWS Shield for Layer 3/4 DDoS mitigation
-and AWS WAF for Layer 7 protection.  In addition, CloudFront negotiates TLS
-connections with the highest security ciphers, and authenticates viewers with
-signed URLs.  You can also use our advanced feature Field-Level Encryption to
-protect most sensitive data throughout your enterprise, so the information can
-only be viewed by certain components and services in your application stack.
-CloudFront also integrates with AWS Identity and Access Management (IAM) to
-control access, with AWS CloudTrail to log access to your configuration, and
-with Amazon Certificate Manager (ACM) for automated certificate renewals.
-
-#+texinfo:@heading Customizable content delivery with Lambda@@Edge
-With =Lambda@Edge= you can easily run your code across AWS locations globally,
-allowing you to respond to your end users at the lowest latency and allowing
-you to personalize content.  For example, you can deliver unique content based
-on attributes of your visitors, generate custom responses, or conduct A/B
-testing with your own custom code running on the CloudFront infrastructure.
-
-#+texinfo:@heading Dynamic content & API acceleration
-Amazon CloudFront can be used to secure and accelerate your WebSocket traffic
-as well as API calls.  CloudFront supports proxy methods (POST, PUT, OPTIONS,
-DELETE, and PATCH) and is already integrated with Amazon API Gateway by
-default.  With the Content Delivery Network (CDN), TLS connections with clients
-terminate at a nearby edge location, then CloudFront uses optimized
-AWS-backbone network paths to securely reach your API servers.
-
-#+texinfo:@heading Software distribution
-Amazon CloudFront scales automatically as globally-distributed clients download
-software updates.  You can make your software available right at the edge where
-your users are, via the content delivery network.  The CDN's high data transfer
-rates speed up the delivery of your binaries, improving customer experience
-while lowering your costs.
-
-*** Edge location
-#+cindex:edge location
-#+cindex:CloudFront, edge location
-CloudFront delivers your content through a worldwide network of data centers
-called edge locations.
-
-*** Origin
-#+cindex:origin
-#+cindex:CloudFront, origin
-An Amazon S3 bucket, a MediaPackage channel, or an HTTP server (for example, a
-web server) that you have identified as the source for the definitive version
-of your content.
-
 * AWS Documentation
 
 “Find user guides, developer guides, API references, tutorials, and more.”
@@ -649,6 +717,181 @@ Amazon CloudFront speeds up distribution of your static and dynamic web
 content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
 request your content, CloudFront delivers it through a worldwide network of
 edge locations that provide low latency and high performance.
+*** Command Line Interface Command Reference
+
+#+cindex:Command Line Interface
+The AWS Command Line Interface is a unified tool to manage your AWS services.
+
+https://docs.aws.amazon.com/cli/latest/reference/
+
+#+texinfo:@heading Synopsis
+
+#+cindex:synopsis
+: aws [options] <command> <subcommand> [parameters]
+
+#+cindex:help, aws command
+#+attr_texinfo: :indic @code 
+- aws command help :: for information on a specific command
+
+- aws help topics :: to view a list of available help topics
+
+
+The synopsis for each command shows its parameters and their usage. Optional
+parameters are shown in square brackets.
+
+**** s3
+
+#+cindex:s3 API
+This section explains prominent concepts and notations in the set of high-level
+S3 commands provided.
+
+https://docs.aws.amazon.com/cli/latest/reference/s3/index.html
+
+***** Path Argument Type
+
+#+cindex:path argument type
+#+cindex:@code{LocalPath}
+#+cindex:@code{S3Uri}
+Whenever using a command, at least one path argument must be specified.  There
+are two types of path arguments: =LocalPath= and =S3Uri=.
+
+#+attr_texinfo: :indic @code
+- LocalPath :: represents the path of a local file or directory. It can be
+               written as an absolute path or relative path.
+
+- S3Uri :: represents the location of a S3 object, prefix, or bucket.  This
+           must be written in the form:
+	   : s3://mybucket/mykey
+
+***** Order of Path Arguments
+
+Every command takes one or two positional path arguments.
+
+- The /first path argument/ represents the *source*, which is the local
+  file/directory or S3 object/prefix/bucket that is being referenced.  Commands
+  with only one path argument do not have a *destination* because the operation
+  is being performed only on the *source*.
+
+- If there is a /second path argument/, it represents the *destination*, which
+  is the local file/directory or S3 object/prefix/bucket that is being operated
+  on.
+
+***** Single Local File and S3 Object Operations
+
+Some commands perform operations only on single files and S3 objects.  The
+following commands are single file/object operations if no
+@@texinfo:@option{--recursive}@@ flag is provided.
+
+- cp
+- mv
+- rm
+
+
+For this type of operation, the first path argument, the *source*, must exist
+and be a local file or S3 object.  The second path argument, the *destination*,
+can be the name of a local file, local directory, S3 object, S3 prefix, or S3
+bucket.
+
+The *destination* is indicated as a local directory, S3 prefix, or S3 bucket if
+it ends with a forward slash or back slash.  The use of slash depends on the
+path argument type.  If the path argument is a =LocalPath=, the type of slash
+is the separator used by the operating system.  If the path is a =S3Uri, the
+forward slash must always be used.  If a slash is at the end of the
+*destination*, the destination file or object will adopt the name of the source
+file or object.  Otherwise, if there is no slash at the end, the file or object
+will be saved under the name provided.  See examples in ~cp~ and ~mv~ to
+illustrate this description.
+
+***** Directory and S3 Prefix Operations
+
+Some commands only perform operations on the contents of a local directory or
+S3 prefix/bucket.  Adding or omitting a forward slash or back slash to the end
+of any path argument, depending on its type, does not affect the results of the
+operation.  The following commands will always result in a directory or S3
+prefix/bucket operation:
+
+- sync
+- mb
+- rb
+- ls
+
+***** Use of Exclude and Include Filters
+
+Currently, there is no support for the use of UNIX style wildcards in a
+command's path arguments.  However, most commands have
+@@texinfo:@option{--exclude "<value>"}@@ and @@texinfo:@option{--include
+"<value>"} parameters that can achieve the desired result.  These parameters
+perform pattern matching to either exclude or include a particular file or
+object.  The following pattern symbols are supported.
+
+#+cindex:filters
+#+attr_texinfo: :indic @samp
+- * :: Matches everything
+ 
+- ? :: Matches any single character
+
+- [sequence] :: Matches any character in sequence
+
+- [!sequence] :: Matches any character not in sequence
+
+
+Any number of these parameters can be passed to a command.  You can do this by
+providing an @@texinfo:@option{--exclude}@@ or @@texinfo:@option{--include}@@
+argument multiple times, e.g. @@texinfo:@samp{--include "*.txt"--include
+"*.png"}@@.  When there are multiple filters, the rule is the filters that
+appear later in the command take precedence over filters that appear earlier in
+the command.
+
+Each filter is evaluated against the source directory.  If the source location
+is a file instead of a directory, the directory containing the file is used as
+the source directory.
+
+Note that, by default, all files are included.  This means that providing only
+an @@texinfo:@option{--include}@@ filter will not change what files are
+transferred.  @@texinfo:@option{--include} will only re-include files that have
+been excluded from an @@texinfo:@option{--exclude}@@ filter.  If you only want
+to upload files with a particular extension, you need to first exclude all
+files, then re-include the files with the particular extension.
+
+***** Available Commands
+
+#+texinfo:@heading Available Commands
+
+#+attr_texinfo: :indic @code
+- cp ::
+
+- ls ::
+
+- mb ::
+
+- mv ::
+
+- presign ::
+
+- rb ::
+
+- rm ::
+
+- sync ::
+	  #+cindex:@command{website}
+	  #+cindex:@command{static website}
+- website :: Set the website configuration for a bucket.
+	     : website <S3Uri > [--index-document <value>] [--error-document <value>]
+
+	     The following command configures a bucket named =my-bucket= as a
+             static website:
+
+	     : aws s3 website s3://my-bucket/ --index-document index.html --error-document error.html
+
+**** s3 API
+
+https://docs.aws.amazon.com/cli/latest/reference/s3api/index.html
+
+**** s3control
+
+AWS S3 Control provides access to Amazon S3 control plane operations.
+
+https://docs.aws.amazon.com/cli/latest/reference/s3control/index.html
 
 ** Tutorials and Projects
 
@@ -1558,8 +1801,10 @@ Copyright \copy 2019 {{{author}}}
 #+texinfo_dir_desc:AWS guide
 #+texinfo_printed_title:Amazon Web Services Guide
 
+#+options: toc:nil
+
 
-# Local Variables:
+# local Variables:
 # fill-column: 79
 # indent-tabs-mode: t
 # time-stamp-pattern: "8/^\\#\\+date:%:y-%02m-%02d %02H:%02M$"
