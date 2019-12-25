@@ -1,9 +1,11 @@
 # -*- mode:org; -*-
 
 #+title:AWS Guide
+#+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-24 19:43
-#+macro:version Version 0.0.8
+#+date:2019-12-24 22:30
+#+macro:version Version 0.0.9
+#+texinfo: @insertcopying
 
 
 * AWS Glossary
@@ -1459,13 +1461,10 @@ completed individually.
 
 - [[https://aws.amazon.com/getting-started/projects/build-modern-app-fargate-lambda-dynamodb-python/?e=gs&p=gsrc][Build]]
 
-* Main Index
-:PROPERTIES:
-:unnumbered: t
-:index:    cp
-:END:
-
 * Makefile
+:PROPERTIES:
+:appendix: t
+:END:
 #+name:Makefile
 #+begin_src makefile :tangle Makefile
   PROG = AWS-Guide
@@ -1475,8 +1474,10 @@ completed individually.
   INFO = $(PROG).info
   PDF  = $(PROG).pdf
   INDEX = index.html
+  BUILD = $(PROG).t2d
 
-  default: dist-clean open-html
+  default: open-html
+  all: texi info html pdf
 
   $(ORG):
 	  @echo 'DISASTER HAS BEFALLEN YOU AS THERE IS NO $(ORG) FILE!!!'
@@ -1484,10 +1485,11 @@ completed individually.
 
   texi: $(TEXI)
   $(TEXI): $(ORG)
-	  emacs $(ORG) --batch --eval "(progn(require 'ox-texinfo)(org-texinfo-export-to-texinfo))"
+	  emacs -Q $(ORG) --batch \
+	  --eval "(progn(require 'ox-texinfo)(org-texinfo-export-to-texinfo))"
 
   info: $(INFO)
-  $(INFO): texi
+  $(INFO): $(TEXI)
 	  makeinfo $(TEXI)
 
   html: $(DIR)
@@ -1509,20 +1511,40 @@ completed individually.
 	  -rm *.{texi*,info,html,pdf}
 
   dist-clean: clean
-	  -rm -rf $(DIR) $(PROG).t2d
+	  -rm -rf $(DIR) $(BUILD)
 
   help:
 	  @echo '"make texi" makes the .texi file'
 	  @echo '"make info" makes the .info file'
 	  @echo '"make html" makes the html distribution'
-	  @echo '"make open" opens the html index.html file in a web browser'
-	  @echo '"make default" performs the three foregoing commands'
-	  @echo '"make clean" removes .texi, .info, and backup files ("~")'
-	  @echo '"make dist-clean" does the former, and removes the html distribution'
+	  @echo '"make open-html" opens the distribution index.html file \
+	  in the default web browser'
+	  @echo '"make pdf" makes the .pdf file'
+	  @echo '"make open-pdf" opens the .pdf file'
+	  @echo '"make default" makes the .texi file, \
+	  the html files, and opens the index.html file'
+	  @echo '"make all" makes the .texi, .info, .pdf, and html distribution'
+	  @echo '"make clean" removes the .texi, .info, and backup files ("*~")'
+	  @echo '"make dist-clean" cleans, removes the html distribution, \
+	  and removes the build directory'
 
-  PHONY: default texi info html pdf open-html open-pdf clean dist-clean help
+  PHONY: default all texi info html pdf open-html open-pdf clean dist-clean help
 
 #+end_src
+
+* Copying
+:PROPERTIES:
+:copying:  t
+:END:
+{{{title}}}
+
+Copyright \copy 2019 {{{author}}}
+
+* Main Index
+:PROPERTIES:
+:unnumbered: t
+:index:    cp
+:END:
 
 * End                                                              :noexport:
 
@@ -1531,8 +1553,6 @@ completed individually.
 #+texinfo_class: info
 #+texinfo_header:
 #+texinfo_post_header:
-#+subtitle:
-#+subauthor:
 #+texinfo_dir_category:Cloud
 #+texinfo_dir_title:AWS Guide
 #+texinfo_dir_desc:AWS guide
@@ -1543,5 +1563,5 @@ completed individually.
 # fill-column: 79
 # indent-tabs-mode: t
 # time-stamp-pattern: "8/^\\#\\+date:%:y-%02m-%02d %02H:%02M$"
-# eval: (electric-quote-local-mode)
+# eval: (electric-quote-local-mode t)
 # End:
