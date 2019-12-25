@@ -2,8 +2,8 @@
 
 #+title:AWS Guide
 #+author:Pinecone062
-#+date:2019-12-24 18:29
-#+macro:version Version 0.0.7
+#+date:2019-12-24 19:43
+#+macro:version Version 0.0.8
 
 
 * AWS Glossary
@@ -1473,7 +1473,7 @@ completed individually.
   ORG  = $(PROG).org
   TEXI = $(PROG).texi
   INFO = $(PROG).info
-  HTML = $(PROG).html
+  PDF  = $(PROG).pdf
   INDEX = index.html
 
   default: dist-clean open-html
@@ -1482,24 +1482,34 @@ completed individually.
 	  @echo 'DISASTER HAS BEFALLEN YOU AS THERE IS NO $(ORG) FILE!!!'
 	  exit 1
 
-  texi: $(ORG)
+  texi: $(TEXI)
+  $(TEXI): $(ORG)
 	  emacs $(ORG) --batch --eval "(progn(require 'ox-texinfo)(org-texinfo-export-to-texinfo))"
 
-  info: texi
+  info: $(INFO)
+  $(INFO): texi
 	  makeinfo $(TEXI)
 
-  html: texi
+  html: $(DIR)
+  $(DIR): $(TEXI)
 	  makeinfo --html $(TEXI)
+
+  pdf: $(PDF)
+  $(PDF): $(TEXI)
+	  pdftexi2dvi --silent --quiet --build=tidy $(TEXI)
 
   open-html: html
 	  open $(DIR)/$(INDEX)
 
+  open-pdf: pdf
+	  open $(PDF)
+
   clean:
 	  -rm *~
-	  -rm *.{texi*,info,html}
+	  -rm *.{texi*,info,html,pdf}
 
   dist-clean: clean
-	  -rm -rf $(DIR)
+	  -rm -rf $(DIR) $(PROG).t2d
 
   help:
 	  @echo '"make texi" makes the .texi file'
@@ -1510,7 +1520,7 @@ completed individually.
 	  @echo '"make clean" removes .texi, .info, and backup files ("~")'
 	  @echo '"make dist-clean" does the former, and removes the html distribution'
 
-  PHONY: default texi html open-html clean dist-clean
+  PHONY: default texi info html pdf open-html open-pdf clean dist-clean help
 
 #+end_src
 
@@ -1524,9 +1534,9 @@ completed individually.
 #+subtitle:
 #+subauthor:
 #+texinfo_dir_category:Cloud
-#+texinfo_dir_title:AWS Glossary
-#+texinfo_dir_desc:AWS glossary
-#+texinfo_printed_title:AWS Glossary
+#+texinfo_dir_title:AWS Guide
+#+texinfo_dir_desc:AWS guide
+#+texinfo_printed_title:Amazon Web Services Guide
 
 
 # Local Variables:
