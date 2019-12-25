@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-25 12:11
-#+macro:version Version 0.0.11
+#+date:2019-12-25 15:23
+#+macro:version Version 0.0.12
 #+texinfo: @insertcopying
 
 
@@ -1768,6 +1768,244 @@ higher-level commands that simplify using a service with a complex API.  For
 example, the [[*s3][aws s3 commands]] provide a familiar syntax for managing files in
 Amazon Simple Storage Service (Amazon S3).  Performing the same task with the
 low-level commands (available under [[*s3 API][aws s3api]]) would take a lot more effort.
+
+*** Installing the CLI
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
+
+**** CLI Version 2
+
+AWS CLI version 2 is provided as a preview for testing and evaluation.  At this
+time, we do not recommend using it in a production environment.  For production
+environments, we recommend that you use the generally available version 1.x.
+
+AWS CLI version 2 is the most recent major version of the AWS CLI and supports
+all of the latest features.  Some features introduced in version 2 are not
+backward compatible with version 1 and you must upgrade to access those
+features.
+
+AWS CLI version 2 is available to install only as a bundled installer.
+Although you might find it in some package managers, these are not produced or
+managed by AWS and are therefore not official and not supported by AWS.  We
+recommend that you install the AWS CLI from only the official AWS distribution
+points, as documented in this guide.
+
+- see [[https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html][Installing the AWS CLI version 2]].
+
+
+For AWS CLI version 2, it doesn't matter if you have Python installed and if
+you do, it doesn't matter which version.  AWS CLI version 2 uses only the
+version of Python (and all other dependencies) that are included and installed
+into a local virtual environment that is isolated.
+
+***** Prerequisites
+
+- The AWS CLI version 2 has no dependencies on other software packages.  It has
+  a self-contained copy of all dependencies included with the installer.  You
+  no longer need to have Python installed first.
+
+- You must be able to "unzip" the downloaded package.  If your operating system
+  doesn't have a built-in unzip command, use your favorite package manager to
+  download it or an equivalent.
+
+- *Linux*: We support the AWS CLI version 2 on recent distributions of CentOS,
+  Fedora, Ubuntu, Amazon Linux 1, and Amazon Linux 2.
+
+- *macOS*: We support the AWS CLI version 2 on versions of macOS that are
+  supported by Apple, including High Sierra (10.13), Mojave (10.14), and
+  Catalina (10.15).
+
+***** Installing
+
+Follow these steps from the command line to install the AWS CLI on either Linux
+or macOS.  The only difference in the following commands is the name of the
+file that you download.  Everything else is the same.
+
+#+texinfo:@heading Commands for macOS
+
+#+begin_example
+curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-macos.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws2 --version
+#+end_example
+
+: aws-cli/2.0.0dev0 Python/3.7.3 Linux/4.14.133-113.105.amzn2.x86_64 botocore/2.0.0dev0
+
+***** Upgrading
+
+To upgrade your copy of the AWS CLI version 2, run the same steps that you used
+to install it, but this time include the @@texinfo:@option{--update}@@ or
+@@texinfo:@option{-u}2@ option on the install command line.  If the installer
+finds an existing version of the AWS CLI version 2 in the target installation
+folder and the @@texinfo:@option{--upgrade}@@ option isn't used, the install
+fails.
+
+: sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+
+***** Uninstalling
+
+To uninstall the AWS CLI version 2, run the following commands, substituting
+the paths you used to install.
+
+Now delete the two symlinks in the @@texinfo:@option{--bin-dir}@@ folder.  If
+your user account has write permission to these folders, you don't need to use
+~sudo~.
+
+#+begin_example
+sudo rm /usr/local/bin/aws2
+sudo rm /usr/local/bin/aws2_completer
+#+end_example
+
+Finally, you can delete the @@texinfo:@option{--install-dir}@@ folder.  Again,
+if your user account has write permission to this folder, you don't need to use
+~sudo~.
+
+: $ sudo rm -rf /usr/local/aws-cli
+
+**** CLI Version 1
+
+AWS CLI version 1 is the original AWS CLI, and we continue to support it.
+However, major new features that are introduced in AWS CLI version 2 might not
+be backported to AWS CLI version 1.  To use those features, you must install
+AWS CLI version 2.
+
+- see [[https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html][Installing the AWS CLI version 1]].
+
+
+You can install the AWS CLI version 1 using any of the following techniques:
+
+- Using a bundled installer
+
+- Using pip
+
+- Using a virtual environment
+
+***** Prerequisites
+
+- Python 2 version 2.7+ or Python 3 version 3.4+
+
+- Windows, Linux or macOS
+
+
+You can find the version number of the most recent CLI at:
+
+- https://github.com/aws/aws-cli/blob/master/CHANGELOG.rst
+
+
+In this guide, the commands shown assume you have Python v3 installed and the
+pip commands shown use the pip3 version.
+
+***** Installing the AWS CLI Using the Bundled Installer
+
+For offline or automated installations on Linux or macOS, we recommend that you
+try the bundled installer.  The bundled installer includes the AWS CLI, its
+dependencies, and a shell script that performs the installation for you.
+
+- [[https://docs.aws.amazon.com/cli/latest/userguide/install-bundle.html][bundled installer]]
+
+***** Installing the AWS CLI Using pip
+
+The pip package manager for Python provides an easy way to install, upgrade,
+and remove Python packages and their dependencies.
+
+#+texinfo:@heading Installing the current AWS CLI Version
+
+The AWS CLI is updated frequently with support for new services and commands.
+To determine whether you have the latest version:
+
+- see the [[https://github.com/aws/aws-cli/releases][releases page on GitHub]]
+
+
+If you already have pip and a supported version of Python, you can install the
+AWS CLI by using the following command.  If you have Python version 3
+installed, we recommend that you use the ~pip3~ command.
+
+: $ pip3 install awscli --upgrade --user
+
+The #+texinfo:@upgrade{--upgrade}@@ option tells ~pip3~ to upgrade any
+requirements that are already installed.  The @@texinfo:@option{--user} option
+tells ~pip3~ to install the program to a subdirectory of your user directory to
+avoid modifying libraries used by your operating system.
+
+#+texinfo:@heading Upgrading to the latest version of the AWS CLI
+
+We recommend that you regularly check to see if there is a new version of the
+AWS CLI and upgrade to it when you can.
+
+Use the ~pip3 list -o~ command to check which packages are "outdated".
+
+#+begin_example
+$ aws --version
+aws-cli/1.16.273 Python/3.7.3 Linux/4.14.133-113.105.amzn2.x86_64 botocore/1.13.0
+
+$ pip3 list -o
+Package    Version  Latest   Type 
+---------- -------- -------- -----
+awscli     1.16.170 1.16.198 wheel
+botocore   1.12.160 1.12.188 wheel
+#+end_example
+
+Because the previous command shows that there is a newer version of the AWS CLI
+available, you can run ~pip3 install --upgrade~ to get the latest version.
+
+: $ pip3 install --upgrade --user awscli
+
+#+texinfo:@heading Installing the AWS CLI in a Virtual Environment
+
+If you encounter issues when you attempt to install the AWS CLI with ~pip3~,
+you can [[https://docs.aws.amazon.com/cli/latest/userguide/install-virtualenv.html][install the AWS CLI in a virtual environment]] to isolate the tool and
+its dependencies.  Or you can use a different version of Python than you
+normally do.
+
+***** Steps to Take after Installation
+
+#+texinfo:@heading Setting the Path to Include the AWS CLI
+
+After you install the AWS CLI, you might need to add the path to the executable
+file to your PATH variable.  For platform-specific instructions, see the
+following topics:
+
+- macOS :: [[https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html#awscli-install-osx-path][Add the AWS CLI version 1 Executable to Your macOS Command Line Path]]
+
+
+Verify that the AWS CLI installed correctly by running
+: $ aws --version
+
+#+texinfo:@heading Configure the AWS CLI with Your Credentials
+
+Before you can run a CLI command, you must configure the AWS CLI with your
+credentials.
+
+You store credential information locally by defining profiles in the [[https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html][AWS CLI
+configuration files]], which are stored by default in your user's home directory.
+
+- see [[qhttps://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html][Configuring the AWS CLI]].
+
+
+#+texinfo:@heading Upgrading to the Latest Version of the AWS CLI
+
+The AWS CLI is updated regularly to add support for new services and commands.
+To update to the latest version of the AWS CLI, run the installation command
+again.  For details about the latest version of the AWS CLI:
+
+- see [[https://github.com/aws/aws-cli/blob/develop/CHANGELOG.rst][the AWS CLI release notes]]
+
+: $ pip3 install awscli --upgrade --user
+
+#+texinfo:@heading Uninstalling the AWS CLI
+
+If you need to uninstall the AWS CLI, use pip uninstall.
+
+: $ pip3 uninstall awscli
+
+**** TODO Install the AWS CLI version 1 on macOS
+
+https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html
+
+The recommended way to install version 1 of the AWS Command Line Interface (AWS
+CLI) on macOS is to use the bundled installer.  The bundled installer includes
+all dependencies and you can use it offline.
 
 * Makefile
 :PROPERTIES:
