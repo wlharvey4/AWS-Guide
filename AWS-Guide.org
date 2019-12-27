@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-25 15:23
-#+macro:version Version 0.0.12
+#+date:2019-12-27 10:27
+#+macro:version Version 0.0.13
 #+texinfo: @insertcopying
 
 
@@ -750,6 +750,7 @@ The synopsis for each command shows its parameters and their usage. Optional
 parameters are shown in square brackets.
 
 **** s3
+<<s3 API>>
 
 #+cindex:s3 API
 This section explains prominent concepts and notations in the set of high-level
@@ -894,6 +895,7 @@ files, then re-include the files with the particular extension.
 	     : aws s3 website s3://my-bucket/ --index-document index.html --error-document error.html
 
 **** s3 API
+<<s3api>>
 
 https://docs.aws.amazon.com/cli/latest/reference/s3api/index.html
 
@@ -1765,9 +1767,9 @@ other languages by using the AWS SDKs.
 In addition to the low-level, API-equivalent commands, several AWS services
 provide customizations for the AWS CLI.  Customizations can include
 higher-level commands that simplify using a service with a complex API.  For
-example, the [[*s3][aws s3 commands]] provide a familiar syntax for managing files in
+example, the [[s3 API][aws s3 commands]] provide a familiar syntax for managing files in
 Amazon Simple Storage Service (Amazon S3).  Performing the same task with the
-low-level commands (available under [[*s3 API][aws s3api]]) would take a lot more effort.
+low-level commands (available under [[s3api][aws s3api]]) would take a lot more effort.
 
 *** Installing the CLI
 
@@ -1830,7 +1832,7 @@ sudo ./aws/install
 aws2 --version
 #+end_example
 
-: aws-cli/2.0.0dev0 Python/3.7.3 Linux/4.14.133-113.105.amzn2.x86_64 botocore/2.0.0dev0
+: aws-cli/2.0.0dev2 Python/3.7.4 Darwin/18.7.0 botocore/2.0.0dev1
 
 ***** Upgrading
 
@@ -1980,7 +1982,7 @@ credentials.
 You store credential information locally by defining profiles in the [[https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html][AWS CLI
 configuration files]], which are stored by default in your user's home directory.
 
-- see [[qhttps://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html][Configuring the AWS CLI]].
+- see [[https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html][Configuring the AWS CLI]].
 
 
 #+texinfo:@heading Upgrading to the Latest Version of the AWS CLI
@@ -2006,6 +2008,411 @@ https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html
 The recommended way to install version 1 of the AWS Command Line Interface (AWS
 CLI) on macOS is to use the bundled installer.  The bundled installer includes
 all dependencies and you can use it offline.
+
+*** Configuring the CLI
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
+
+This section explains how to configure the settings that the AWS Command Line
+Interface (AWS CLI) uses to interact with AWS.  These include:
+- your security credentials,
+- the default output format, and
+- the default AWS Region.
+
+
+AWS requires that all incoming requests are cryptographically signed.  The AWS
+CLI does this for you.  The "signature" includes a date/time stamp.  Therefore,
+you must ensure that your computer's date and time are set correctly.  If you
+don't, and the date/time in the signature is too far off of the date/time
+recognized by the AWS service, AWS rejects the request.
+
+**** Quickly Configuring the AWS CLI
+
+For general use, the ~aws configure~ command is the fastest way to set up your
+AWS CLI installation.  The following example shows sample values.  Replace them
+with your own values as described in the following sections.
+
+#+begin_example
+$ aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: us-west-2
+Default output format [None]: json
+#+end_example
+
+When you enter this command, the AWS CLI prompts you for four pieces of
+information:
+
+- access key,
+- secret access key,
+- AWS Region, and
+- output format.
+
+
+The AWS CLI stores this information in a /profile/ (a collection of settings)
+named =default=.  The information in the =default= profile is used any time you
+run an AWS CLI command that doesn't explicitly specify a profile to use.
+
+#+texinfo:@heading Access Key and Secret Access Key
+
+The AWS Access Key ID and AWS Secret Access Key are your AWS credentials.  They
+are associated with an AWS Identity and Access Management (IAM) user or role
+that determines what permissions you have.  Access keys consist of an access
+key ID and secret access key, which are used to sign programmatic requests that
+you make to AWS.
+
+#+texinfo:@heading Region
+
+The Default region name identifies the AWS Region whose servers you want to
+send your requests to by default.  This is typically the Region closest to you,
+but it can be any Region.
+
+#+texinfo:@subheading List of Available Regions
+
+You must specify an AWS Region when using the AWS CLI, either explicitly or by
+setting a default Region.  For a list of the available Regions:
+
+#+cindex:Regions and Endpoints
+- see [[https://docs.aws.amazon.com/general/latest/gr/rande.html][Regions and Endpoints]].
+
+
+#+texinfo:@heading Output Format
+
+The =Default output format= specifies how the results are formatted.  The value
+can be any of the values in the following list.  If you don't specify an output
+format, =json= is used as the default.
+
+- json ::
+- yaml ::
+- text :: The output is formatted as multiple lines of tab-separated string
+          values. This can be useful to pass the output to a text processor,
+          like grep, sed, or awk.
+- table :: The output is formatted as a table using the characters =+|-= to
+           form the cell borders.  It typically presents the information in a
+           "human-friendly" format that is much easier to read than the others,
+           but not as programmatically useful.
+
+**** Creating Multiple Profiles
+
+If you use the command shown in the previous section, the result is a single
+profile named =default=.  You can create additional configurations that you can
+refer to with a name by specifying the @@texinfo:@option{--profile}@@ option
+and assigning a name.
+
+: $ aws configure --profile produser
+
+Then, when you run a command, you can omit the @@texinfo:@option{--profile}
+option and use the credentials and settings stored in the =default= profile.
+
+: $ aws s3 ls
+
+Or you can specify a @@texinfo:@option{--profile profilename}@@ and use the
+credentials and settings stored under that name.
+
+: $ aws s3 ls --profile produser
+
+To update any of your settings, simply run ~aws configure~ again (with or
+without the @@texinfo:@option{--profile} parameter, depending on which profile
+you want to update) and enter new values as appropriate.  The next sections
+contain more information about the files that aws configure creates, additional
+settings, and named profiles.
+
+**** Configuration Settings and Precedence
+
+#+cindex:credential provider
+The AWS CLI uses a set of /credential providers/ to look for AWS credentials.
+Each credential provider looks for credentials in a different place, such as
+the system or user environment variables, local AWS configuration files, or
+explicitly declared on the command line as a parameter.  The AWS CLI looks for
+credentials and configuration settings by invoking the providers in the
+following order, stopping when it finds a set of credentials to use:
+
+1. Command line options --- You can specify @@texinfo:@option{--region}@@,
+   @@texinfo:@option{--output}@@, and @@texinfo:@option{--profile}@@ as
+   parameters on the command line.
+
+2. Environment variables --- You can store values in the environment variables:
+   =AWS_ACCESS_KEY_ID=, =AWS_SECRET_ACCESS_KEY=, and =AWS_SESSION_TOKEN=.  If
+   they are present, they are used.
+
+3. CLI credentials file --- This is one of the files that is updated when you
+   run the command ~aws configure~.  The file is located at ~/.aws/credentials
+   on Linux or macOS.  This file can contain the /credential details/ for the
+   =default= profile and any named profiles.
+
+4. CLI configuration file --- This is another file that is updated when you run
+   the command ~aws configure~.  The file is located at ~/.aws/config on Linux
+   or macOS. This file contains the /configuration settings/ for the =default=
+   profile and any named profiles.
+
+5. Container credentials --- You can associate an IAM role with each of your
+   Amazon Elastic Container Service (Amazon ECS) task definitions.  Temporary
+   credentials for that role are then available to that task's containers.
+
+6. Instance profile credentials --- You can associate an IAM role with each of
+   your Amazon Elastic Compute Cloud (Amazon EC2) instances.  Temporary
+   credentials for that role are then available to code running in the
+   instance.  The credentials are delivered through the Amazon EC2 metadata
+   service.
+
+*** Using an IAM Role in the AWS CLI
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html
+
+#+cindex:role
+An AWS Identity and Access Management (IAM) /role/ is an authorization tool
+that lets an IAM user gain additional (or different) permissions, or get
+permissions to perform actions in a different AWS account.
+
+You can configure the AWS Command Line Interface (AWS CLI) to use an IAM role
+by defining a profile for the role in the ~/.aws/credentials file.
+
+The following example shows a role profile named marketingadmin.  If you run
+commands with @@texinfo:@option{--profile marketingadmin}@@ (or specify it with
+the =AWS_PROFILE= environment variable), the CLI uses the credentials defined
+in the profile =user1= to assume the role with the Amazon Resource Name (ARN)
+=arn:aws:iam::123456789012:role/marketingadminrole=.  You can run any
+operations that are allowed by the permissions assigned to that role.
+
+#+begin_example
+[marketingadmin]
+role_arn = arn:aws:iam::123456789012:role/marketingadminrole
+source_profile = user1
+#+end_example
+
+You can then specify a =source_profile= that points to a separate named profile
+that contains IAM user credentials with permission to use the role.  In the
+previous example, the =marketingadmin= profile uses the credentials in the
+=user1= profile.  When you specify that an AWS CLI command is to use the
+profile =marketingadmin=, the CLI automatically looks up the credentials for
+the linked =user1= profile and uses them to request temporary credentials for
+the specified IAM role.  The CLI uses the =sts:AssumeRole= operation in the
+background to accomplish this.  Those temporary credentials are then used to
+run the requested CLI command.  The specified role must have attached IAM
+permission policies that allow the requested CLI command to run.
+
+To run a CLI command from within an Amazon Elastic Compute Cloud (Amazon EC2)
+instance or an Amazon Elastic Container Service (Amazon ECS) container, you can
+use an IAM role attached to the instance profile or the container.  If you
+specify no profile or set no environment variables, that role is used directly.
+This enables you to avoid storing long-lived access keys on your instances.
+You can also use those instance or container roles only to get credentials for
+another role.  To do this, you use =credential_source= (instead of
+=source_profile=) to specify how to find the credentials.  The
+=credential_source= attribute supports the following values:
+
+#+attr_texinfo: :indic @code
+- Environment :: Retrieves the source credentials from environment variables.
+
+- Ec2InstanceMetadata :: Uses the IAM role attached to the Amazon EC2 instance
+     profile.
+
+- EcsContainer :: Uses the IAM role attached to the Amazon ECS container.
+
+
+The following example shows the same =marketingadminrole= role used by
+referencing an Amazon EC2 instance profile.
+
+#+begin_example
+[profile marketingadmin]
+role_arn = arn:aws:iam::123456789012:role/marketingadminrole
+credential_source = Ec2InstanceMetadata
+#+end_example
+
+When you invoke a role, you have additional options that you can require, such
+as the use of multi-factor authentication and an External ID (used by
+third-party companies to access their clients' resources).  You can also
+specify unique role session names that can be more easily audited in AWS
+CloudTrail logs.
+
+**** Configuring and Using a Role
+
+When you run commands using a profile that specifies an IAM role, the AWS CLI
+uses the source profile's credentials to call AWS Security Token Service (AWS
+STS) and request temporary credentials for the specified role.  The user in the
+source profile must have permission to call =sts:assume-role= for the role in
+the specified profile.  The role must have a trust relationship that allows the
+user in the source profile to use the role.  The process of retrieving and then
+using temporary credentials for a role is often referred to as assuming the
+role.
+
+You can create a role in IAM with the permissions that you want users to assume
+by following the procedure under Creating a Role to Delegate Permissions to an
+IAM User in the AWS Identity and Access Management User Guide.  If the role and
+the source profile's IAM user are in the same account, you can enter your own
+account ID when configuring the role's trust relationship.
+
+After creating the role, modify the trust relationship to allow the IAM user
+(or the users in the AWS account) to assume it.
+
+The following example shows a trust policy that you could attach to a role.
+This policy allows the role to be assumed by any IAM user in the account
+123456789012, if the administrator of that account explicitly grants the
+=sts:assumerole= permission to the user.
+
+#+begin_example
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::123456789012:root"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+#+end_example
+
+The trust policy doesn't actually grant permissions.  The administrator of the
+account must delegate the permission to assume the role to individual users by
+attaching a policy with the appropriate permissions.  The following example
+shows a policy that you can attach to an IAM user that allows the user to
+assume only the marketingadminrole role.  For more information about granting a
+user access to assume a role, see Granting a User Permission to Switch Roles in
+the IAM User Guide.
+
+#+begin_example
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "arn:aws:iam::123456789012:role/marketingadminrole"
+    }
+  ]
+}
+#+end_example
+
+The IAM user doesn't need to have additional permissions to run the CLI
+commands using the role profile.  Instead, the permissions to run the command
+come from those attached to the role.  You attach permission policies to the
+role to specify which actions can be performed against which AWS resources.
+For more information about attaching permissions to a role (which works
+identically to an IAM user), see [[https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_change-permissions.html][Changing Permissions for an IAM User]] in the
+IAM User Guide.
+
+Now that you have the role profile, role permissions, role trust relationship,
+and user permissions correctly configured, you can use the role at the command
+line by invoking the @@texinfo:@option{--profile}@@ option.  For example, the
+following calls the Amazon S3 ~ls~ command using the permissions attached to
+the =marketingadmin= role as defined by the example at the beginning of this
+topic.
+
+: $ aws s3 ls --profile marketingadmin
+
+To use the role for several calls, you can set the =AWS_DEFAULT_PROFILE=
+environment variable for the current session from the command line.  While that
+environment variable is defined, you don't have to specify the
+@@texinfo:@option{--profile}@@ option on each command.
+
+: $ export AWS_PROFILE=marketingadmin
+
+**** Using Multi-Factor Authentication
+
+For additional security, you can require that users provide a one-time key
+generated from a multi-factor authentication (MFA) device, a U2F device, or
+mobile app when they attempt to make a call using the role profile.
+
+First, you can choose to modify the trust relationship on the IAM role to
+require MFA.  This prevents anyone from using the role without first
+authenticating by using MFA.  For an example, see the Condition line in the
+following example.  This policy allows the IAM user named =anika= to assume the
+role the policy is attached to, but only if they authenticate by using MFA.
+
+#+begin_example
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::123456789012:user/anika" },
+      "Action": "sts:AssumeRole",
+      "Condition": { "Bool": { "aws:multifactorAuthPresent": true } }
+    }
+  ]
+}
+#+end_example
+
+Next, add a line to the role profile that specifies the ARN of the user's MFA
+device.  The following sample config file entries show two role profiles that
+both use the access keys for the IAM user anika to request temporary
+credentials for the role cli-role.  The user =anika= has permissions to assume
+the role, granted by the role's trust policy.
+
+#+begin_example
+[profile role-without-mfa]
+region = us-west-2
+role_arn= arn:aws:iam::128716708097:role/cli-role
+source_profile=cli-user
+
+[profile role-with-mfa]
+region = us-west-2
+role_arn= arn:aws:iam::128716708097:role/cli-role
+source_profile = cli-user
+mfa_serial = arn:aws:iam::128716708097:mfa/cli-user
+
+[profile anika]
+region = us-west-2
+output = json
+#+end_example
+
+The =mfa_serial= setting can take an ARN, as shown, or the serial number of a
+hardware MFA token.
+
+The first profile, =role-without-mfa=, doesn't require MFA.  However, because
+the previous example trust policy attached to the role requires MFA, any
+attempt to run a command with this profile fails.
+
+#+begin_example
+$ aws iam list-users --profile role-without-mfa
+
+An error occurred (AccessDenied) when calling the AssumeRole operation: Access denied
+#+end_example
+
+The second profile entry, =role-with-mfa=, identifies an MFA device to use.
+When the user attempts to run a CLI command with this profile, the CLI prompts
+the user to enter the one-time password (OTP) that the MFA device provides.  If
+the MFA authentication succeeds, the command performs the requested operation.
+The OTP is not displayed on the screen.
+
+#+begin_example
+$ aws iam list-users --profile role-with-mfa
+Enter MFA code for arn:aws:iam::123456789012:mfa/cli-user:
+{
+    "Users": [
+        {
+            ...
+#+end_example
+
+*** Using the CLI
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-using.html
+
+**** Getting Help with the AWS CLI
+
+You can get help with any command when using the AWS Command Line Interface
+(AWS CLI).  To do so, simply type ~help~ at the end of a command name.
+
+For example, the following command displays help for the general AWS CLI
+options and the available top-level commands.
+
+: $ aws help
+
+The following command displays the available Amazon Elastic Compute Cloud
+(Amazon EC2) specific commands.
+
+: $ aws ec2 help
+
+The following example displays detailed help for the Amazon EC2
+=DescribeInstances= operation.  The help includes descriptions of its input
+parameters, available filters, and what is included as output.  It also
+includes examples showing how to type common variations of the command.
+
+: $ aws ec2 describe-instances help
 
 * Makefile
 :PROPERTIES:
