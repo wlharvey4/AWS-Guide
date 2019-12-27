@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-27 10:27
-#+macro:version Version 0.0.13
+#+date:2019-12-27 15:25
+#+macro:version Version 0.0.14
 #+texinfo: @insertcopying
 
 
@@ -57,7 +57,9 @@ https://aws.amazon.com/products/
 
 “Fast, highly secure and programmable content delivery network (CDN)”
 
-https://aws.amazon.com/cloudfront/
+[[https://aws.amazon.com/cloudfront/][CloudFront Home]]
+
+[[https://docs.aws.amazon.com/cloudfront/index.html][CloudFront Documentation]]
 
 #+cindex:CloudFront
 - *CloudFront* :: An AWS content delivery service that helps you improve the
@@ -700,8 +702,314 @@ traffic to protect your workloads from malicious actors.
 
 https://docs.aws.amazon.com/index.html
 
-** Guides and API References
-*** Cognito Documentation
+
+** CloudFront Documentation
+
+[[https://docs.aws.amazon.com/cloudfront/index.html][CloudFront Documentation]]
+
+Amazon CloudFront speeds up distribution of your static and dynamic web
+content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
+request your content, CloudFront delivers it through a worldwide network of
+edge locations that provide low latency and high performance.
+
+*** Serving Private Content using CloudFront
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html
+
+Many companies that distribute content over the internet want to restrict
+access to documents, business data, media streams, or content that is intended
+for selected users, for example, users who have paid a fee.  To securely serve
+this private content by using CloudFront, you can do the following:
+
+#+cindex:signed URLs
+#+cindex:signed cookies
+- Require that your users access your private content by using special
+  CloudFront signed URLs or signed cookies.
+
+  #+cindex:CloudFront URLs
+- Require that your users access your content by using CloudFront URLs, not
+  URLs that access content directly on the origin server (for example, Amazon
+  S3 or a private HTTP server).  Requiring CloudFront URLs isn't necessary, but
+  we recommend it to prevent users from bypassing the restrictions that you
+  specify in signed URLs or signed cookies.
+
+**** Overview of Serving Private Content
+
+#+cindex:access, restrict
+You can control user access to your private content in two ways, as shown in
+the following illustration:
+
+1. Restrict access to files in CloudFront edge caches
+
+2. Restrict access to files in your origin by doing one of the following:
+   #+cindex:origin access identity (OAI)
+   #+cindex:OAI (origin access identity)
+   - Set up an origin access identity (OAI) for your Amazon S3 bucket (unless
+     you've configured it as a website endpoint)
+     #+cindex:custom headers
+   - Configure custom headers for a private HTTP server or an Amazon S3 bucket
+     configured as a website endpoint
+
+
+#+texinfo:@heading Restricting Access to Files in CloudFront Edge Caches
+
+#+cindex:signed URLs
+#+cindex:signed cookies
+You can configure CloudFront to require that users access your files using
+either signed URLs or signed cookies.  You then develop your application either
+to create and distribute signed URLs to authenticated users or to send
+Set-Cookie headers that set signed cookies on the viewers for authenticated
+users.  (To give a few users long-term access to a limited number of files, you
+can also create signed URLs manually.)
+
+When you create signed URLs or signed cookies to control access to your files,
+you can specify the following restrictions:
+
+- An ending date and time, after which the URL is no longer valid.
+
+- (Optional) The date and time that the URL becomes valid.
+
+- (Optional) The IP address or range of addresses of the computers that can be
+  used to access your content.
+
+
+#+cindex:key pair
+One part of a signed URL or a signed cookie is hashed and signed using the
+private key from a public/private key pair.  When someone uses a signed URL or
+signed cookie to access a file, CloudFront compares the signed and unsigned
+portions of the URL or cookie.  If they don't match, CloudFront doesn't serve
+the file.
+
+#+cindex:RSA-SHA1
+You must use RSA-SHA1 for signing URLs or cookies.  CloudFront doesn't accept
+other algorithms.
+
+#+texinfo:@heading Restricting Access to Files in Amazon S3 Buckets
+
+#+cindex:restrict access
+#+cindex:access, restrict
+You can optionally secure the content in your Amazon S3 bucket so that users
+can access it through CloudFront but cannot access it directly by using Amazon
+S3 URLs.  This prevents someone from bypassing CloudFront and using the Amazon
+S3 URL to get content that you want to restrict access to.  This step isn't
+required to use signed URLs, but we recommend it.  Be aware that this option is
+only available if you have not set up your Amazon S3 bucket as a website
+endpoint.
+
+To require that users access your content through CloudFront URLs, you do the
+following tasks:
+
+#+cindex:origin access identity
+- Create a special CloudFront user called an *origin access identity*.
+
+- Give the origin access identity permission to read the files in your bucket.
+
+- Remove permission for anyone else to use Amazon S3 URLs to read the files.
+
+
+For more information:
+
+- see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html][Restricting Access to Amazon S3 Content by Using an Origin Access Identity]]
+
+
+#+texinfo:@heading Restricting Access to Files on Custom Origins
+
+#+cindex:custom headers
+#+cindex:restrict access, custom headers
+#+cindex:access, restrict using custom headers
+If you use a custom origin, you can optionally set up custom headers to
+restrict access.  For CloudFront to get your files from a custom origin, the
+files must be publicly accessible.  But by using custom headers, you can
+restrict access to your content so that users can access it only through
+CloudFront, not directly.  This step isn't required to use signed URLs, but we
+recommend it.
+
+To require that users access content through CloudFront, change the following
+settings in your CloudFront distributions:
+
+- Origin Custom Headers :: 
+
+     Configure CloudFront to forward custom headers to your origin.
+
+     See [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/forward-custom-headers.html#forward-custom-headers-configure][Configuring CloudFront to Forward Custom Headers to Your Origin]].
+
+- Viewer Protocol Policy ::
+
+     Configure your distribution to require viewers to use HTTPS to access
+     CloudFront.
+
+     See [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesViewerProtocolPolicy][Viewer Protocol Policy]].
+
+- Origin Protocol Policy ::
+
+     Configure your distribution to require CloudFront to use the same protocol
+     as viewers to forward requests to the origin.
+
+     See [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginProtocolPolicy][Origin Protocol Policy]]
+
+
+After you've made these changes, update your application on your custom origin
+to only accept requests that include these headers.
+
+The combination of *Viewer Protocol Policy* and *Origin Protocol Policy* ensure
+that your custom headers are encrypted between the viewer and your origin.
+However, we recommend that you periodically do the following to rotate the
+custom headers that CloudFront forwards to your origin:.
+
+1. Update your CloudFront distribution to begin forwarding a new header to your
+   custom origin.
+
+2. Update your application to accept the new header as confirmation that the
+   request is coming from CloudFront.
+
+3. When viewer requests no longer include the header that you're replacing,
+   update your application to no longer accept the old header as confirmation
+   that the request is coming from CloudFront.
+
+**** Serving Private Content
+
+To configure CloudFront to serve private content, do the following tasks:
+
+1. (Optional but recommended) Require your users to access your content only
+   through CloudFront.  The method that you use depends on whether you're using
+   Amazon S3 or custom origins:
+
+   - Amazon S3 ::
+
+     See [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html][Restricting Access to Amazon S3 Content by Using an Origin Access Identity]].
+
+   - Custom origin ::
+
+		      See [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-overview.html#forward-custom-headers-restrict-access][Restricting Access to Files on Custom Origins]].
+
+		      Custom origins include Amazon EC2, Amazon S3 buckets
+                      configured as website endpoints, Elastic Load Balancing,
+                      and your own HTTP web servers.
+
+2. Specify the AWS accounts that you want to use to create signed URLs or
+   signed cookies.
+
+   see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html][Specifying the AWS Accounts That Can Create Signed URLs and Signed Cookies (Trusted Signers)]].
+
+3. Write your application to respond to requests from authorized users either
+   with signed URLs or with Set-Cookie headers that set signed cookies. Follow
+   the steps in one of the following topics:
+
+   - [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-urls.html][Using Signed URLs]]
+
+   - [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-cookies.html][Using Signed Cookies]]
+
+   - If you're not sure which method to use, see[[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-choosing-signed-urls-cookies.html][Choosing Between Signed URLs and Signed Cookies]].
+
+**** Specifying Your Trusted Signers
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html
+
+#+cindex:trusted signer
+To create signed URLs or signed cookies, you need at least one AWS account that
+has an active CloudFront key pair.  This account is known as a trusted signer.
+The trusted signer has two purposes:
+
+- As soon as you add the AWS account ID for your trusted signer to your
+  distribution, CloudFront starts to require that users use signed URLs or
+  signed cookies to access your files.
+  #+cindex:private key
+- When you create signed URLs or signed cookies, you use the private key from
+  the trusted signer's key pair to sign a portion of the URL or the cookie.
+  When someone requests a restricted file, CloudFront compares the signed
+  portion of the URL or cookie with the unsigned portion to verify that the URL
+  or cookie hasn't been tampered with.  CloudFront also verifies that the URL
+  or cookie is valid, meaning, for example, that the expiration date and time
+  hasn't passed.
+
+
+When you specify trusted signers, you also indirectly specify the files that
+require signed URLs or signed cookies:
+
+- Web distributions ::
+
+     You add trusted signers to cache behaviors.  If your distribution has only
+     one cache behavior, users must use signed URLs or signed cookies to access
+     any file associated with the distribution.  If you create multiple cache
+     behaviors and add trusted signers to some cache behaviors and not to
+     others, you can require that users use signed URLs or signed cookies to
+     access some files and not others.
+
+- RTMP distributions (signed URLs only) ::
+
+     You add trusted signers to a distribution.  After you add trusted signers
+     to an RTMP distribution, users must use signed URLs to access any file
+     associated with the distribution.
+
+
+*Note*: To specify trusted signers for a distribution, you must use the
+CloudFront console or CloudFront API version 2009-09-09 or later.
+
+To specify the accounts that are allowed to create signed URLs or signed
+cookies and to add the accounts to your CloudFront distribution, do the
+following tasks:
+
+1. Decide which AWS accounts you want to use as trusted signers. Most
+   CloudFront customers use the account that they used to create the
+   distribution.
+
+2. For each of the accounts that you selected in Step 1, create a CloudFront
+   key pair.
+
+   See [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html#private-content-creating-cloudfront-key-pairs][Creating CloudFront Key Pairs for Your Trusted Signers]].
+
+3. If you're using .NET or Java to create signed URLs or signed cookies,
+   reformat the CloudFront private key.
+
+   see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html#private-content-reformatting-private-key][Reformatting the CloudFront Private Key (.NET and Java Only)]].
+
+4. In the distribution for which you're creating signed URLs or signed cookies,
+   specify the AWS account IDs of your trusted signers.
+
+**** Choosing Between Signed URLs and Signed Cookies
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-choosing-signed-urls-cookies.html
+
+CloudFront signed URLs and signed cookies provide the same basic functionality:
+they allow you to control who can access your content.  If you want to serve
+private content through CloudFront and you're trying to decide whether to use
+signed URLs or signed cookies, consider the following.
+
+#+texinfo:@heading Use signed URLs in the following cases:
+
+- You want to use an RTMP distribution.  Signed cookies aren't supported for
+  RTMP distributions.
+
+- You want to restrict access to individual files, for example, an installation
+  download for your application.
+
+- Your users are using a client (for example, a custom HTTP client) that
+  doesn't support cookies.
+
+
+#+texinfo:@heading Use signed cookies in the following cases:
+
+- You want to provide access to multiple restricted files, for example, all of
+  the files for a video in HLS format or all of the files in the subscribers'
+  area of website.
+
+- You don't want to change your current URLs.
+
+
+If you are not currently using signed URLs and if your URLs contain any of the
+following query string parameters, you cannot use either signed URLs or signed
+cookies:
+
+- Expires
+- Policy
+- Signature
+- Key-Pair-Id
+
+
+CloudFront assumes that URLs that contain any of those query string parameters
+are signed URLs and therefore won't look at signed cookies.
+
+** Cognito Documentation
 
 “Amazon Cognito is a service that you can use to create unique identities for
 your users, authenticate these identities with identity providers, and save
@@ -710,7 +1018,7 @@ mobile user data in the AWS Cloud.”
 #+cindex:Cognito documentation
 [[https://docs.aws.amazon.com/cognito/index.html]]
 
-**** Cognito API Reference
+*** Cognito API Reference
 
 “Describes all of the REST API actions for user pools in detail.”
 
@@ -719,15 +1027,7 @@ https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/Welc
 #+cindex:Cognito API reference
 This API reference provides information about /user pools/ in Amazon Cognito
 User Pools.
-*** CloudFront Documentation
-
-[[https://docs.aws.amazon.com/cloudfront/index.html][CloudFront Documentation]]
-
-Amazon CloudFront speeds up distribution of your static and dynamic web
-content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
-request your content, CloudFront delivers it through a worldwide network of
-edge locations that provide low latency and high performance.
-*** Command Line Interface Command Reference
+** Command Line Interface Command Reference
 
 #+cindex:Command Line Interface
 The AWS Command Line Interface is a unified tool to manage your AWS services.
@@ -749,7 +1049,7 @@ https://docs.aws.amazon.com/cli/latest/reference/
 The synopsis for each command shows its parameters and their usage. Optional
 parameters are shown in square brackets.
 
-**** s3
+*** s3
 <<s3 API>>
 
 #+cindex:s3 API
@@ -758,7 +1058,7 @@ S3 commands provided.
 
 https://docs.aws.amazon.com/cli/latest/reference/s3/index.html
 
-***** Path Argument Type
+**** Path Argument Type
 
 #+cindex:path argument type
 #+cindex:@code{LocalPath}
@@ -774,7 +1074,7 @@ are two types of path arguments: =LocalPath= and =S3Uri=.
            must be written in the form:
 	   : s3://mybucket/mykey
 
-***** Order of Path Arguments
+**** Order of Path Arguments
 
 Every command takes one or two positional path arguments.
 
@@ -787,7 +1087,7 @@ Every command takes one or two positional path arguments.
   is the local file/directory or S3 object/prefix/bucket that is being operated
   on.
 
-***** Single Local File and S3 Object Operations
+**** Single Local File and S3 Object Operations
 
 Some commands perform operations only on single files and S3 objects.  The
 following commands are single file/object operations if no
@@ -813,7 +1113,7 @@ file or object.  Otherwise, if there is no slash at the end, the file or object
 will be saved under the name provided.  See examples in ~cp~ and ~mv~ to
 illustrate this description.
 
-***** Directory and S3 Prefix Operations
+**** Directory and S3 Prefix Operations
 
 Some commands only perform operations on the contents of a local directory or
 S3 prefix/bucket.  Adding or omitting a forward slash or back slash to the end
@@ -826,7 +1126,7 @@ prefix/bucket operation:
 - rb
 - ls
 
-***** Use of Exclude and Include Filters
+**** Use of Exclude and Include Filters
 
 Currently, there is no support for the use of UNIX style wildcards in a
 command's path arguments.  However, most commands have
@@ -864,7 +1164,7 @@ been excluded from an @@texinfo:@option{--exclude}@@ filter.  If you only want
 to upload files with a particular extension, you need to first exclude all
 files, then re-include the files with the particular extension.
 
-***** Available Commands
+**** Available Commands
 
 #+texinfo:@heading Available Commands
 
@@ -894,22 +1194,18 @@ files, then re-include the files with the particular extension.
 
 	     : aws s3 website s3://my-bucket/ --index-document index.html --error-document error.html
 
-**** s3 API
+*** s3 API
 <<s3api>>
 
 https://docs.aws.amazon.com/cli/latest/reference/s3api/index.html
 
-**** s3control
+*** s3control
 
 AWS S3 Control provides access to Amazon S3 control plane operations.
 
 https://docs.aws.amazon.com/cli/latest/reference/s3control/index.html
 
-** Tutorials and Projects
-
-#+texinfo:@heading Learn with Introductory Tutorials & Projects
-
-- [[https://aws.amazon.com/getting-started/][Tutorials]]
+** General Resources
 
 ** SDKs and Toolkits
 
@@ -951,7 +1247,11 @@ https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.htm
 *** iOS
 https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.html
 
-** General Resources
+** Tutorials and Projects
+
+#+texinfo:@heading Learn with Introductory Tutorials & Projects
+
+- [[https://aws.amazon.com/getting-started/][Tutorials]]
 
 * AWS Developer Center
 
@@ -2414,7 +2714,165 @@ includes examples showing how to type common variations of the command.
 
 : $ aws ec2 describe-instances help
 
-* Makefile
+** CloudFront---Getting Started with a Simple CloudFront Distribution
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.SimpleDistribution.html
+
+#+cindex:CloudFront getting started
+#+cindex:CloudFront, simple distribution
+Get started with the basic steps to deliver your content with CloudFront by
+creating a simple CloudFront distribution.
+
+The procedures in this section show you how to use CloudFront to set up a basic
+configuration that does the following:
+
+- Stores the original versions of your objects in one Amazon Simple Storage
+  Service (Amazon S3) bucket
+
+- Distributes content such as text or graphics
+
+- Makes your objects accessible to everyone
+
+- Uses the CloudFront domain name in URLs for your objects (for example,
+  =http://d111111abcdef8.cloudfront.net/image.jpg=)
+
+- Keeps your objects in CloudFront edge locations for the default duration of
+  24 hours (the minimum duration is 0 seconds)
+
+
+Most of these options are customizable.  For example, you can store your
+content on your own web server instead of using an S3 bucket, and you can limit
+who has access to the content by using signed URLs or cookies.  For information
+about how to customize your CloudFront distribution options,
+
+- see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-creating.html][Steps for Creating a Distribution]]
+
+
+You have to complete only a few basic steps to start delivering your content
+with CloudFront.
+
+- The first step is signing up.
+
+- After that, you create a CloudFront distribution, and
+
+- then use the CloudFront domain name in URLs in your webpages or applications
+  to reference the content.
+
+*** Step 1---Upload Your Content to Amazon S3 and Grant Object Permissions
+
+#+cindex:S3 bucket
+An Amazon S3 bucket is a container that can contain files (objects) or folders.
+CloudFront can distribute almost any type of file for you using an Amazon S3
+bucket as the source.  For example, CloudFront can distribute text, images, and
+videos.  You can create multiple buckets, and there is no limit to the amount
+of data that you can store on Amazon S3.
+
+#+cindex:private
+#+cindex:permissions, grant
+By default, your Amazon S3 bucket and all the files in it are private---only
+the AWS account that created the bucket has read/write permission to the files.
+If you want to allow anyone to access the files in your Amazon S3 bucket using
+CloudFront URLs, you must grant public read permissions to the objects.  You
+must explicitly grant permissions to each object in an Amazon S3 bucket.
+
+#+cindex:private content feature
+If you want to restrict who can download your content, you can use the
+CloudFront private content feature.  For more information about distributing
+private content:
+
+- see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html][Serving Private Content with Signed URLs and Signed Cookies]].
+
+
+**** Upload your content to Amazon S3 and grant read permissions to everyone
+
+1. open the Amazon S3 console
+
+2. choose *Create bucket*
+
+3. on the Name and region page, do the following:
+
+   - enter a bucket name
+
+   - choose an AWS Region
+
+4. choose *Next*
+
+5. on the *Configure options* page, choose options for versioning, tagging, and
+   other features.
+
+6. choose *Next*
+
+7. on the *Set permissions* page, clear the following check box:
+
+   - *Block all public access*
+
+     #+cindex:private content feature
+     #+cindex:public read access, allow
+     You must allow public read access to the bucket and files so that
+     CloudFront URLs can serve content from the bucket.  However, you can
+     restrict access to specific content by using the CloudFront private
+     content feature.
+
+     - see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html][Serving Private Content with Signed URLs and Signed Cookies]]
+
+8. choose *Next*, and then choose *Create bucket*.
+
+9. In the *Buckets* pane, choose your bucket, and then choose *Upload*.
+
+10. choose *Add files*, and then choose the files that you want to upload.
+
+11. choose *Next*
+
+12. On the *Set permissions* page, grant public read privileges for each file
+    that you upload to your Amazon S3 bucket.
+
+    - choose *Next* to set permissions
+
+    - for *Manage public permissions*, choose *Grant public read access to this
+      object(s)*
+
+    - choose *Next*
+
+13. Set any properties that you want for the object, such as encryption or
+    tagging, and then choose *Next*
+
+14. choose *Upload*
+
+
+Use your Amazon S3 URL to verify that your content is publicly accessible.
+
+*** Step 2---Create a CloudFront Distribution
+
+To create a CloudFront distribution:
+
+1. Open the [[https://console.aws.amazon.com/cloudfront/][CloudFront console]]
+
+2. Choose *Create Distribution*.
+
+3. On the *Select a delivery method for your content* page, in the *Web*
+   section, choose *Get Started*.
+
+4. On the *Create Distribution* page, for *Origin Domain Name*, choose the
+   Amazon S3 bucket that you created earlier.  For *Origin Path*, *Origin ID*,
+   *Restrict Bucket Access*, and *Origin Custom Headers*, accept the default
+   values.
+
+5. Under *Default Cache Behavior Settings*, accept the default values.
+
+   For more information about cache behavior options,
+
+   - Cache [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesCacheBehavior][Behavior Settings]].
+
+6. Under *Distribution Settings*, choose the values for your distribution.
+
+7. Choose *Create Distribution*.
+
+8. After CloudFront creates your distribution, the value of the *Status* column
+   for your distribution changes from *In Progress* to *Deployed*.  This
+   typically takes between 20 and 40 minutes.  The domain name that CloudFront
+   assigns to your distribution appears in the list of distributions.
+
+* makefile
 :PROPERTIES:
 :appendix: t
 :END:
