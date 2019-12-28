@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-27 18:44
-#+macro:version Version 0.0.15
+#+date:2019-12-28 10:52
+#+macro:version Version 0.0.16
 #+texinfo: @insertcopying
 
 
@@ -891,21 +891,23 @@ specify the following values.
     - The files must be publicly readable unless you secure your content in
       Amazon S3 by using a CloudFront origin access identity.
 
-  - Origin Path
+  - Origin Path ::
     #+cindex:origin path
-    If you want CloudFront to request your content from a directory in your AWS
-    resource or your custom origin, enter the directory path, beginning with a
-    slash (=/=).  CloudFront appends the directory path to the value of Origin
-    Domain Name, for example, ~cf-origin.example.com/production/images~.  Do
-    not add a slash (=/=) at the end of the path.
+      If you want CloudFront to request your content from a directory in your
+                   AWS resource or your custom origin, enter the directory
+                   path, beginning with a slash (=/=).  CloudFront appends the
+                   directory path to the value of Origin Domain Name, for
+                   example, ~cf-origin.example.com/production/images~.  Do not
+                   add a slash (=/=) at the end of the path.
 
-  - Origin ID
+  - Origin ID ::
     #+cindex:origin id
-    A string that uniquely distinguishes this origin or origin group in this
-    distribution.  If you create cache behaviors in addition to the default
-    cache behavior, you use the ID that you specify here to identify the origin
-    or origin group that you want CloudFront to route a request to when the
-    request matches the path pattern for that cache behavior.
+      A string that uniquely distinguishes this origin or origin group in this
+                 distribution.  If you create cache behaviors in addition to
+                 the default cache behavior, you use the ID that you specify
+                 here to identify the origin or origin group that you want
+                 CloudFront to route a request to when the request matches the
+                 path pattern for that cache behavior.
 
 
 The following values are for Amazon S3 origins only (except if configured as
@@ -1479,8 +1481,8 @@ https://docs.aws.amazon.com/cli/latest/reference/
 : aws [options] <command> <subcommand> [parameters]
 
 #+cindex:help, aws command
-#+attr_texinfo: :indic @code 
-- aws command help :: for information on a specific command
+#+attr_texinfo: :indic @code
+- aws <command> help :: for information on a specific command
 
 - aws help topics :: to view a list of available help topics
 
@@ -1727,47 +1729,41 @@ https://aws.amazon.com/sdk-for-go/
 *** AWS SDK for C++
 https://aws.amazon.com/sdk-for-cpp/
 
-** Login with Amazon
+** CloudFront Developer Guide
 
-“Securely connect with millions of Amazon customers and personalize their
-experience”
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html
 
-https://developer.amazon.com/apps-and-games/login-with-amazon
+*** What CloudFront Is
 
-Let customers log in to your site or app in just a few clicks using their
-Amazon accounts.  Leverage a brand customers trust while getting data like
-name, email address, and zip code to build a more personalized experience.
+#+cindex:edge location
+Amazon CloudFront is a web service that speeds up distribution of your static
+and dynamic web content, such as .html, .css, .js, and image files, to your
+users.  CloudFront delivers your content through a worldwide network of data
+centers called /edge locations/.  When a user requests content that you're
+serving with CloudFront, the user is routed to the edge location that provides
+the lowest latency (time delay), so that content is delivered with the best
+possible performance.
 
-[[https://developer.amazon.com/docs/login-with-amazon/web-docs.html][Getting Started]]
+#+cindex:origin
+- If the content is already in the edge location with the lowest latency,
+  CloudFront delivers it immediately.
 
-#+texinfo:@heading Benefits
+- If the content is not in that edge location, CloudFront retrieves it from an
+  /origin/ that you've defined---such as an Amazon S3 bucket, a MediaPackage
+  channel, or an HTTP server (for example, a web server) that you have
+  identified as the source for the definitive version of your content.
 
-#+texinfo:@subheading Reduce registration friction
-Customers prefer to register and log in with credentials they already know. In
-a head-to-head test, Woot found that customers picked Login with Amazon twice
-as many times as any other identity provider.
 
-#+texinfo:@subheading Leverage security and scalability
-Keep your customer information more secure by leveraging the same user
-authentication system used by Amazon.com. Login with Amazon is based on OAuth
-2.0, which has been broadly adopted for user-authorized exchanges across sites.
-
-#+texinfo:@subheading Reduce infrastructure and operational cost
-By taking advantage of Login with Amazon, you can spend less time building a
-user management system and more time building your product. Login with Amazon
-also allows for faster development cycle by using the OAuth 2.0 protocol.
-
-#+texinfo:@subheading Make Amazon's customers your customers
-When you add Amazon Pay, millions of Amazon buyers can log in and pay on your
-website or mobile devices with the information already stored in their Amazon
-account.
-
-#+texinfo:@heading Blog Posts
-
-#+texinfo:@subheading Query strings and URL fragments in Login with Amazon responses
-When using an implicit grant, the Login with Amazon SDK for JavaScript can
-return the access token as a URL fragment, rather than a query string.  Why
-does this happen? How is the access token utilized? [[https://developer.amazon.com/blogs/post/Tx2XUFUBNT8PRXE/query-strings-and-url-fragments-in-login-with-amazon-responses][Go]]
+#+cindex:latency
+#+cindex:edge location
+#+cindex:edge server
+CloudFront speeds up the distribution of your content by routing each user
+request through the AWS backbone network to the edge location that can best
+serve your content.  Typically, this is a CloudFront edge server that provides
+the fastest delivery to the viewer.  Using the AWS network dramatically reduces
+the number of networks that your users' requests must pass through, which
+improves performance.  Users get lower /latency/---the time it takes to load
+the first byte of the file—and higher data transfer rates.
 
 ** Cognito Developer Guide
 
@@ -2403,41 +2399,47 @@ scope=openid+profile+aws.cognito.signin.user.admin
 
 **** Sync API
 
-** CloudFront Developer Guide
+** Login with Amazon
 
-https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html
+“Securely connect with millions of Amazon customers and personalize their
+experience”
 
-*** What CloudFront Is
+https://developer.amazon.com/apps-and-games/login-with-amazon
 
-#+cindex:edge location
-Amazon CloudFront is a web service that speeds up distribution of your static
-and dynamic web content, such as .html, .css, .js, and image files, to your
-users.  CloudFront delivers your content through a worldwide network of data
-centers called /edge locations/.  When a user requests content that you're
-serving with CloudFront, the user is routed to the edge location that provides
-the lowest latency (time delay), so that content is delivered with the best
-possible performance.
+Let customers log in to your site or app in just a few clicks using their
+Amazon accounts.  Leverage a brand customers trust while getting data like
+name, email address, and zip code to build a more personalized experience.
 
-#+cindex:origin
-- If the content is already in the edge location with the lowest latency,
-  CloudFront delivers it immediately.
+[[https://developer.amazon.com/docs/login-with-amazon/web-docs.html][Getting Started]]
 
-- If the content is not in that edge location, CloudFront retrieves it from an
-  /origin/ that you've defined---such as an Amazon S3 bucket, a MediaPackage
-  channel, or an HTTP server (for example, a web server) that you have
-  identified as the source for the definitive version of your content.
+#+texinfo:@heading Benefits
 
+#+texinfo:@subheading Reduce registration friction
+Customers prefer to register and log in with credentials they already know. In
+a head-to-head test, Woot found that customers picked Login with Amazon twice
+as many times as any other identity provider.
 
-#+cindex:latency
-#+cindex:edge location
-#+cindex:edge server
-CloudFront speeds up the distribution of your content by routing each user
-request through the AWS backbone network to the edge location that can best
-serve your content.  Typically, this is a CloudFront edge server that provides
-the fastest delivery to the viewer.  Using the AWS network dramatically reduces
-the number of networks that your users' requests must pass through, which
-improves performance.  Users get lower /latency/---the time it takes to load
-the first byte of the file—and higher data transfer rates.
+#+texinfo:@subheading Leverage security and scalability
+Keep your customer information more secure by leveraging the same user
+authentication system used by Amazon.com. Login with Amazon is based on OAuth
+2.0, which has been broadly adopted for user-authorized exchanges across sites.
+
+#+texinfo:@subheading Reduce infrastructure and operational cost
+By taking advantage of Login with Amazon, you can spend less time building a
+user management system and more time building your product. Login with Amazon
+also allows for faster development cycle by using the OAuth 2.0 protocol.
+
+#+texinfo:@subheading Make Amazon's customers your customers
+When you add Amazon Pay, millions of Amazon buyers can log in and pay on your
+website or mobile devices with the information already stored in their Amazon
+account.
+
+#+texinfo:@heading Blog Posts
+
+#+texinfo:@subheading Query strings and URL fragments in Login with Amazon responses
+When using an implicit grant, the Login with Amazon SDK for JavaScript can
+return the access token as a URL fragment, rather than a query string.  Why
+does this happen? How is the access token utilized? [[https://developer.amazon.com/blogs/post/Tx2XUFUBNT8PRXE/query-strings-and-url-fragments-in-login-with-amazon-responses][Go]]
 
 * Getting Started Resource Center
 
