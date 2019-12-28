@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-27 15:25
-#+macro:version Version 0.0.14
+#+date:2019-12-27 18:44
+#+macro:version Version 0.0.15
 #+texinfo: @insertcopying
 
 
@@ -711,6 +711,445 @@ Amazon CloudFront speeds up distribution of your static and dynamic web
 content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
 request your content, CloudFront delivers it through a worldwide network of
 edge locations that provide low latency and high performance.
+
+*** What CloudFront Is
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html
+
+*** How You Set Up CloudFront to Deliver Content
+
+#+cindex:CloudFront distribution, create
+#+cindex:CloudFront, configure
+#+cindex:edge server
+You create a CloudFront distribution to tell CloudFront where you want content
+to be delivered from, and the details about how to track and manage content
+delivery.  Then CloudFront uses computers---edge servers---that are close to
+your viewers to deliver that content quickly when someone wants to see it or
+use it.
+
+#+texinfo:@heading How You Configure CloudFront to Deliver Your Content
+
+#+cindex:origin server
+#+cindex:custom origin
+#+cindex:edge location
+1. You specify /origin servers/, like an Amazon S3 bucket or your own HTTP
+   server, from which CloudFront gets your files which will then be distributed
+   from CloudFront edge locations all over the world.  An /origin server/
+   stores the original, definitive version of your objects.  If you're serving
+   content over HTTP, your origin server is either an Amazon S3 bucket or an
+   HTTP server, such as a web server.  Your HTTP server can run on an Amazon
+   Elastic Compute Cloud (Amazon EC2) instance or on a server that you manage;
+   these servers are also known as /custom origins/.  If you use the Adobe
+   Media Server RTMP protocol to distribute media files on demand, your origin
+   server is always an Amazon S3 bucket.
+
+   #+cindex:objects
+2. You upload your files to your origin servers.  Your files, also known as
+   objects, typically include web pages, images, and media files, but can be
+   anything that can be served over HTTP or a supported version of Adobe RTMP,
+   the protocol used by Adobe Flash Media Server.
+
+   If you're using an Amazon S3 bucket as an origin server, you can make the
+   objects in your bucket publicly readable, so that anyone who knows the
+   CloudFront URLs for your objects can access them.  You also have the option
+   of keeping objects private and controlling who accesses them.
+
+3. You create a CloudFront /distribution/, which tells CloudFront which origin
+   servers to get your files from when users request the files through your web
+   site or application.  At the same time, you specify details such as whether
+   you want CloudFront to log all requests and whether you want the
+   distribution to be enabled as soon as it's created.
+   #+cindex:domain name
+   #+cindex:alternate domain name
+4. CloudFront assigns a /domain name/ to your new distribution that you can see
+   in the CloudFront console, or that is returned in the response to a
+   programmatic request, for example, an API request.  If you like, you can add
+   an /alternate domain name/ to use instead.
+   #+cindex:points of presence (POPs)
+   #+cindex:POPs (points of presence)
+5. CloudFront sends your distribution's configuration (but not your content) to
+   all of its edge locations or points of presence (POPs)---collections of
+   servers in geographically-dispersed data centers where CloudFront caches
+   copies of your files.
+
+
+As you develop your website or application, you use the domain name that
+CloudFront provides for your URLs.  For example, if CloudFront returns
+~d111111abcdef8.cloudfront.net~ as the domain name for your distribution, the
+URL for ~logo.jpg~ in your Amazon S3 bucket (or in the root directory on an
+HTTP server) is =http://d111111abcdef8.cloudfront.net/logo.jpg=.
+
+Or you can set up CloudFront to use your own domain name with your
+distribution.  In that case, the URL might be
+=http://www.example.com/logo.jpg=.
+
+Optionally, you can configure your origin server to add headers to the files,
+to indicate how long you want the files to stay in the cache in CloudFront edge
+locations.  By default, each file stays in an edge location for 24 hours before
+it expires.  The minimum expiration time is 0 seconds; there isn't a maximum
+expiration time limit.
+
+*** Accessing CloudFront
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/introduction-accessing-cloudfront.html
+
+You can access Amazon CloudFront in the following ways:
+
+- AWS Management Console ::
+
+     The procedures throughout this guide explain how to use the AWS Management
+     Console to perform tasks.
+
+- AWS SDKs ::
+
+	    If you're using a programming language that AWS provides an SDK
+              for, you can use an SDK to access CloudFront. SDKs simplify
+              authentication, integrate easily with your development
+              environment, and provide access to CloudFront commands.
+
+- CloudFront API ::
+
+		     If you're using a programming language that an SDK isn't
+                    available for, see the [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/][Amazon CloudFront API Reference]] for
+                    information about API actions and about how to make API
+                    requests.
+
+- AWS Command Line Interface ::
+
+     For more information, see [[https://docs.aws.amazon.com/cli/latest/userguide/][Getting Set Up with the AWS Command Line
+     Interface]] in the AWS Command Line Interface User Guide.
+
+*** Working with Distributions
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-working-with.html
+
+#+cindex:distribution, CloudFront
+#+cindex:CloudFront distribution
+You create a CloudFront /distribution/ to tell CloudFront where you want
+content to be delivered from, and the details about how to track and manage
+content delivery.  The following topics explain some basics about CloudFront
+distributions and provide detailed information about the settings you can
+choose to configure your distributions to meet your business needs.
+
+**** Creating Updating and Deleting Distributions
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-create-delete.html
+
+You can create, update, or delete a distribution by completing the steps in the
+following topics.
+
+***** Steps for Creating a Distribution---Overview
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-creating.html
+
+***** Creating a Distribution
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-creating-console.html
+
+This topic is about working with distributions by using the console.
+
+If you want to create or update a distribution by using the CloudFront API, see
+[[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreateDistribution.html][Create Distribution]] or [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_UpdateDistribution.html][Update Distribution]] in the /Amazon CloudFront API
+Reference/.  When you update your distribution, be aware that a number of
+additional fields are required that are not required to create a distribution.
+To help make sure that all of the required fields are included when you update
+your distribution by using the CloudFront API, follow the steps described in
+the /Amazon CloudFront API Reference/.
+
+***** Values That You Specify When You Create or Update a Distribution
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html
+
+When you create a new distribution or update an existing distribution, you
+specify the following values.
+
+- Delivery Method
+
+  - =Web= or =RTMP=
+  - Unless you're using Adobe Flash Media Server with RTMP, this value is
+    always =Web=.
+
+- Origin Settings
+  #+cindex:origin settings
+  When you create or update a distribution, you provide information about one
+  or more locations---known as origins---where you store the original versions
+  of your web content.  CloudFront gets your web content from your origins and
+  serves it to viewers via a world-wide network of edge servers.  Each origin
+  is either an Amazon S3 bucket or an HTTP server, for example, a web server.
+  #+cindex:origin domain name
+  - Origin Domain Name :: The DNS domain name of the Amazon S3 bucket or HTTP
+       server from which you want CloudFront to get objects for this origin.
+       Choose the domain name in the Origin Domain Name field, or type the
+       name.  The domain name is not case sensitive.
+
+       If your origin is an Amazon S3 bucket, note the following:
+
+    - If the bucket is configured as a website, enter the Amazon S3 static
+      website hosting endpoint for your bucket; don't select the bucket name
+      from the list in the Origin Domain Name field.
+
+    - The files must be publicly readable unless you secure your content in
+      Amazon S3 by using a CloudFront origin access identity.
+
+  - Origin Path
+    #+cindex:origin path
+    If you want CloudFront to request your content from a directory in your AWS
+    resource or your custom origin, enter the directory path, beginning with a
+    slash (=/=).  CloudFront appends the directory path to the value of Origin
+    Domain Name, for example, ~cf-origin.example.com/production/images~.  Do
+    not add a slash (=/=) at the end of the path.
+
+  - Origin ID
+    #+cindex:origin id
+    A string that uniquely distinguishes this origin or origin group in this
+    distribution.  If you create cache behaviors in addition to the default
+    cache behavior, you use the ID that you specify here to identify the origin
+    or origin group that you want CloudFront to route a request to when the
+    request matches the path pattern for that cache behavior.
+
+
+The following values are for Amazon S3 origins only (except if configured as
+website endpoints):
+
+- Restrict Bucket Access
+- Origin Access Identity
+- Comment for New Identity
+- Your Identities
+- Grant Read Permissions on Bucket
+
+
+The following values are for custom origins only, such as Amazon EC2, Elastic
+Load Balancing, Amazon S3 buckets configured as website endpoints, or your own
+web server:
+
+- Minimum Origin SSL Protocol :: we recommend that you choose the latest TLS
+     protocol that your origin supports.
+- Origin Protocol Policy :: The protocol policy that you want CloudFront to use
+     when fetching objects from your origin server.
+
+  - HTTP Only :: If your origin is an Amazon S3 bucket configured as a
+                 website endpoint, you must choose this option. Amazon S3
+                 doesn't support HTTPS connections for website endpoints.
+
+  - HTTPS Only :: CloudFront uses only HTTPS to access the origin.
+
+  - Match Viewer :: CloudFront communicates with your origin using HTTP or
+                    HTTPS, depending on the protocol of the viewer request.
+	
+- Origin Response Timeout ::
+- Origin Keep-alive Timeout ::
+- HTTP Port ::
+- HTTPS Port ::
+
+
+The following value is for all types of origins:
+
+- Origin Custom Headers
+  #+cindex:origin custom headers
+  #+cindex:custom headers
+  If you want CloudFront to include custom headers whenever it forwards a
+  request to your origin, specify the following values:
+
+  - Header Name
+  - Value
+
+- Cache Behavior Settings
+  #+cindex:cache behavior settings
+  A cache behavior lets you configure a variety of CloudFront functionality for
+  a given URL path pattern for files on your website.
+
+  When you create a new distribution, you specify settings for the default
+  cache behavior, which automatically forwards all requests to the origin that
+  you specify when you create the distribution.  After you create a
+  distribution, you can create additional cache behaviors that define how
+  CloudFront responds when it receives a request for objects that match a path
+  pattern.  If you create additional cache behaviors, the default cache
+  behavior is always the last to be processed.  Other cache behaviors are
+  processed in the order in which they're listed in the CloudFront console or,
+  if you're using the CloudFront API, the order in which they're listed in the
+  DistributionConfig element for the distribution.
+  #+cindex:path pattern
+  - Path Pattern
+  - Origin (Existing Distributions Only)
+  - Viewer Protocol Policy
+  - Allowed HTTP Methods
+  - Field Level Encryption
+  - Cached HTTP Methods
+  - Cache Based on Selected Request Headers
+  - Whitelist Headers
+  - Object Caching
+  - Minimum TTL
+  - Maximum TTL
+  - Default TTL
+  - Forward Cookies
+  - Whitelist Cookies
+  - Query String Forwarding and Caching
+  - Query String Whitelist
+  - Smooth Streaming
+  - Restrict Viewer Access (Use Signed URLs)
+  - Trusted Signers
+  - AWS Account Numbers
+  - Compress Objects Automatically
+  - Event Type
+  - Lambda Function ARN
+
+- Distribution Details
+
+  - Price Class
+  - AWS WAF Web ACL
+  - Alternate Domain Names (CNAMEs)
+  - SSL Certificate
+  - Clients Supported
+  - Security Policy
+  - Minimum SSL Security Protocol – See Security Policy
+  - Supported HTTP Versions
+  - Default Root Object
+  - Logging
+  - Bucket for Logs
+  - Log Prefix
+  - Cookie Logging
+  - Enable IPv6
+  - Comment
+  - Distribution State
+
+- Custom Error Pages and Error Caching
+
+  - Error Code
+  - Response Page Path
+  - Response Code
+  - Error Caching Minimum TTL
+
+- Restrictions
+
+  - Enable Geo Restriction
+  - Restriction Type
+  - Countries
+
+**** Using Different Origins
+
+**** Using Custom URLs
+
+“Using Custom URLs for Files by Adding Alternate Domain Names (CNAMEs)”
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html
+
+#+cindex:alternate domain name (CNAME)
+#+cindex:CNAME (alternate domain name)
+In CloudFront, an /alternate domain name/, also known as a *CNAME*, lets you
+use your own domain name (for example, =www.example.com=) for links to your
+files instead of using the domain name that CloudFront assigns to your
+distribution.  Both web and RTMP distributions support alternate domain names.
+
+When you create a distribution, CloudFront returns a domain name for the
+distribution, for example:
+
+: d111111abcdef8.cloudfront.net
+
+When you use the CloudFront domain name for your files, the URL for a file
+called /images/image.jpg is:
+
+: http://d111111abcdef8.cloudfront.net/images/image.jpg
+
+If you want to use your own domain name, such as =www.example.com=, instead of
+the cloudfront.net domain name, you can add an /alternate domain name/ to your
+distribution, like =www.example.com=.  You can then use the following URL to
+view ~/images/image.jpg~:
+
+: http://www.example.com/images/image.jpg
+
+***** Adding an Alternate Domain Name
+
+#+cindex:alternate domain name
+The following task list describes how to use the CloudFront console to add an
+alternate domain name to your distribution so that you can use your own domain
+name in your links instead of the CloudFront domain name.
+
+For information about updating your distribution using the CloudFront API:
+- see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-working-with.html][Working with Distributions]].
+
+
+#+cindex:HTTPS, alternate domain name
+If you want viewers to use HTTPS with your alternate domain name:
+- see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-alternate-domain-names.html][Using Alternate Domain Names and HTTPS]].
+
+
+#+texinfo:@heading Before You Begin
+
+Make sure that you do the following before you update your distribution to add
+an alternate domain name:
+
+- Register the domain name with Route 53 or another domain provider.
+
+- Add a certificate from an authorized certificate authority (CA) to CloudFront
+  that covers the domain name you plan to use with the distribution, to
+  validate that you are authorized to use the domain.
+
+
+#+texinfo:@heading Adding an Alternate Domain Name
+
+Update the following values:
+
+#+attr_texinfo: :indic @b
+- Alternate Domain Names (CNAMEs) ::
+
+     Add your alternate domain names.  Separate domain names with commas, or
+     type each domain name on a new line.
+
+- SSL Certificate (Web Distributions Only) ::
+
+     Choose the following setting:
+
+     *Use HTTPS*; choose *Custom SSL Certificate*, and then choose a
+     certificate from the list.
+
+- Clients Supported (Web Distributions Only) ::
+
+     Choose an option:
+
+  - Only Clients that Support Server Name Indication (SNI) (Recommended) ::
+
+       Older browsers or other clients that don't support SNI must use
+       another method to access your content.
+
+  - All Clients :: CloudFront serves your HTTPS content using dedicated IP
+                   addresses.  If you select this option, you incur additional
+                   charges when you associate your SSL/TLS certificate with a
+                   distribution that is enabled.
+
+
+#+texinfo:@heading Confige the DNS Service
+
+Configure the DNS service for the domain to route traffic for the domain, such
+as ~example.com~, to the CloudFront domain name for your distribution, such as
+~d111111abcdef8.cloudfront.net~.
+
+#+cindex:alias resource record set
+- Route 53 :: Create an /alias resource record set/.  With an alias resource
+              record set, you don't pay for Route 53 queries.  In addition, you
+              can create an alias resource record set for the root domain name
+              (~example.com~), which DNS doesn't allow for =CNAME=s.
+
+	      For more information, see [[https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-cloudfront-distribution.html][Routing Queries to an Amazon CloudFront
+              Distribution]] in the Amazon Route 53 Developer Guide.
+
+
+#+cindex:@command{dig}
+#+cindex:domain information groper (dig)
+Using ~dig~ or a similar tool, confirm that the resource record set that you
+created in step 7 points to the domain name for your distribution.  For more
+information about ~dig~, go to http://www.kloth.net/services/dig.php.
+
+***** Moving an Alternate Domain Name to a Different CloudFront Distribution
+
+***** Removing an Alternate Domain Name
+
+***** Using Wildcards in Alternate Domain Names That You Add to CloudFront
+
+***** Requirements for Using Alternate Domain Names
+
+***** Restrictions on Using Alternate Domain Names
+
+**** Using WebSockets
 
 *** Serving Private Content using CloudFront
 
@@ -2872,7 +3311,7 @@ To create a CloudFront distribution:
    typically takes between 20 and 40 minutes.  The domain name that CloudFront
    assigns to your distribution appears in the list of distributions.
 
-* makefile
+* Makefile
 :PROPERTIES:
 :appendix: t
 :END:
