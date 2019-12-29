@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-28 13:51
-#+macro:version Version 0.0.17
+#+date:2019-12-28 18:48
+#+macro:version Version 0.0.18
 #+texinfo: @insertcopying
 
 
@@ -3318,11 +3318,11 @@ To create a CloudFront distribution:
 :appendix: t
 :END:
 #+name:Makefile
-#+begin_src makefile :tangle Makefile
+#+begin_src makefile :tangle Makefile :noweb yes
   ### PROGRAM
-  PROG = AWS-Guide
-  TOOLS= tools # directory for tools
-  VERS = $$(tools/version.sh) # a shell program to extract PROG.org’s Version
+  PROG  = <<get-org-filename()>>
+  VERS  = <<get-filename-version()>>
+  TOOLS = tools
 
   ### TEXINFO
   ORG   = $(PROG).org
@@ -3332,8 +3332,8 @@ To create a CloudFront distribution:
   BUILD = $(PROG).t2d
 
   ### HTML DIR
-  DIR   = aws-guide  # dir into which all html files are compiled
-  INDEX = index.html # entry for html
+  DIR   = aws-guide
+  INDEX = index.html
 
   ### AWS
   HOME = s3://pinecone-forest.com
@@ -3343,13 +3343,16 @@ To create a CloudFront distribution:
   DST  = $(HOME)/$(DIR)/$(VERS)
   SYNC = $(S3) sync $(SRC) $(DST)
 
+  default: open-html
+
   PHONY: default all texi info html pdf open-org open-texi open-html \
 	   open-pdf clean clean-dist help sync
 
   show-version:
 	  @echo $(VERS)
+	  @echo $(PROG)
+	  @echo $(DIR)
 
-  default: open-html
   all: texi info html pdf
 
   open-org: $(ORG)
@@ -3422,17 +3425,24 @@ To create a CloudFront distribution:
 	  and removes the build directory'
 
 #+end_src
-* Tools
 
-** Get Current Version
-#+name:get-current-version
-#+header: :tangle tools/version.sh :mkdirp t :shebang "#!/usr/bin/env bash"
+* Tools
+** Get Filename Version
+#+name:get-filename-version
+#+header: :eval no-export
 #+begin_src sh
   sed -E -n '/^\#\+macro:version Version/ {
     s///
     p
     q
   }' AWS-Guide.org
+#+end_src
+
+** Get Org Filename
+#+name:get-org-filename
+#+header: :eval no-export
+#+begin_src elisp
+(file-name-base)
 #+end_src
 
 * Copying
