@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-28 18:48
-#+macro:version Version 0.0.18
+#+date:2019-12-28 23:38
+#+macro:version Version 0.0.19
 #+texinfo: @insertcopying
 
 
@@ -3319,129 +3319,129 @@ To create a CloudFront distribution:
 :END:
 #+name:Makefile
 #+begin_src makefile :tangle Makefile :noweb yes
-  ### PROGRAM
-  PROG  = <<get-org-filename()>>
-  VERS  = <<get-filename-version()>>
-  TOOLS = tools
+    ### PROGRAM
+    PROG  = <<get-org-filename()>>
+    VERS  = <<get-filename-version()>>
 
-  ### TEXINFO
-  ORG   = $(PROG).org
-  TEXI  = $(PROG).texi
-  INFO  = $(PROG).info
-  PDF   = $(PROG).pdf
-  BUILD = $(PROG).t2d
+    ### TEXINFO
+    ORG   = $(PROG).org
+    TEXI  = $(PROG).texi
+    INFO  = $(PROG).info
+    PDF   = $(PROG).pdf
+    BUILD = $(PROG).t2d
 
-  ### HTML DIR
-  DIR   = aws-guide
-  INDEX = index.html
+    ### HTML DIR
+    DIR   = aws-guide
+    INDEX = index.html
 
-  ### AWS
-  HOME = s3://pinecone-forest.com
-  AWS  = aws2
-  S3   = $(AWS) s3
-  SRC  = $(PROG)/$(DIR)
-  DST  = $(HOME)/$(DIR)/$(VERS)
-  SYNC = $(S3) sync $(SRC) $(DST)
+    ### AWS
+    HOME = s3://pinecone-forest.com
+    AWS  = aws2
+    S3   = $(AWS) s3
+    SRC  = $(PROG)/$(DIR)
+    DST  = $(HOME)/$(DIR)/$(VERS)
+    SYNC = $(S3) sync $(SRC) $(DST)
 
-  default: open-html
+    default: open-html
 
-  PHONY: default all texi info html pdf open-org open-texi open-html \
-	   open-pdf clean clean-dist help sync
+    PHONY: default all texi info html pdf open-org open-texi open-html \
+	     open-pdf clean clean-dist help sync
 
-  show-version:
-	  @echo $(VERS)
-	  @echo $(PROG)
-	  @echo $(DIR)
+    show-version:
+	    @echo $(VERS)
+	    @echo $(PROG)
+	    @echo $(DIR)
 
-  all: texi info html pdf
+    all: texi info html pdf
 
-  open-org: $(ORG)
-	  emacsclient $(ORG) &
-  $(ORG):
-	  @echo 'DISASTER HAS BEFALLEN YOU AS THERE IS NO $(ORG) FILE!!!'
-	  exit 1
+    open-org: $(ORG)
+	    emacsclient $(ORG) &
+    $(ORG):
+	    @echo 'DISASTER HAS BEFALLEN YOU AS THERE IS NO $(ORG) FILE!!!'
+	    exit 1
 
-  texi: $(TEXI)
-  $(TEXI): $(ORG)
-	  emacs -Q $(ORG) --batch \
-	  --eval "(progn(require 'ox-texinfo)(org-texinfo-export-to-texinfo))"
+    texi: $(TEXI)
+    $(TEXI): $(ORG)
+	    emacs -Q $(ORG) --batch \
+	    --eval "(progn(require 'ox-texinfo)(org-texinfo-export-to-texinfo))"
 
-  info: $(INFO)
-  $(INFO): $(TEXI)
-	  makeinfo $(TEXI)
+    info: $(INFO)
+    $(INFO): $(TEXI)
+	    makeinfo $(TEXI)
 
-  html: $(DIR)
-  $(DIR): $(TEXI)
-	  makeinfo --html $(TEXI)
+    html: $(DIR)
+    $(DIR): $(TEXI)
+	    makeinfo --html $(TEXI)
 
-  pdf: $(PDF)
-  $(PDF): $(TEXI)
-	  pdftexi2dvi --silent --quiet --build=tidy $(TEXI)
+    pdf: $(PDF)
+    $(PDF): $(TEXI)
+	    pdftexi2dvi --silent --quiet --build=tidy $(TEXI)
 
-  open-texi: texi
-	  emacsclient $(TEXI) &
+    open-texi: texi
+	    emacsclient $(TEXI) &
 
-  open-html: html
-	  open $(DIR)/$(INDEX)
+    open-html: html
+	    open $(DIR)/$(INDEX)
 
-  open-pdf: pdf
-	  open $(PDF)
+    open-pdf: pdf
+	    open $(PDF)
 
-  clean:
-	  -rm *~
-	  -rm *.{texi*,info,html,pdf}
+    clean:
+	    -rm *~
+	    -rm *.{texi*,info,html,pdf}
 
-  clean-dist: clean
-	  -rm -rf $(DIR) $(BUILD) $(TOOLS)
+    clean-dist: clean
+	    -rm -rf $(DIR) $(BUILD)
 
-  sync: html
-	  $(SYNC)
+    sync: html
+	    $(SYNC)
 
-  help:
-	  @echo '"make default" makes the .texi file \
-	  the html files, and opens the index.html file'
-	  @echo
+    help:
+	    @echo '"make default" makes the .texi file \
+	    the html files, and opens the index.html file'
+	    @echo
 
-	  @echo '"make all" makes the .texi, .info, .pdf, and html distribution'
-	  @echo '"make sync" syncs the html files in the AWS S3 bucket \
-	  You must have your AWS credentials installed in ~/.aws/credentials'
-	  @echo
+	    @echo '"make all" makes the .texi, .info, .pdf, and html distribution'
+	    @echo '"make sync" syncs the html files in the AWS S3 bucket \
+	    You must have your AWS credentials installed in ~/.aws/credentials'
+	    @echo
 
-	  @echo '"make texi" makes the .texi file'
-	  @echo '"make info" makes the .info file'
-	  @echo '"make html" makes the html distribution in a subdirectory'
-	  @echo '"make pdf" makes the .pdf file'
-	  @echo
+	    @echo '"make texi" makes the .texi file'
+	    @echo '"make info" makes the .info file'
+	    @echo '"make html" makes the html distribution in a subdirectory'
+	    @echo '"make pdf" makes the .pdf file'
+	    @echo
 
-	  @echo '"make open-org" opens the ORG program using emacsclient for editing'
-	  @echo '"make open-texi" opens the .texi file using emacsclient for review'
-	  @echo '"make open-html" opens the distribution index.html file \
-	  in the default web browser'
-	  @echo '"make open-pdf" opens the .pdf file'
-	  @echo
+	    @echo '"make open-org" opens the ORG program using emacsclient for editing'
+	    @echo '"make open-texi" opens the .texi file using emacsclient for review'
+	    @echo '"make open-html" opens the distribution index.html file \
+	    in the default web browser'
+	    @echo '"make open-pdf" opens the .pdf file'
+	    @echo
 
-	  @echo '"make clean" removes the .texi, .info, and backup files ("*~")'
-	  @echo '"make clean-dist" cleans, removes the html distribution, \
-	  and removes the build directory'
+	    @echo '"make clean" removes the .texi, .info, and backup files ("*~")'
+	    @echo '"make clean-dist" cleans, removes the html distribution, \
+	    and removes the build directory'
 
 #+end_src
 
 * Tools
 ** Get Filename Version
 #+name:get-filename-version
-#+header: :eval no-export
-#+begin_src sh
-  sed -E -n '/^\#\+macro:version Version/ {
+#+header: :cmd-line -E -n
+#+header: :in-file AWS-Guide.org
+#+header: :exports both :results value
+#+begin_src sed
+  /^\#\+macro:version Version / {
     s///
     p
     q
-  }' AWS-Guide.org
+  }
 #+end_src
 
 ** Get Org Filename
 #+name:get-org-filename
-#+header: :eval no-export
-#+begin_src elisp
+#+begin_src emacs-lisp :exports both
 (file-name-base)
 #+end_src
 
