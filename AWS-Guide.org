@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-28 23:38
-#+macro:version Version 0.0.19
+#+date:2019-12-29 10:46
+#+macro:version Version 0.0.20
 #+texinfo: @insertcopying
 
 
@@ -3313,12 +3313,14 @@ To create a CloudFront distribution:
    typically takes between 20 and 40 minutes.  The domain name that CloudFront
    assigns to your distribution appears in the list of distributions.
 
-* Makefile
+* Tools
 :PROPERTIES:
+:header-args: :eval never-export
 :appendix: t
 :END:
+** Makefile
 #+name:Makefile
-#+begin_src makefile :tangle Makefile :noweb yes
+#+begin_src makefile :tangle Makefile :noweb tangle
     ### PROGRAM
     PROG  = <<get-org-filename()>>
     VERS  = <<get-filename-version()>>
@@ -3425,24 +3427,18 @@ To create a CloudFront distribution:
 
 #+end_src
 
-* Tools
+** Get Org Filename
+#+name:get-org-filename
+#+begin_src emacs-lisp
+(file-name-base)
+#+end_src
+
 ** Get Filename Version
 #+name:get-filename-version
 #+header: :cmd-line -E -n
 #+header: :in-file AWS-Guide.org
-#+header: :exports both :results value
 #+begin_src sed
-  /^\#\+macro:version Version / {
-    s///
-    p
-    q
-  }
-#+end_src
-
-** Get Org Filename
-#+name:get-org-filename
-#+begin_src emacs-lisp :exports both
-(file-name-base)
+  /^\#\+macro:version Version / { s//"v"/; p; q; }
 #+end_src
 
 * Copying
@@ -3471,7 +3467,7 @@ Copyright \copy 2019 {{{author}}}
 #+texinfo_dir_desc:AWS guide
 #+texinfo_printed_title:Amazon Web Services Guide
 
-#+options: toc:t
+#+options: toc:t H:4 num:3
 
 
 # Local Variables:
