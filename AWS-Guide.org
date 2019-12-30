@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-29 17:50
-#+macro:version Version 0.0.21
+#+date:2019-12-29 18:11
+#+macro:version Version 0.0.22
 #+texinfo: @insertcopying
 
 
@@ -3333,7 +3333,7 @@ To create a CloudFront distribution:
     BUILD = $(PROG).t2d
 
     ### HTML DIR
-    DIR   = aws-guide
+    DIR   = <<get-org-lc-filename()>>
     INDEX = index.html
 
     ### AWS
@@ -3404,7 +3404,7 @@ To create a CloudFront distribution:
 	    @echo
 
 	    @echo '"make all" makes the .texi, .info, .pdf, and html distribution'
-	    @echo '"make sync" syncs the html files in the AWS S3 bucket \
+	    @echo '"make sync" syncs the html files in the AWS S3 bucket HOME; \
 	    You must have your AWS credentials installed in ~/.aws/credentials'
 	    @echo
 
@@ -3433,6 +3433,12 @@ To create a CloudFront distribution:
 (file-name-base)
 #+end_src
 
+** Get Org Lowercase Filename
+#+name:get-org-lc-filename
+#+begin_src emacs-lisp
+(downcase (file-name-base))
+#+end_src
+
 ** Get File Version
 #+name:get-file-version
 #+begin_src emacs-lisp
@@ -3446,7 +3452,7 @@ To create a CloudFront distribution:
 :PROPERTIES:
 :copying:  t
 :END:
-{{{title}}}
+{{{title}}} {{{version}}} printed {{{date}}}
 
 Copyright \copy 2019 {{{author}}}
 
