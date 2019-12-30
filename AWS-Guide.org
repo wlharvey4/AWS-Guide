@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-29 18:11
-#+macro:version Version 0.0.22
+#+date:2019-12-29 19:42
+#+macro:version Version 0.0.24
 #+texinfo: @insertcopying
 
 
@@ -3319,113 +3319,149 @@ To create a CloudFront distribution:
 :appendix: t
 :END:
 ** Makefile
+
+#+texinfo:@heading Tangling
+
+This Makefile must be tangled from within the Org buffer (as opposed to being
+tangled from another Org buffer or from a batch script) because the two
+functions ~get-org-fiename~ and ~get-file-version~ are elisp functions that use
+the current buffer to find the filename and the current version.  The scripts
+would have to be done a bit differently to make them work from an external
+source.
+
+#+texinfo:@heading Environment Variables Instead of Credentials File
+
+For some reason when running the ~sync~ command via this Makefile, ~aws2~ was
+not able to locate my credential information stored in the =~/.aws/credentials=
+file created by running ~aws2 configure~.  Therefore, I placed my keys into
+environment variables instead, and added the @@texinfo:@option{--region}@@
+option explicitly to the command.  This solved the problem.
+
+#+texinfo:@heading Sync Command Problem
+
+The ~sync~ command compares files and only uploads files that have been
+changed.  However, the ~makeinfo --html~ command updates every single file, not
+just ones that have changed, so anytime the main Org file changes, every single
+HTML file will be re-saved, thus eliminating any advantage of the ~sync~
+function.
+
 #+name:Makefile
 #+begin_src makefile :tangle Makefile :noweb tangle
-    ### PROGRAM
-    PROG  = <<get-org-filename()>>
-    VERS  = <<get-file-version()>>
+  ### PROGRAM
+  PROG  = <<get-org-filename()>>
+  VERS  = <<get-file-version()>>
 
-    ### TEXINFO
-    ORG   = $(PROG).org
-    TEXI  = $(PROG).texi
-    INFO  = $(PROG).info
-    PDF   = $(PROG).pdf
-    BUILD = $(PROG).t2d
+  ### TEXINFO
+  ORG   = $(PROG).org
+  TEXI  = $(PROG).texi
+  INFO  = $(PROG).info
+  PDF   = $(PROG).pdf
+  BUILD = $(PROG).t2d
 
-    ### HTML DIR
-    DIR   = <<get-org-lc-filename()>>
-    INDEX = index.html
+  ### HTML DIR
+  DIR   = <<get-org-lc-filename()>>
+  INDEX = index.html
 
-    ### AWS
-    HOME = s3://pinecone-forest.com
-    AWS  = aws2
-    S3   = $(AWS) s3
-    SRC  = $(PROG)/$(DIR)
-    DST  = $(HOME)/$(DIR)/$(VERS)
-    SYNC = $(S3) sync $(SRC) $(DST)
+  ### AWS
+  HOME = s3://pinecone-forest.com
+  AWS  = aws2
+  S3   = $(AWS) s3
+  SRC  = $(DIR)/
+  DST  = $(HOME)/$(DIR)/$(VERS)/
+  GRANTS = --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+  REGION = --region us-west-2
+  SYNC = $(S3) sync $(SRC) $(DST) $(GRANTS) $(REGION)
 
-    default: open-html
+  default: open-html
 
-    PHONY: default all texi info html pdf open-org open-texi open-html \
-	     open-pdf clean clean-dist help sync
+  PHONY: default all texi info html pdf open-org open-texi open-html \
+	   open-pdf clean clean-dist help sync
 
-    show-version:
-	    @echo $(VERS)
-	    @echo $(PROG)
-	    @echo $(DIR)
+  show-version:
+	  @echo $(VERS)
+	  @echo $(PROG)
+	  @echo $(DIR)
 
-    all: texi info html pdf
+  all: texi info html pdf
 
-    open-org: $(ORG)
-	    emacsclient $(ORG) &
-    $(ORG):
-	    @echo 'DISASTER HAS BEFALLEN YOU AS THERE IS NO $(ORG) FILE!!!'
-	    exit 1
+  open-org: $(ORG)
+	  emacsclient $(ORG) &
+  $(ORG):
+	  @echo 'DISASTER HAS BEFALLEN YOU AS THERE IS NO $(ORG) FILE!!!'
+	  exit 1
 
-    texi: $(TEXI)
-    $(TEXI): $(ORG)
-	    emacs -Q $(ORG) --batch \
-	    --eval "(progn(require 'ox-texinfo)(org-texinfo-export-to-texinfo))"
+  texi: $(TEXI)
+  $(TEXI): $(ORG)
+	  emacs -Q $(ORG) --batch \
+	  --eval "(progn(require 'ox-texinfo)(org-texinfo-export-to-texinfo))"
 
-    info: $(INFO)
-    $(INFO): $(TEXI)
-	    makeinfo $(TEXI)
+  info: $(INFO)
+  $(INFO): $(TEXI)
+	  makeinfo $(TEXI)
 
-    html: $(DIR)
-    $(DIR): $(TEXI)
-	    makeinfo --html $(TEXI)
+  html: $(DIR)
+  $(DIR): $(TEXI)
+	  makeinfo --html $(TEXI)
 
-    pdf: $(PDF)
-    $(PDF): $(TEXI)
-	    pdftexi2dvi --silent --quiet --build=tidy $(TEXI)
+  pdf: $(PDF)
+  $(PDF): $(TEXI)
+	  pdftexi2dvi --silent --quiet --build=tidy $(TEXI)
 
-    open-texi: texi
-	    emacsclient $(TEXI) &
+  open-texi: texi
+	  emacsclient $(TEXI) &
 
-    open-html: html
-	    open $(DIR)/$(INDEX)
+  open-html: html
+	  open $(DIR)/$(INDEX)
 
-    open-pdf: pdf
-	    open $(PDF)
+  open-pdf: pdf
+	  open $(PDF)
 
-    clean:
-	    -rm *~
-	    -rm *.{texi*,info,html,pdf}
+  clean:
+	  -rm *~
+	  -rm *.{texi*,info,html,pdf}
 
-    clean-dist: clean
-	    -rm -rf $(DIR) $(BUILD)
+  clean-dist: clean
+	  -rm -rf $(DIR) $(BUILD)
 
-    sync: html
-	    $(SYNC)
+  sync:
+	  $(SYNC)
 
-    help:
-	    @echo '"make default" makes the .texi file \
-	    the html files, and opens the index.html file'
-	    @echo
+  help:
+	  @echo '"make default" makes the .texi file \
+	  the html files, and opens the index.html file'
+	  @echo
 
-	    @echo '"make all" makes the .texi, .info, .pdf, and html distribution'
-	    @echo '"make sync" syncs the html files in the AWS S3 bucket HOME; \
-	    You must have your AWS credentials installed in ~/.aws/credentials'
-	    @echo
+	  @echo '"make all" makes the .texi, .info, .pdf, and html distribution'
+	  @echo '"make sync" syncs the html files in the AWS S3 bucket HOME; \
+	  You must have your AWS credentials installed in ~/.aws/credentials'
+	  @echo
 
-	    @echo '"make texi" makes the .texi file'
-	    @echo '"make info" makes the .info file'
-	    @echo '"make html" makes the html distribution in a subdirectory'
-	    @echo '"make pdf" makes the .pdf file'
-	    @echo
+	  @echo '"make texi" makes the .texi file'
+	  @echo '"make info" makes the .info file'
+	  @echo '"make html" makes the html distribution in a subdirectory'
+	  @echo '"make pdf" makes the .pdf file'
+	  @echo
 
-	    @echo '"make open-org" opens the ORG program using emacsclient for editing'
-	    @echo '"make open-texi" opens the .texi file using emacsclient for review'
-	    @echo '"make open-html" opens the distribution index.html file \
-	    in the default web browser'
-	    @echo '"make open-pdf" opens the .pdf file'
-	    @echo
+	  @echo '"make open-org" opens the ORG program using emacsclient for editing'
+	  @echo '"make open-texi" opens the .texi file using emacsclient for review'
+	  @echo '"make open-html" opens the distribution index.html file \
+	  in the default web browser'
+	  @echo '"make open-pdf" opens the .pdf file'
+	  @echo
 
-	    @echo '"make clean" removes the .texi, .info, and backup files ("*~")'
-	    @echo '"make clean-dist" cleans, removes the html distribution, \
-	    and removes the build directory'
+	  @echo '"make clean" removes the .texi, .info, and backup files ("*~")'
+	  @echo '"make clean-dist" cleans, removes the html distribution, \
+	  and removes the build directory'
 
 #+end_src
+*** TODO Next
+1. The CloudFront configuration needs to be updated recognize the new version
+   directory that is created as part of the ~sync~ operation.
+
+2. Update the GitHub HOME website link for each new sync operation.
+
+3. Store on GitHub a version of each other format upon a sync operation (i.e.,
+   the INFO and PDF versions)
 
 ** Get Org Filename
 #+name:get-org-filename
