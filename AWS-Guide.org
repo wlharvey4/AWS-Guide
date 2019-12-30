@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-29 23:10
-#+macro:version Version 0.0.25
+#+date:2019-12-30 11:22
+#+macro:version Version 0.0.26
 #+texinfo: @insertcopying
 
 
@@ -1499,10 +1499,12 @@ This API reference provides information about /user pools/ in Amazon Cognito
 User Pools.
 ** Command Line Interface Command Reference
 
+[[http://docs.aws.amazon.com/cli/latest/userguide/][CLI User Guide]]
+
 #+cindex:Command Line Interface
 The AWS Command Line Interface is a unified tool to manage your AWS services.
 
-https://docs.aws.amazon.com/cli/latest/reference/
+[[https://docs.aws.amazon.com/cli/latest/reference/][AWS CLI API Reference]]
 
 #+texinfo:@heading Synopsis
 
@@ -1518,6 +1520,16 @@ https://docs.aws.amazon.com/cli/latest/reference/
 
 The synopsis for each command shows its parameters and their usage. Optional
 parameters are shown in square brackets.
+
+*** cloudfront
+
+[[https://docs.aws.amazon.com/cli/latest/reference/cloudfront/index.html][CloudFront API Reference]]
+
+Local link to [[*CloudFront Developer Guide][CloudFront Developer Guide]]
+
+#+cindex:cloudfront api reference
+This is the Amazon CloudFront API Reference.  This guide is for developers who
+need detailed information about CloudFront API actions, data types, and errors.
 
 *** s3
 <<s3 API>>
@@ -1793,6 +1805,332 @@ the fastest delivery to the viewer.  Using the AWS network dramatically reduces
 the number of networks that your users' requests must pass through, which
 improves performance.  Users get lower /latency/---the time it takes to load
 the first byte of the file—and higher data transfer rates.
+
+**** Use Cases
+
+**** How CloudFront Delivers Content
+
+**** Locations and IP Addresses of CloudFront Edge Servers
+
+**** Accessing CloudFront
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/introduction-accessing-cloudfront.html
+
+#+cindex:CloudFront, ways to access
+You can access Amazon CloudFront in the following ways:
+
+#+attr_texinfo: :indic b
+- AWS Management Console :: The procedures throughout this guide explain how to
+     use the AWS Management Console to perform tasks.
+
+- AWS SDKs :: 
+
+	      If you're using a programming language that AWS provides an SDK
+              for, you can use an SDK to access CloudFront.  SDKs simplify
+              authentication, integrate easily with your development
+              environment, and provide access to CloudFront commands.
+
+  - see [[https://aws.amazon.com/tools][Tools for Amazon Web Services]]
+
+- CloudFront API ::
+
+		    If you're using a programming language that an SDK isn't
+                    available for, see [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/][the Amazon CloudFront API Reference]] for
+                    information about API actions and about how to make API
+                    requests.
+
+- AWS Command Line Interface ::
+
+     For more information, see [[https://docs.aws.amazon.com/cli/latest/userguide/][Getting Set Up with the AWS Command Line
+     Interface]] in the AWS Command Line Interface User Guide.
+
+**** How to Get Started with CloudFront
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/welcome-how-to-get-started.html
+
+For information about getting started with Amazon CloudFront, see the following
+topics in this guide:
+
+- [[*Setting Up][Setting Up Amazon CloudFront]] :: which explains how to sign up for AWS, how to
+     secure access to your AWS account, and how to set up programmatic access
+     to CloudFront.
+
+- [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html][Getting Started with Amazon CloudFront]] :: which describes how to create a
+     distribution that can serve content to viewers from your origin, like an
+     Amazon S3 bucket or a website, and then test that it works.
+
+**** AWS Identity and Access Management
+
+**** CloudFront Pricing
+*** Setting Up
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/setting-up-cloudfront.html
+
+1. Sign up for AWS
+2. Access Your Account
+3. Create an IAM User
+4. Set Up the AWS Tools for Windows PowerShell
+
+   For information about how to install and configure the AWS CLI, see [[https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html][Getting
+   Set Up with the AWS Command Line Interface]] in the AWS Command Line Interface
+   User Guide.
+
+5. Download an AWS SDK
+
+   If you're using a programming language that AWS provides an SDK for, we
+   recommend that you use an SDK instead of the Amazon CloudFront API.  The
+   SDKs make authentication simpler, integrate easily with your development
+   environment, and provide easy access to CloudFront commands.
+
+   For more information, see [[https://aws.amazon.com//tools/][Tools for Amazon Web Services]]
+
+*** Getting Started with CloudFront
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html
+
+#+cindex:CloudFront, getting started
+Get started with the basic steps to deliver your content with CloudFront by
+creating a simple CloudFront distribution.
+
+[[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.SimpleDistribution.html][Getting Started with a Simple CloudFront Distribution]]
+
+The procedures in this section show you how to use CloudFront to set up a basic
+configuration that does the following:
+
+- /Stores/ the original versions of your objects in one Amazon Simple Storage
+  Service (Amazon S3) bucket
+- /Distributes/ content such as text or graphics
+- Makes your objects /accessible/ to everyone
+- Uses the CloudFront /domain name/ in URLs for your objects (for example,
+  =http://d111111abcdef8.cloudfront.net/image.jpg=)
+- Keeps your objects in CloudFront /edge locations/ for the default duration of
+  24 hours (the minimum duration is 0 seconds)
+
+
+Most of these options are customizable.  For example, you can store your
+content on your own web server instead of using an S3 bucket, and you can limit
+who has access to the content by using signed URLs or cookies.  For information
+about how to customize your CloudFront distribution options, see:
+- [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-creating.html][Steps for Creating a Distribution (Overview)]]
+
+
+You have to complete only a few basic steps to start delivering your content
+with CloudFront.
+
+- The first step is signing up.
+
+- After that, you create a CloudFront distribution, and
+
+- then use the CloudFront domain name in URLs in your webpages or applications
+  to reference the content.
+
+#+cindex:CloudFront getting started
+#+cindex:CloudFront, simple distribution
+**** Step 1---Upload Your Content to Amazon S3 and Grant Object Permissions
+
+CloudFront can distribute almost any type of file for you using an Amazon S3
+bucket as the source, and there is no limit to the amount of data that you can
+store on Amazon S3.
+
+#+cindex:private
+#+cindex:permissions, grant
+By default, your Amazon S3 bucket and all the files in it are private---only
+the AWS account that created the bucket has read/write permission to the files.
+If you want to allow anyone to access the files in your Amazon S3 bucket using
+CloudFront URLs, you must grant public read permissions to the objects.  You
+must explicitly grant permissions to each object in an Amazon S3 bucket.
+
+#+cindex:private content feature
+If you want to restrict who can download your content, you can use the
+CloudFront private content feature.  For more information about distributing
+private content:
+
+- see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html][Serving Private Content with Signed URLs and Signed Cookies]].
+
+
+***** Upload your content to Amazon S3 and grant read permissions to everyone
+
+1. open the Amazon S3 console
+
+2. choose *Create bucket*
+
+3. on the Name and region page, do the following:
+
+   - enter a bucket name
+
+   - choose an AWS Region
+
+4. choose *Next*
+
+5. on the *Configure options* page, choose options for versioning, tagging, and
+   other features.
+
+6. choose *Next*
+
+7. on the *Set permissions* page, clear the following check box:
+
+   - *Block all public access*
+
+     #+cindex:private content feature
+     #+cindex:public read access, allow
+     You must allow public read access to the bucket and files so that
+     CloudFront URLs can serve content from the bucket.  However, you can
+     restrict access to specific content by using the CloudFront private
+     content feature.
+
+     - see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html][Serving Private Content with Signed URLs and Signed Cookies]]
+
+8. choose *Next*, and then choose *Create bucket*.
+
+9. In the *Buckets* pane, choose your bucket, and then choose *Upload*.
+
+10. choose *Add files*, and then choose the files that you want to upload.
+
+11. choose *Next*
+
+12. On the *Set permissions* page, grant public read privileges for each file
+    that you upload to your Amazon S3 bucket.
+
+    - choose *Next* to set permissions
+
+    - for *Manage public permissions*, choose *Grant public read access to this
+      object(s)*
+
+    - choose *Next*
+
+13. Set any properties that you want for the object, such as encryption or
+    tagging, and then choose *Next*
+
+14. choose *Upload*
+
+
+Use your Amazon S3 URL to verify that your content is publicly accessible.
+
+**** Step 2---Create a CloudFront Distribution
+
+#+texinfo:@heading To create a CloudFront distribution:
+
+1. Open the [[https://console.aws.amazon.com/cloudfront/][CloudFront console]]
+
+2. Choose *Create Distribution*.
+
+3. On the *Select a delivery method for your content* page, in the *Web*
+   section, choose *Get Started*.
+
+   The options are:
+
+   - *Web* to create a web distribution for static and dynamic content, media
+     file over HTTP/HTTPS, deal with objects, and serve live streaming events
+     in real time;
+   - *RTMP* for streaming media files using Adobe Flash Media Server's RTMP
+     protocol.
+
+4. On the *Create Distribution* page, for *Origin Domain Name*, choose the
+   Amazon S3 bucket that you created earlier.  For *Origin Path*, *Origin ID*,
+   *Restrict Bucket Access*, and *Origin Custom Headers*, accept the default
+   values.
+
+   - *Origin Domain Name* ::
+	#+cindex:domain name, origin
+	#+cindex:origin domain name
+	Specify the domain name for your /origin/ --- the Amazon S3 bucket, AWS
+        MediaPackage channel endpoint, AWS MediaStore container endpoint, or
+        web server from which you want CloudFront to get your web content.  The
+        files in your origin must be *publicly readable* if you are not using
+        an OAI.
+
+	The dropdown list contains the available AWS resources in the current
+        AWS account.  To use a resource from a different AWS account, type the
+        domain name of the resource.
+
+   - *Origin Path* :: Optional.
+		      #+cindex:origin path
+		      If you want CloudFront to request your content from a
+                      directory in your Amazon S3 bucket or your custom origin,
+                      enter the directory name here, beginning with a =/=.  Do
+                      not include a =/= at the end of the directory name.
+
+		      CloudFront appends the directory name to the value of
+                      Origin Domain Name when forwarding the request to your
+                      origin.
+
+5. Under *Default Cache Behavior Settings*, accept the default values.
+   #+cindex:path pattern
+   - *Path Pattern* ::
+
+		       The default cache behavior only allows a path pattern of
+                       =*= (forward all requests to the origin specified by
+                       Origin).  To change the behavior or the routing for
+                       other requests (for example, ~*.jpg~), add more cache
+                       behaviors after you create the distribution.
+
+     For more information about cache behavior options,
+
+     - Cache [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesCacheBehavior][Behavior Settings]].
+
+   - *Viewer Protocol Policy* ::
+
+	The options are:
+
+     - HTTP and HTTPS (default)
+     - Redirect HTTP to HTTPS
+     - HTTP only
+
+     If you want CloudFront to allow viewers to access your web content
+     using either HTTP or HTTPS, specify *HTTP and HTTPS*.  If you want
+     CloudFront to redirect all HTTP requests to HTTPS, specify *Redirect
+     HTTP to HTTPS*. If you want CloudFront to require HTTPS, specify *HTTPS
+     Only*.
+
+6. Under *Distribution Settings*, choose the values for your distribution.
+
+   - *Alternate Domain Names (CNAMES)* ::
+
+	You must list any custom domain names that you use in addition to the
+        CloudFront domain name for the URLs for your files.  Specify up to 100
+        CNAMEs separated with commas or put each on a new line.
+
+	You also must create a CNAME record with your DNS service to route
+        queries for the custome domain to the CloudFront domain.
+
+   - *SSL Certificate* ::
+
+	The options are:
+
+     - /Default CloudFront Certificate/ (~*.cloudfront.net~) --- Choose this
+       option if you want your users to use HTTPS or HTTP to access your
+       content with the CloudFront domain name.
+
+     - /Custom SSL Certificate/ (~example.com~) --- Choose this option if you
+       want your users to access your content by using an alternate domain
+       name.  You can use a certificate stored in AWS Certificate Manager (ACM)
+       in the US East (N. Virginia) Region.
+
+   - *Default Root Object* :: Optional.
+
+	The object that you want CloudFront to return (for example,
+        ~index.html~) when a viewer request points to your root URL instead of
+        to a specific object in your distribution.
+
+   - *Logging* :: Select whether you want CloudFront to log all viewer requests
+                  for files in your distribution.  You are charged for access
+                  logs.
+
+7. Choose *Create Distribution*.
+
+8. After CloudFront creates your distribution, the value of the *Status* column
+   for your distribution changes from *In Progress* to *Deployed*.  This
+   typically takes between 20 and 40 minutes.  The domain name that CloudFront
+   assigns to your distribution appears in the list of distributions.
+
+**** Step 3---Test Your Links
+
+After you've created your distribution, CloudFront knows where your Amazon S3
+origin server is, and you know the domain name associated with the
+distribution.  You can create a link to your Amazon S3 bucket content with that
+domain name and have CloudFront serve it.
+
+*** Working with Distributions
 
 ** Cognito Developer Guide
 
@@ -3184,163 +3522,6 @@ includes examples showing how to type common variations of the command.
 
 : $ aws ec2 describe-instances help
 
-** CloudFront---Getting Started with a Simple CloudFront Distribution
-
-https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.SimpleDistribution.html
-
-#+cindex:CloudFront getting started
-#+cindex:CloudFront, simple distribution
-Get started with the basic steps to deliver your content with CloudFront by
-creating a simple CloudFront distribution.
-
-The procedures in this section show you how to use CloudFront to set up a basic
-configuration that does the following:
-
-- Stores the original versions of your objects in one Amazon Simple Storage
-  Service (Amazon S3) bucket
-
-- Distributes content such as text or graphics
-
-- Makes your objects accessible to everyone
-
-- Uses the CloudFront domain name in URLs for your objects (for example,
-  =http://d111111abcdef8.cloudfront.net/image.jpg=)
-
-- Keeps your objects in CloudFront edge locations for the default duration of
-  24 hours (the minimum duration is 0 seconds)
-
-
-Most of these options are customizable.  For example, you can store your
-content on your own web server instead of using an S3 bucket, and you can limit
-who has access to the content by using signed URLs or cookies.  For information
-about how to customize your CloudFront distribution options,
-
-- see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-creating.html][Steps for Creating a Distribution]]
-
-
-You have to complete only a few basic steps to start delivering your content
-with CloudFront.
-
-- The first step is signing up.
-
-- After that, you create a CloudFront distribution, and
-
-- then use the CloudFront domain name in URLs in your webpages or applications
-  to reference the content.
-
-*** Step 1---Upload Your Content to Amazon S3 and Grant Object Permissions
-
-#+cindex:S3 bucket
-An Amazon S3 bucket is a container that can contain files (objects) or folders.
-CloudFront can distribute almost any type of file for you using an Amazon S3
-bucket as the source.  For example, CloudFront can distribute text, images, and
-videos.  You can create multiple buckets, and there is no limit to the amount
-of data that you can store on Amazon S3.
-
-#+cindex:private
-#+cindex:permissions, grant
-By default, your Amazon S3 bucket and all the files in it are private---only
-the AWS account that created the bucket has read/write permission to the files.
-If you want to allow anyone to access the files in your Amazon S3 bucket using
-CloudFront URLs, you must grant public read permissions to the objects.  You
-must explicitly grant permissions to each object in an Amazon S3 bucket.
-
-#+cindex:private content feature
-If you want to restrict who can download your content, you can use the
-CloudFront private content feature.  For more information about distributing
-private content:
-
-- see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html][Serving Private Content with Signed URLs and Signed Cookies]].
-
-
-**** Upload your content to Amazon S3 and grant read permissions to everyone
-
-1. open the Amazon S3 console
-
-2. choose *Create bucket*
-
-3. on the Name and region page, do the following:
-
-   - enter a bucket name
-
-   - choose an AWS Region
-
-4. choose *Next*
-
-5. on the *Configure options* page, choose options for versioning, tagging, and
-   other features.
-
-6. choose *Next*
-
-7. on the *Set permissions* page, clear the following check box:
-
-   - *Block all public access*
-
-     #+cindex:private content feature
-     #+cindex:public read access, allow
-     You must allow public read access to the bucket and files so that
-     CloudFront URLs can serve content from the bucket.  However, you can
-     restrict access to specific content by using the CloudFront private
-     content feature.
-
-     - see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html][Serving Private Content with Signed URLs and Signed Cookies]]
-
-8. choose *Next*, and then choose *Create bucket*.
-
-9. In the *Buckets* pane, choose your bucket, and then choose *Upload*.
-
-10. choose *Add files*, and then choose the files that you want to upload.
-
-11. choose *Next*
-
-12. On the *Set permissions* page, grant public read privileges for each file
-    that you upload to your Amazon S3 bucket.
-
-    - choose *Next* to set permissions
-
-    - for *Manage public permissions*, choose *Grant public read access to this
-      object(s)*
-
-    - choose *Next*
-
-13. Set any properties that you want for the object, such as encryption or
-    tagging, and then choose *Next*
-
-14. choose *Upload*
-
-
-Use your Amazon S3 URL to verify that your content is publicly accessible.
-
-*** Step 2---Create a CloudFront Distribution
-
-To create a CloudFront distribution:
-
-1. Open the [[https://console.aws.amazon.com/cloudfront/][CloudFront console]]
-
-2. Choose *Create Distribution*.
-
-3. On the *Select a delivery method for your content* page, in the *Web*
-   section, choose *Get Started*.
-
-4. On the *Create Distribution* page, for *Origin Domain Name*, choose the
-   Amazon S3 bucket that you created earlier.  For *Origin Path*, *Origin ID*,
-   *Restrict Bucket Access*, and *Origin Custom Headers*, accept the default
-   values.
-
-5. Under *Default Cache Behavior Settings*, accept the default values.
-
-   For more information about cache behavior options,
-
-   - Cache [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesCacheBehavior][Behavior Settings]].
-
-6. Under *Distribution Settings*, choose the values for your distribution.
-
-7. Choose *Create Distribution*.
-
-8. After CloudFront creates your distribution, the value of the *Status* column
-   for your distribution changes from *In Progress* to *Deployed*.  This
-   typically takes between 20 and 40 minutes.  The domain name that CloudFront
-   assigns to your distribution appears in the list of distributions.
 
 * Tools
 :PROPERTIES:
