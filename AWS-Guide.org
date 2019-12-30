@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-29 10:46
-#+macro:version Version 0.0.20
+#+date:2019-12-29 17:50
+#+macro:version Version 0.0.21
 #+texinfo: @insertcopying
 
 
@@ -3323,7 +3323,7 @@ To create a CloudFront distribution:
 #+begin_src makefile :tangle Makefile :noweb tangle
     ### PROGRAM
     PROG  = <<get-org-filename()>>
-    VERS  = <<get-filename-version()>>
+    VERS  = <<get-file-version()>>
 
     ### TEXINFO
     ORG   = $(PROG).org
@@ -3433,12 +3433,13 @@ To create a CloudFront distribution:
 (file-name-base)
 #+end_src
 
-** Get Filename Version
-#+name:get-filename-version
-#+header: :cmd-line -E -n
-#+header: :in-file AWS-Guide.org
-#+begin_src sed
-  /^\#\+macro:version Version / { s//"v"/; p; q; }
+** Get File Version
+#+name:get-file-version
+#+begin_src emacs-lisp
+  (save-excursion
+    (goto-char (point-min))
+    (re-search-forward "^#\\+macro:version Version \\(\\(?:[[:digit:]]+\\.?\\)\\{3\\}\\)")
+    (concat "v" (match-string-no-properties 1)))
 #+end_src
 
 * Copying
