@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-29 19:42
-#+macro:version Version 0.0.24
+#+date:2019-12-29 23:10
+#+macro:version Version 0.0.25
 #+texinfo: @insertcopying
 
 
@@ -53,13 +53,16 @@ https://aws.amazon.com/products/
 
 **** Blockchain
 
-** CloudFront
+** API Gateway
+** CloudFront                                                   :networking:
 
 “Fast, highly secure and programmable content delivery network (CDN)”
 
 [[https://aws.amazon.com/cloudfront/][CloudFront Home]]
 
 [[https://docs.aws.amazon.com/cloudfront/index.html][CloudFront Documentation]]
+
+[[*CloudFront Documentation][CloudFront]]
 
 #+cindex:CloudFront
 - *CloudFront* :: An AWS content delivery service that helps you improve the
@@ -80,6 +83,11 @@ applications, and =Lambda@Edge= to run custom code closer to customers’ users
 and to customize the user experience.  Lastly, if you use AWS origins such as
 Amazon S3, Amazon EC2 or Elastic Load Balancing, you don’t pay for any data
 transferred between these services and CloudFront.
+
+Amazon CloudFront speeds up distribution of your static and dynamic web
+content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
+request your content, CloudFront delivers it through a worldwide network of
+edge locations that provide low latency and high performance.
 
 *** Benefits
 
@@ -110,6 +118,19 @@ EC2, Elastic Load Balancing, Amazon Route 53, and AWS Elemental Media Services.
 They are all accessible via the same console and all features in the CDN can be
 programmatically configured by using APIs or the AWS Management Console.
 
+*** Content Delivery Network
+*** Edge location
+#+cindex:edge location
+#+cindex:CloudFront, edge location
+CloudFront delivers your content through a worldwide network of data centers
+called edge locations.
+
+*** Origin
+#+cindex:origin
+#+cindex:CloudFront, origin
+An Amazon S3 bucket, a MediaPackage channel, or an HTTP server (for example, a
+web server) that you have identified as the source for the definitive version
+of your content.
 *** Use Cases
 
 #+texinfo:@heading Static asset caching
@@ -163,18 +184,6 @@ your users are, via the content delivery network.  The CDN's high data transfer
 rates speed up the delivery of your binaries, improving customer experience
 while lowering your costs.
 
-*** Edge location
-#+cindex:edge location
-#+cindex:CloudFront, edge location
-CloudFront delivers your content through a worldwide network of data centers
-called edge locations.
-
-*** Origin
-#+cindex:origin
-#+cindex:CloudFront, origin
-An Amazon S3 bucket, a MediaPackage channel, or an HTTP server (for example, a
-web server) that you have identified as the source for the definitive version
-of your content.
 ** Command Line Interface
 
 https://aws.amazon.com/cli/
@@ -292,6 +301,7 @@ Describes the AWS CLI commands that you can use to generate temporary
 security credentials. Provides syntax, options, and usage examples for
 each command.
 
+** Lambda@Edge
 ** Organizations
 
 #+cindex:organizations
@@ -366,6 +376,11 @@ to all AWS customers at no additional charge.
 #+cindex:SCP
 
 ** Security
+*** AWS Shield
+Layer 3/4 DDoS mitigation
+
+*** AWS WAF
+Layer 7 protection
 *** Cognito
 
 “Amazon Cognito is a service that you can use to create unique identities for
@@ -478,6 +493,8 @@ When the authorization server returns the =state=, parse it and split it into
 two values based on the space.  The second value will contain the dynamic URL
 needed to direct the user to the appropriate page after authentication.
 
+*** Field Level Encryption
+*** Identity and Access Management---IAM
 *** Security Credentials
 
 #+cindex:security credentials
@@ -517,6 +534,10 @@ unit (OU).
 Because of this, we recommend that you delete your root user access
 keys and then create AWS Identity and Access Management (IAM) user
 credentials for everyday interaction with AWS.
+*** Signed URLs
+*** TLS
+*** CloudTrail
+*** Certificate Manager---ACM
 ** Simple Storage Service---S3
 “Object storage built to store and retrieve any amount of data from anywhere”
 
@@ -690,11 +711,14 @@ Amazon VPC ingress routing allows you to easily deploy network and security
 appliances, including third-party offerings, inline to the inbound or outbound
 Amazon VPC traffic.  Inline traffic inspection helps you screen and secure
 traffic to protect your workloads from malicious actors.
+
 * AWS Documentation
 
 “Find user guides, developer guides, API references, tutorials, and more.”
 
 - [[https://aws.amazon.com/documentation/][View all Documentation]]
+
+- [[https://github.com/awsdocs][Amazon Web Services --- Documentation on GitHub]]
 
 #+texinfo:@heading Start building with SDKs and tools
 
@@ -707,10 +731,15 @@ https://docs.aws.amazon.com/index.html
 
 [[https://docs.aws.amazon.com/cloudfront/index.html][CloudFront Documentation]]
 
-Amazon CloudFront speeds up distribution of your static and dynamic web
-content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
-request your content, CloudFront delivers it through a worldwide network of
-edge locations that provide low latency and high performance.
+*** CloudFront Developer Guide
+
+Provides an overview of Amazon CloudFront, detailed feature descriptions,
+procedures for using the console, and an explanation of the API.
+
+- [[https://github.com/awsdocs/amazon-cloudfront-developer-guide/tree/master/doc_source][The open source version of the Amazon CloudFront documentation]]
+
+
+*** CloudFront API Reference
 
 *** What CloudFront Is
 
