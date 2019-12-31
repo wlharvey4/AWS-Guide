@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-30 18:27
-#+macro:version Version 0.0.28
+#+date:2019-12-31 08:06
+#+macro:version Version 0.0.29
 #+texinfo: @insertcopying
 
 
@@ -3440,6 +3440,64 @@ completed individually.
 
 - [[https://aws.amazon.com/getting-started/projects/build-modern-app-fargate-lambda-dynamodb-python/?e=gs&p=gsrc][Build]]
 
+** Tutorials
+
+These short tutorials are designed to teach you more about AWS services and
+quickly give you hands-on experience.
+
+- Mobile :: [[https://aws.amazon.com/getting-started/tutorials/deploy-react-app-cicd-amplify/?e=gs&p=gsrc&trk=gs_card][Deploy and Host a ReactJS App]]
+
+- Machine Learning :: [[https://aws.amazon.com/getting-started/tutorials/build-train-deploy-machine-learning-model-sagemaker/?trk=gs_card&e=gs&p=gsrc][Build, Train, and Deploy a Machine Learning Model]]
+
+- Compute :: [[https://aws.amazon.com/getting-started/tutorials/launch-a-virtual-machine/?trk=gs_card&e=gs&p=gsrc][Launch a Linux Virtual Machine]]
+
+- Serverless :: [[https://aws.amazon.com/getting-started/tutorials/run-serverless-code/?trk=gs_card&e=gs&p=gsrc][Run a Serverless "Hello, World!"]]
+
+- Storage :: [[https://aws.amazon.com/getting-started/tutorials/backup-files-to-amazon-s3/?trk=gs_card&e=gs&p=gsrc][Store and Retrieve a File]]
+
+- Databases :: [[https://aws.amazon.com/getting-started/tutorials/create-nosql-table/?trk=gs_card&e=gs&p=gsrc][Create and Query a NoSQL Table]]
+
+
+[[https://aws.amazon.com/getting-started/use-cases/][VIEW ALL TUTORIALS]]
+
+** Additional resources
+
+Ready to learn more?  Connect with the AWS developer community, advance your
+knowledge with online and in-person trainings, showcase your expertise with
+certifications, and explore reference materials to help you build on AWS.
+
+*** Connect with developer communities
+
+*** Grow your skill set
+
+*** Get trained and certified
+
+*** Explore reference materials
+
+**** SDKs and Toolkits
+
+https://aws.amazon.com/tools/
+
+**** Documentation
+
+https://docs.aws.amazon.com/
+
+**** Quick Starts
+
+https://aws.amazon.com/quickstart/
+
+**** Whitepapers
+
+https://aws.amazon.com/whitepapers/
+
+**** FAQs
+
+https://aws.amazon.com/faqs/
+
+**** AWS Glossary
+
+https://docs.aws.amazon.com/general/latest/gr/glos-chap.html/
+
 ** Command Line Interface---Getting Started
 
 https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html
@@ -4138,7 +4196,15 @@ includes examples showing how to type common variations of the command.
 
 : $ aws ec2 describe-instances help
 
-* Tools
+* AWS Tools
+
+“Tools for developing and managing applications on AWS”
+
+https://aws.amazon.com/tools/
+
+
+
+* Bootstrap
 :PROPERTIES:
 :header-args: :eval never-export
 :appendix: t
