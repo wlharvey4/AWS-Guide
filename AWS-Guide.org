@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 08:06
-#+macro:version Version 0.0.29
+#+date:2019-12-31 09:37
+#+macro:version Version 0.0.30
 #+texinfo: @insertcopying
 
 
@@ -4202,7 +4202,110 @@ includes examples showing how to type common variations of the command.
 
 https://aws.amazon.com/tools/
 
+** Programming Languages
 
+#+cindex:C++
+#+cindex:Go
+#+cindex:Java
+#+cindex:JavaScript
+#+cindex:.NET
+#+cindex:Node.js
+#+cindex:PHP
+#+cindex:Python
+#+cindex:Ruby
+Easily develop applications on AWS in the programming language of your choice.
+
+- C++
+- Go
+- Java
+- JavaScript
+- .NET
+- Node.js
+- PHP
+- Python
+- Ruby
+
+** Tool type
+
+#+cindex:tools
+#+cindex:CLI tool
+#+cindex:DevOps tool
+#+cindex:IDE toolkits
+#+cindex:Mobile SDKs
+#+cindex:Mobile tools
+#+cindex:monitoring tools
+#+cindex:tracing tools
+Find the tool you need for the job.
+
+*** Command Line tools
+
+*** DevOps and Automation
+
+*** IDE and IDE Toolkits
+
+*** IoT Device SDKs
+
+*** Mobile SDKs
+
+*** Mobile Tools
+
+*** Monitoring and Tracing
+
+*** SDKs
+
+#+cindex:SDKs
+#+cindex:JavaScript SDK
+#+cindex:Python SDK
+#+cindex:Ruby SDK
+#+cindex:Java SDK
+#+cindex:Go SDK
+#+cindex:Node.js SDK
+#+cindex:C++ SDK
+SDKs take the complexity out of coding by providing language-specific APIs for
+AWS services.
+
+- [[https://aws.amazon.com/sdk-for-browser/][JavaScript]]
+
+- [[https://aws.amazon.com/sdk-for-python/][Python]]
+
+- [[https://aws.amazon.com/sdk-for-ruby/][Ruby]]
+
+- [[https://aws.amazon.com/sdk-for-java/][Java]]
+
+- [[https://aws.amazon.com/sdk-for-go/][Go]]
+
+- [[https://aws.amazon.com/sdk-for-node-js/][Node.js]]
+
+- [[https://aws.amazon.com/sdk-for-cpp/][C++]]
+
+** Connect with the Community
+
+The global AWS ecosystem consists of a range of AWS enthusiasts and advocates
+who are passionate about helping others build.  Whether you’re looking for
+expert advice or want to add your voice, you can connect with others through
+informal chats, live event feeds, launch news, or community stories.
+
+** Additional Resources
+
+- Getting started resources
+
+- GitHub projects
+
+- Jeff Barr blog
+
+- Developer Center
+
+- Developer blog
+
+- AWS answers
+
+- Forums
+
+- StackOverflow
+
+- Upcoming events
+
+- Twitter
 
 * Bootstrap
 :PROPERTIES:
