@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 10:06
-#+macro:version Version 0.0.31
+#+date:2019-12-31 13:59
+#+macro:version Version 0.0.32
 #+texinfo: @insertcopying
 
 
@@ -1696,7 +1696,197 @@ https://docs.aws.amazon.com/cli/latest/reference/s3control/index.html
 
 ** General Resources
 
+** Identity and Access Management
+*** IAM User Guide
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
+
+**** Getting Started
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started.html
+
+***** Creating Your First IAM Admin User and Group
+<<create-first_IAM-admin>>
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html
+
+#+cindex:root user
+#+cindex:administrator user
+#+cindex:Administrators group
+#+cindex:group, administrators
+#+cindex:AdministratorAccess policy
+#+cindex:policy, AdministratorAccess
+As a best practice, do not use the AWS account root user for any task where
+it's not required.  Instead, create a new IAM user for each person that
+requires administrator access.  Then make those users administrators by placing
+the users into an "Administrators" group to which you attach the
+AdministratorAccess managed policy.
+
+Thereafter, the users in the administrators group should set up the groups,
+users, and so on, for the AWS account.  All future interaction should be
+through the AWS account's users and their own keys instead of the root user.
+
+
+However, to perform some account and service management tasks, you must log in
+using the root user credentials.  To view the tasks that require you to sign in
+as the root user, see [[https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html][AWS Tasks that Require Account Root User]].
+
+#+texinfo:@heading Creating an Administrator IAM User and Group (Console)
+
+This procedure describes how to use the AWS Management Console to create an IAM
+user for yourself and add that user to a group that has administrative
+permissions from an attached managed policy.
+
+#+texinfo:@heading Creating an IAM User and Group (AWS CLI)
+
+If you followed the steps in the previous section, you used the AWS Management
+Console to set up an administrators group while creating the IAM user in your
+AWS account.  This procedure shows an alternative way to create a group.
+
+***** Creating a Group---AWS CLI
+
+This section shows how to create a group in the IAM system.
+
+***** Attaching a Policy to the Group---AWS CLI
+
+This section shows how to attach a policy that lets any user in the group
+perform any action on any resource in the AWS account.  You do this by
+attaching the [[ AWS managed policy][AWS managed policy]] called =AdministratorAccess= to the =Admins=
+group.  For more information about policies, see [[https://docs.aws.amazon.com/IAM/latest/UserGuide/access.html][Access Management]].
+
+** SDK for JavaScript Documentation
+
+https://docs.aws.amazon.com/sdk-for-javascript/
+
+The AWS SDK for JavaScript enables developers to build libraries and
+applications that use AWS services.  You can use the JavaScript API in the
+browser and inside Node.js applications on the server.
+
+*** Developer Guide
+
+Introduces you to using JavaScript with AWS services and resources, both in
+browser scripts and in Node.js applications.  Describes how to set up the SDK,
+connect to AWS services, and access AWS service features.  Also provides
+Node.js and browser code examples for working with popular AWS services.
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/welcome.html
+
+**** What Is the AWS SDK for JavaScript
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/welcome.html
+
+The AWS SDK for JavaScript provides a JavaScript API for AWS services.  You can
+use the JavaScript API to build libraries or applications for Node.js or the
+browser.
+
+Not all services are immediately available in the SDK. To find out which
+services are currently supported by the AWS SDK for JavaScript, see:
+
+- https://github.com/aws/aws-sdk-js/blob/master/SERVICES.md
+
+
+#+texinfo:@heading Using the SDK with Node.js
+
+Node.js is a cross-platform runtime for running server-side JavaScript
+applications.  You can set up Node.js on an Amazon EC2 instance to run on a
+server.  You can also use Node.js to write on-demand AWS Lambda functions.
+
+Using the SDK for Node.js differs from the way in which you use it for
+JavaScript in a web browser.  The difference comes from the way in which you
+load the SDK and in how you obtain the credentials needed to access specific
+web services.  When use of particular APIs differs between Node.js and the
+browser, those differences will be called out.
+
+#+texinfo:@heading Using the SDK with AWS Cloud9
+
+You can also develop Node.js applications using the SDK for JavaScript in the
+AWS Cloud9 IDE.  For a sample of how to use AWS Cloud9 for Node.js development,
+see [[https://docs.aws.amazon.com/cloud9/latest/user-guide//sample-nodejs.html][Node.js Sample for AWS Cloud9]] in the AWS Cloud9 User Guide.
+
+#+texinfo:@heading Using the SDK with AWS Amplify
+
+For browser-based web, mobile, and hybrid apps, you can also use the AWS
+Amplify Library on GitHub, which extends the SDK for JavaScript, providing a
+declarative interface.
+
+#+texinfo:@heading Using the SDK with Web Browsers
+
+All major web browsers support execution of JavaScript. JavaScript code that is
+running in a web browser is often called client-side JavaScript.
+
+Using the SDK for JavaScript in a web browser differs from the way in which you
+use it for Node.js.  The difference comes from the way in which you load the
+SDK and in how you obtain the credentials needed to access specific web
+services.  When use of particular APIs differs between Node.js and the browser,
+those differences will be called out.
+
+#+texinfo:@heading Common Use Cases
+
+Using the SDK for JavaScript in browser scripts makes it possible to realize a
+number of compelling use cases.  Here are several ideas for things you can
+build in a browser application by using the SDK for JavaScript to access
+various web services.
+
+- Build a custom console to AWS services in which you access and combine
+  features across Regions and services to best meet your organizational or
+  project needs.
+
+- Use Amazon Cognito Identity to enable authenticated user access to your
+  browser applications and websites, including use of third-party
+  authentication from Facebook and others.
+
+- Use Amazon Kinesis to process click streams or other marketing data in real
+  time.
+
+- Use Amazon DynamoDB for serverless data persistence such as individual user
+  preferences for website visitors or application users.
+
+- Use AWS Lambda to encapsulate proprietary logic that you can invoke from
+  browser scripts without downloading and revealing your intellectual property
+  to users.
+
+
+#+texinfo:@heading About the Examples
+
+You can browse the SDK for JavaScript examples in the [[https://docs.aws.amazon.com/code-samples/latest/catalog/code-catalog-javascript.html][AWS Code Sample Catalog]].
+
+**** Getting Started with the AWS SDK for JavaScript
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started.html
+
+The AWS SDK for JavaScript provides access to web services in either browser
+scripts or Node.js.  This section has two getting started exercises that show
+you how to work with the SDK for JavaScript in each of these JavaScript
+environments.
+
+***** Getting Started in a Browser Script
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-browser.html
+
+***** Getting Started in Node.js
+
+[[*Getting Started in Node.js SDK][Getting Started in Node.js SDK]]
+
+*** API Reference
+
+Describes in detail all the API operations for the AWS SDK for JavaScript.  In
+addition, it provides sample requests, responses, and errors for the supported
+web services protocols.
+
+https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/
+
+*** Code Sample Catelog
+
+Contains code examples and other types of examples to help accelerate your
+development of applications that work with AWS services.  The examples show how
+to perform specific tasks for AWS services using various programming languages
+and supported technologies.  Be aware that the PDF is over 25 MB.
+
+https://docs.aws.amazon.com/code-samples/latest/catalog/welcome.html
+
 ** SDKs and Toolkits
+
+https://docs.aws.amazon.com/index.html
 
 https://aws.amazon.com/getting-started/tools-sdks/
 
@@ -1725,6 +1915,8 @@ https://aws.amazon.com/sdk-for-java/
 https://aws.amazon.com/sdk-for-go/
 
 *** Node
+https://docs.aws.amazon.com/sdk-for-javascript/
+
 https://aws.amazon.com/sdk-for-node-js/
 
 *** C++
@@ -4196,6 +4388,331 @@ includes examples showing how to type common variations of the command.
 
 : $ aws ec2 describe-instances help
 
+** Getting Started in Node.js SDK
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-nodejs.html
+
+This Node.js code example shows:
+
+- How to create the package.json manifest for your project.
+
+- How to install and include the modules that your project uses.
+
+- How to create an Amazon Simple Storage Service (Amazon S3) service object
+  from the AWS.S3 client class.
+
+- How to create an Amazon S3 bucket and upload an object to that bucket.
+
+
+#+texinfo:@heading The Scenario
+
+The example shows how to set up and run a simple Node.js module that creates an
+Amazon S3 bucket, then adds a text object to it.
+
+Because bucket names in Amazon S3 must be globally unique, this example
+includes a third-party Node.js module that generates a unique ID value that you
+can incorporate into the bucket name.  This additional module is named ~uuid~.
+
+#+texinfo:@heading Prerequisite Tasks
+
+To set up and run this example, you must first complete these tasks:
+
+- Create a working directory for developing your Node.js module.  Name this
+  directory ~awsnodesample~.  Note that the directory must be created in a
+  location that can be updated by applications.  For example, in Windows, do
+  not create the directory under "C:\Program Files".
+
+- Install Node.js.  For more information, see the Node.js website.  You can
+  find downloads of the current and LTS versions of Node.js for a variety of
+  operating systems at https://nodejs.org/en/download/current/.
+
+*** Step 1---Configure Your Credentials
+
+#+cindex:credentials
+#+cindex:shared credentials file
+You need to provide credentials to AWS so that only your account and its
+resources are accessed by the SDK.  To hold this information, we recommend you
+create a shared credentials file.
+- see [[shared-credentials-file][Loading Credentials in Node.js from the Shared Credentials File]]
+
+
+Your credentials file should resemble the following example.
+
+#+begin_example
+[default]
+aws_access_key_id = YOUR_ACCESS_KEY_ID
+aws_secret_access_key = YOUR_SECRET_ACCESS_KEY
+#+end_example
+
+You can determine whether you have set your credentials correctly by executing
+the following code with node:
+
+#+begin_src js :eval never-export :results output
+var AWS = require("aws-sdk");
+
+AWS.config.getCredentials(function(err) {
+  if (err) console.log(err.stack);
+  // credentials not loaded
+  else {
+    console.log("Access key:", AWS.config.credentials.accessKeyId);
+    console.log("Secret access key:", AWS.config.credentials.secretAccessKey);
+  }
+});
+#+end_src
+
+#+cindex:@env{AWS_SDK_LOAD_CONFIG} environment variable
+Similarly, if you have set your region correctly in your config file, you can
+display that value by setting the =AWS_SDK_LOAD_CONFIG= environment variable to
+a truthy value and using the following code:
+
+: export AWS_SDK_LOAD_CONFIG=1
+
+#+begin_src js :eval never-export :results output
+var AWS = require("aws-sdk");
+
+console.log("Region: ", AWS.config.region);
+#+end_src
+
+*** Step 2---Create the Package JSON for the Project
+
+#+cindex:package.json
+After you create the ~awsnodesample~ project directory, you create and add a
+~package.json~ file for holding the metadata for your Node.js project.
+
+In the project directory, create a new file named ~package.json~.  Then add
+this JSON to the file.
+
+#+begin_src js :eval no
+{
+  "dependencies": {},
+  "name": "aws-nodejs-sample",
+  "description": "A simple Node.js application illustrating usage of the AWS SDK for Node.js.",
+  "version": "1.0.1",
+  "main": "sample.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "NAME",
+  "license": "ISC"
+}
+#+end_src
+
+*** Step 3---Install the SDK and Dependencies
+
+You install the SDK for JavaScript package using npm.  From the awsnodesample
+directory in the package, type the following at the command line.
+
+: npm install aws-sdk
+
+This command installs the SDK for JavaScript in your project, and updates
+~package.json~ to list the SDK as a project dependency.
+
+Next, install the ~uuid~ module to the project by typing the following at the
+command line, which installs the module and updates ~package.json~.  For more
+information about uuid, see the module's page at
+https://www.npmjs.com/package/uuid [fn:1]
+
+*** Step 4---Write the Node.js Code
+
+Create a new file named ~sample.js~ to contain the example code.  Begin by
+adding the require function calls to include the SDK for JavaScript and ~uuid~
+modules so that they are available for you to use.
+
+Build a unique bucket name that is used to create an Amazon S3 bucket by
+appending a unique ID value to a recognizable prefix, in this case
+'node-sdk-sample-'.  You generate the unique ID by calling the ~uuid~ module.
+Then create a name for the Key parameter used to upload an object to the
+bucket.
+
+Create a promise object to call the ~createBucket~ method of the AWS.S3 service
+object.  On a successful response, create the parameters needed to upload text
+to the newly created bucket.  Using another promise, call the ~putObject~
+method to upload the text object to the bucket.
+
+#+begin_src js :eval no
+// Load the SDK and UUID
+var AWS = require('aws-sdk');
+var uuid = require('uuid');
+
+// Create unique bucket name
+var bucketName = 'node-sdk-sample-' + uuid.v4();
+// Create name for uploaded object key
+var keyName = 'hello_world.txt';
+
+// Create a promise on S3 service object
+var bucketPromise = new AWS.S3({apiVersion: '2006-03-01'}).createBucket({Bucket: bucketName}).promise();
+
+// Handle promise fulfilled/rejected states
+bucketPromise.then(
+  function(data) {
+    // Create params for putObject call
+    var objectParams = {Bucket: bucketName, Key: keyName, Body: 'Hello World!'};
+    // Create object upload promise
+    var uploadPromise = new AWS.S3({apiVersion: '2006-03-01'}).putObject(objectParams).promise();
+    uploadPromise.then(
+      function(data) {
+        console.log("Successfully uploaded data to " + bucketName + "/" + keyName);
+      });
+}).catch(
+  function(err) {
+    console.error(err, err.stack);
+});
+#+end_src
+
+This sample code can be found [[https://github.com/awsdocs/aws-doc-sdk-examples/blob/master/javascript/example_code/nodegetstarted/sample.js][here on GitHub]].
+
+*** Step 5---Run the Sample
+
+Type the following command to run the sample.
+
+: node sample.js
+
+If the upload is successful, you'll see a confirmation message at the command
+line.  You can also find the bucket and the uploaded text object in the Amazon
+S3 console.
+
+** Setting Up the SDK for JavaScript
+
+** Configuring the SDK for JavaScript
+*** Using the Global Configuration Object
+
+*** Setting the AWS Region
+
+*** Specifying Custom Endpoints
+
+*** Getting Your Credentials
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-your-credentials.html
+
+#+cindex:root credentials
+When you create an AWS account, your account is provided with root credentials.
+Those credentials consist of two access keys:
+
+- Access key ID
+- Secret access key
+
+
+For more information on your access keys, see Understanding and Getting Your
+Security Credentials in the AWS General Reference.
+
+#+cindex:access keys
+#+cindex:access key ID
+#+cindex:secret access key
+Access keys consist of an access key ID and secret access key, which are used
+to sign programmatic requests that you make to AWS.  If you don't have access
+keys, you can create them from the AWS Management Console.  As a best practice,
+do not use the AWS account root user access keys for any task where it's not
+required.  Instead, create a [[create-first_IAM-admin][new administrator IAM user]] with access keys for
+yourself.
+
+#+texinfo:@heading To create access keys for an IAM user
+
+1. AWS Management Console
+
+2. Users
+
+3. Choose User; choose *Security credentials* tab
+
+4. *Access keys* section; choose *Create access keys*
+
+5. Choose *Show*
+
+6. Choose *Download .csv file*
+
+7. Choose *Close*
+
+*** Setting Credentials in Node.js
+#+cindex:credentials in Node.js
+**** Credentials for EC2 from IAM Roles
+
+**** Credentials for a Node.js Lambda Function
+
+**** Loading Credentials in NodeJS from the Shared Credentials File
+<<shared-credentials-file>>
+
+#+cindex:credentials, loading in Node.js
+#+cindex:shared credentials file
+You can keep your AWS credentials data in a shared file used by SDKs and the
+command line interface.
+
+#+begin_cartouche
+*When the SDK for JavaScript loads, it automatically searches the shared
+credentials file, which is named "credentials".*
+#+end_cartouche
+
+Where you keep the shared credentials file depends on your operating system:
+
+- The shared credentials file on Linux, Unix, and macOS: =~/.aws/credentials=
+
+- The shared credentials file on Windows: =C:\Users\USER_NAME\.aws\credentials=
+
+
+If you do not already have a shared credentials file, see [[*Getting Your Credentials][Getting Your
+Credentials]].
+
+#+cindex:credentials file, shared
+#+cindex:shared credentials file
+#+cindex:access_key_id
+#+cindex:secret_access_key
+Once you follow those instructions, you should see text similar to the
+following in the credentials file, where =<YOUR_ACCESS_KEY_ID>= is your access
+key ID and =<YOUR_SECRET_ACCESS_KEY>= is your secret access key:
+
+#+begin_example
+[default]
+aws_access_key_id = <YOUR_ACCESS_KEY_ID>
+aws_secret_access_key = <YOUR_SECRET_ACCESS_KEY>
+#+end_example
+
+#+cindex:profiles
+The =[default]= section heading specifies a default profile and associated
+values for credentials.  You can create additional profiles in the same shared
+configuration file, each with its own credential information.  The following
+example shows a configuration file with the default profile and two additional
+profiles:
+
+#+begin_example
+[default] ; default profile
+aws_access_key_id = <DEFAULT_ACCESS_KEY_ID>
+aws_secret_access_key = <DEFAULT_SECRET_ACCESS_KEY>
+    
+[personal-account] ; personal account profile
+aws_access_key_id = <PERSONAL_ACCESS_KEY_ID>
+aws_secret_access_key = <PERSONAL_SECRET_ACCESS_KEY>
+    
+[work-account] ; work account profile
+aws_access_key_id = <WORK_ACCESS_KEY_ID>
+aws_secret_access_key = <WORK_SECRET_ACCESS_KEY>
+#+end_example
+
+#+cindex:@env{AWS_PROFILE} environment variable
+By default, the SDK checks the =AWS_PROFILE= environment variable to determine
+which profile to use.  If the =AWS_PROFILE= variable is not set in your
+environment, the SDK uses the credentials for the =[default]= profile.  To use
+one of the alternate profiles, set or change the value of the =AWS_PROFILE=
+environment variable.  For example, given the configuration file shown above,
+to use the credentials from the work account, set the =AWS_PROFILE= environment
+variable to =work-account= (as appropriate for your operating system).
+
+After setting the environment variable (if needed), you can run a file named
+~script.js~ that uses the SDK as follows:
+
+: $ node script.js
+
+#+cindex:prcess.env.AWS_PROFILE
+#+cindex:credential provider
+You can also explicitly select the profile used by the SDK, either by setting
+~process.env.AWS_PROFILE~ before loading the SDK, or by selecting the
+credential provider as shown in the following example:
+
+#+cindex:AWS.config.credentials
+#+begin_src js :eval no
+#+cindex:SharedIniFileCredentials
+var credentials = new AWS.SharedIniFileCredentials({profile: 'work-account'});
+AWS.config.credentials = credentials;
+#+end_src
+
 * AWS Tools
 
 “Tools for developing and managing applications on AWS”
@@ -4220,7 +4737,7 @@ Easily develop applications on AWS in the programming language of your choice.
 - Java
 - JavaScript
 - .NET
-- Node.js
+- [[*Node.js SDK][Node.js]]
 - PHP
 - Python
 - Ruby
@@ -4239,18 +4756,6 @@ Find the tool you need for the job.
 
 *** Command Line tools
 
-*** DevOps and Automation
-
-*** IDE and IDE Toolkits
-
-*** IoT Device SDKs
-
-*** Mobile SDKs
-
-*** Mobile Tools
-
-*** Monitoring and Tracing
-
 *** SDKs
 
 #+cindex:SDKs
@@ -4264,6 +4769,8 @@ Find the tool you need for the job.
 SDKs take the complexity out of coding by providing language-specific APIs for
 AWS services.
 
+- [[https://aws.amazon.com/sdk-for-node-js/][Node.js]]
+
 - [[https://aws.amazon.com/sdk-for-browser/][JavaScript]]
 
 - [[https://aws.amazon.com/sdk-for-python/][Python]]
@@ -4274,9 +4781,19 @@ AWS services.
 
 - [[https://aws.amazon.com/sdk-for-go/][Go]]
 
-- [[https://aws.amazon.com/sdk-for-node-js/][Node.js]]
-
 - [[https://aws.amazon.com/sdk-for-cpp/][C++]]
+
+*** DevOps and Automation
+
+*** IDE and IDE Toolkits
+
+*** IoT Device SDKs
+
+*** Mobile SDKs
+
+*** Mobile Tools
+
+*** Monitoring and Tracing
 
 ** Connect with the Community
 
@@ -4308,7 +4825,6 @@ informal chats, live event feeds, launch news, or community stories.
 - Twitter
 
 * Software Development Kits---SDKs
-
 ** Node.js SDK
 
 “AWS SDK for JavaScript in Node.js”
@@ -4327,7 +4843,6 @@ documentation.
 
 - Install using npm
   : npm install aws-sdk
-
 
 *** AWS SDK for Node.js 3.0 Developer Preview
 
@@ -4592,6 +5107,13 @@ Copyright \copy 2019 {{{author}}}
 :unnumbered: t
 :index:    cp
 :END:
+
+* Footnotes
+
+[fn:1] Deprecation warning: The use of require('uuid') is deprecated and will
+not be supported after version 3.x of this module. Instead, use
+require('uuid/[v1|v3|v4|v5]') as shown in the examples below.
+: const uuidv1 = require('uuid/v1');
 
 * End                                                              :noexport:
 
