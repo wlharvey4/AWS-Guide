@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-30 11:22
-#+macro:version Version 0.0.26
+#+date:2019-12-30 17:54
+#+macro:version Version 0.0.27
 #+texinfo: @insertcopying
 
 
@@ -302,6 +302,7 @@ security credentials. Provides syntax, options, and usage examples for
 each command.
 
 ** Lambda@Edge
+** AWS Media Services
 ** Organizations
 
 #+cindex:organizations
@@ -2132,6 +2133,423 @@ domain name and have CloudFront serve it.
 
 *** Working with Distributions
 
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-working-with.html
+
+You create a CloudFront distribution to tell CloudFront where you want content
+to be delivered from, and the details about how to track and manage content
+delivery.  The following topics explain some basics about CloudFront
+distributions and provide detailed information about the settings you can
+choose to configure your distributions to meet your business needs.
+
+**** Overview of Distributions
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-overview.html
+
+#+cindex:CloudFront distributions, overview
+When you want to use CloudFront to distribute your content, you create a
+/distribution/ and choose the /configuration settings/ you want.  For example:
+
+#+texinfo:@heading CloudFront Configuration Settings
+
+- Your content origin---the Amazon S3 bucket, MediaPackage channel, or HTTP
+  server from which CloudFront gets the files to distribute.  You can specify
+  any combination of up to 25 Amazon S3 buckets, channels, and/or HTTP servers
+  as your origins.
+
+- Access---whether you want the files to be available to everyone or restrict
+  access to some users.
+
+- Security---whether you want CloudFront to require users to use HTTPS to
+  access your content.
+
+- Cookie or query-string forwarding---whether you want CloudFront to forward
+  cookies or query strings to your origin.
+
+- Geo-restrictions---whether you want CloudFront to prevent users in selected
+  countries from accessing your content.
+
+- Access logs---whether you want CloudFront to create access logs that show
+  viewer activity.
+
+
+#+cindex:distributions limit
+#+cindex:quota, distributions
+For the current limit on the number of distributions that you can create for
+each AWS account, see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-web-distributions][General Quotas on Web Distributions]].  The number of files
+that you can serve per distribution is unlimited.
+
+#+texinfo:@heading Type of Content a Distribution can Server
+
+- Static and dynamic download content
+
+- Video on demand in different formats
+
+- A live event, such as a meeting, conference, or concert, in real time
+
+***** Actions You Can Use with Distributions
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-overview-actions.html
+
+The following table lists the CloudFront actions that you can take to work with
+distributions and provides links to the corresponding documentation on how to
+do the actions with the CloudFront console and the CloudFront API.
+
+- [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreateDistribution.html][Create a distribution]]
+
+- [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListDistributions.html][List your distributions]]
+
+- [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_GetDistribution.html][Get all information about a distribution]]
+
+- [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_GetDistributionConfig.html][Get the distribution configuration]]
+
+- [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_UpdateDistribution.html][Update a distribution]]
+
+- [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_DeleteDistribution.html][Delete a distribution]]
+
+***** Required Fields for Create Distribution and Update Distribution
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-overview-required-fields.html
+
+#+cindex:distribution, required fileds
+#+cindex:required fields, distributions
+#+cindex:update distribution, required fields
+When you update a distribution by using the [[https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_UpdateDistribution.html][UpdateDistribution]] CloudFront API
+action, there are more required fields than when you create a distribution by
+using CreateDistribution.  Review the following tables for a summary of the
+fields that are required for creating and for updating a distribution.
+
+- DistributionConfig
+
+- CacheBehavior
+
+**** Creating Updating and Deleting Distributions
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-create-delete.html
+
+**** Using Different Origins
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html
+
+**** Using Custom URLs
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html
+
+**** Using WebSockets
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-working-with.websockets.html
+
+*** Adding Removing Replacing Content
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AddRemoveReplaceObjects.html
+
+This section explains how to make sure CloudFront can access the content that
+you want to be served to your viewers, how to specify the objects in your
+website or in your application, and how to remove or replace content.
+
+
+**** Adding and Accessing Content That CloudFront Distributes
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AddingObjects.html
+
+When you want CloudFront to distribute content (objects), you add files to one
+of the origins that you specified for the distribution, and you expose a
+CloudFront link to the files.  A CloudFront edge location doesn't fetch the new
+files from an origin until the edge location receives viewer requests for them.
+
+#+cindex:MIME type
+#+cindex:Content-Type header field
+CloudFront servers don't determine the MIME type for the objects that they
+serve.  When you upload a file to your origin, we recommend that you set the
+Content-Type header field for it.
+
+**** Updating Existing Content with a CloudFront Distribution
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/UpdatingExistingObjects.html
+
+There are two ways to update existing content that CloudFront is set up to
+distribute for you:
+
+- Update files by using the same name
+
+- Update by using a version identifier in the file name
+
+
+We recommend that you use a version identifier in file names or in folder
+names, to help give you more control over managing the content that CloudFront
+serves.
+
+#+texinfo:@heading Updating Existing Files Using Versioned File Names
+
+When you update existing files in a CloudFront distribution, we recommend that
+you include some sort of version identifier either in your file names or in
+your directory names to give yourself better control over your content.  This
+identifier might be a date-time stamp, a sequential number, or some other
+method of distinguishing two versions of the same object.
+
+#+texinfo:@heading Updating Existing Content Using the Same File Names
+
+Although you can update existing files in a CloudFront distribution and use the
+same file names, we don't recommend it. CloudFront distributes files to edge
+locations only when the files are requested, not when you put new or updated
+files in your origin.
+
+If you update an existing file in your origin with a newer version that has the
+same name, an edge location won't get that new version from your origin until
+both of the following occur:
+
+- The old version of the file in the cache expires.
+
+- There's a user request for the file at that edge location.
+
+
+If you use the same names when you replace files, you can't control when
+CloudFront starts to serve the new files.  By default, CloudFront caches files
+in edge locations for 24 hours.  For example, if you're replacing all of the
+files on an entire website:
+
+- Files for the less popular pages may not be in any edge locations. The new
+  versions of these files will start being served on the next request.
+
+- Files for some pages may be in some edge locations and not in others, so your
+  end users will see different versions depending on which edge location
+  they're served from.
+
+- New versions of the files for the most popular pages might not be served for
+  up to 24 hours because CloudFront might have retrieved the files for those
+  pages just before you replaced the files with new versions.
+
+**** Removing Content so CloudFront Won't Distribute It
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/RemovingObjects.html
+
+You can remove files from your origin that you no longer want to be included in
+your CloudFront distribution.  However, CloudFront will continue to show
+viewers content from the edge cache until the files expire.
+
+If you want to remove a file right away, you must do one of the following:
+
+- Invalidate the file :: see [[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html][Invalidating Files]]
+
+- Use file versioning :: When you use versioning, different versions of a file
+     have different names that you can use in your CloudFront distribution, to
+     change which file is returned to viewers.
+
+**** Customizing the URL Format for Files in CloudFront
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/LinkFormat.html
+
+After you set up your origin with the objects (content) that you want
+CloudFront to serve to your viewers, you must use the correct URLs to reference
+those objects in your website or application code so that CloudFront can serve
+it.
+
+#+pindex:domain name
+#+cindex:CloudFront domain name
+#+cindex:alternate domain name
+#+cindex:SSL/TLS certificate
+The domain name that you use in the URLs for objects on your web pages or in
+your web application can be either of the following:
+
+- The domain name that CloudFront automatically assigns when you create a
+  distribution
+
+- Your own (alternate) domain name.  You must own the domain name, or have
+  authorization to use it, which you verify by adding an SSL/TLS certificate.
+
+  If you add a CNAME (alias) to your distribution, you must also do the
+  following:
+
+  - Create (or update) a CNAME record with your DNS service to route queries
+    for the CNAME to the CloudFront domain name;
+
+  - Add a certificate to CloudFront from a trusted certificate authority (CA)
+    that covers the domain name (CNAME) that you add to your distribution, to
+    validate your authorization to use the domain name.
+
+
+When you specify URLs for directories in your CloudFront distribution, choose
+either to always use a trailing slash or to never use a trailing slash.  Both
+formats work to link to CloudFront objects, but being consistent can help
+prevent issues when you want to invalidate a directory later.  CloudFront
+stores URLs exactly as they are defined, including trailing slashes.  So if
+your format is inconsistent, you'll need to invalidate directory URLs with and
+without the slash, to ensure that CloudFront removes the directory.
+
+**** Invalidating Files
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html
+
+**** Serving Compressed Files
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ServingCompressedFiles.html
+
+You can configure CloudFront to automatically compress files of certain types
+and serve the compressed files when viewer requests include Accept-Encoding:
+gzip in the request header.  When content is compressed, downloads are faster
+because the files are smaller—in some cases, less than a quarter the size of
+the original.  Especially for JavaScript and CSS files, faster downloads
+translates into faster rendering of web pages for your users.  In addition,
+because the cost of CloudFront data transfer is based on the total amount of
+data served, serving compressed files is less expensive than serving
+uncompressed files.
+
+#+cindex:gzip
+#+begin_cartouche
+A viewer request must include =Accept-Encoding: gzip= in the request header, or
+CloudFront won't compress the requested file.
+#+end_cartouche
+
+If you're using a custom or Amazon S3 origin, you can configure your origin to
+compress files with or without CloudFront compression.  Your origin can
+compress file types that CloudFront doesn't compress.
+
+*** Configuring Secure Access and Limiting Access to Content
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/SecurityAndPrivateContent.html
+
+For web distributions, CloudFront provides several options for securing content
+that it delivers, including configuring HTTPS connections, using AWS WAF to
+control access to your content, or setting up field-level encryption for
+specific content fields. 
+
+In addition, you can prevent users in specific geographic locations from
+accessing content distributed through a web distribution.
+
+You also have the option of limiting access to private content by requiring
+that users access that content by using CloudFront signed URLs or signed
+cookies.
+
+*** Optimizing Content Caching and Availability
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ConfiguringCaching.html
+
+This section describes how to set up and manage caching of objects to improve
+performance and meet your business requirements.
+
+To learn about adding and removing the content that you want CloudFront to
+serve, see:
+- [[*Adding Removing Replacing Content][Adding, Removing, or Replacing Content That CloudFront Distributes]]
+
+*** Troubleshooting
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Troubleshooting.html
+
+Troubleshoot common problems you might encounter when setting up Amazon
+CloudFront to distribute your content or when using Lambda@Edge, and find
+possible solutions.
+
+*** Request and Response Behavior
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/RequestAndResponseBehavior.html
+
+The following sections explain how CloudFront processes viewer requests and
+forwards the requests to your Amazon S3 or custom origin, and how CloudFront
+processes responses from your origin, including how CloudFront processes and
+caches 4xx and 5xx HTTP status codes.
+
+*** Generating Custom Error Responses
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GeneratingCustomErrorResponses.html
+
+If the objects that you're serving through CloudFront are unavailable for some
+reason, your web server typically returns an HTTP status code to
+CloudFront. For example, if a viewer specifies an invalid URL, your web server
+returns a 404 status code to CloudFront, and CloudFront returns that status
+code to the viewer. The viewer displays a brief and sparsely formatted default
+message similar to this:
+
+: Not Found: The requested URL /myfilename.html was not found on this server.
+
+But you can display a custom error message instead, if you like.  You also have
+several options for managing how CloudFront responds when there's an error.  To
+specify options for custom error messages, you update your CloudFront
+distribution to specify those values.
+
+*** On-Demand and Live Streaming Video
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/on-demand-streaming-video.html
+
+You can use CloudFront to deliver on-demand video or live streaming video using
+any HTTP origin.  One way you can set up video workflows in the cloud is by
+using CloudFront together with AWS Media Services
+
+*** Customizing with Lambda Edge
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-at-the-edge.html
+
+#+cindex:Lambda@@Edge
+Lambda@Edge is an extension of AWS Lambda, a compute service that lets you
+execute functions that customize the content that CloudFront delivers.  You can
+author Node.js or Python functions in one Region, US-East-1 (N. Virginia), and
+then execute them in AWS locations globally that are closer to the viewer,
+without provisioning or managing servers.  Lambda@Edge scales automatically,
+from a few requests per day to thousands per second.  Processing requests at
+AWS locations closer to the viewer instead of on origin servers significantly
+reduces latency and improves the user experience.
+
+When you associate a CloudFront distribution with a Lambda@Edge function,
+CloudFront intercepts requests and responses at CloudFront edge locations.  You
+can execute Lambda functions when the following CloudFront events occur:
+
+- When CloudFront receives a request from a viewer (viewer request)
+- Before CloudFront forwards a request to the origin (origin request)
+- When CloudFront receives a response from the origin (origin response)
+- Before CloudFront returns the response to the viewer (viewer response)
+
+
+There are many uses for Lambda@Edge processing. For example:
+
+- A Lambda function can inspect cookies and rewrite URLs so that users see
+  different versions of a site for A/B testing.
+- CloudFront can return different objects to viewers based on the device
+  they're using by checking the User-Agent header, which includes information
+  about the devices. For example, CloudFront can return different images based
+  on the screen size of their device. Similarly, the function could consider
+  the value of the Referer header and cause CloudFront to return the images to
+  bots that have the lowest available resolution.
+- Or you could check cookies for other criteria. For example, on a retail
+  website that sells clothing, if you use cookies to indicate which color a
+  user chose for a jacket, a Lambda function can change the request so that
+  CloudFront returns the image of a jacket in the selected color.
+- A Lambda function can generate HTTP responses when CloudFront viewer request
+  or origin request events occur.
+- A function can inspect headers or authorization tokens, and insert a header
+  to control access to your content before CloudFront forwards the request to
+  your origin.
+- A Lambda function can also make network calls to external resources to
+  confirm user credentials, or fetch additional content to customize a
+  response.
+
+*** Reports Access Logs and Monitoring
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/reports-and-monitoring.html
+
+This section includes topics that provide details on your options for reports
+and monitoring for CloudFront.  A variety of reports are available for you to
+see usage and activity for your CloudFront distributions, including billing
+reports, cache statistics, popular content, and top referrers.  In addition,
+you can monitor and track CloudFront—including Lambda@Edge activity—directly in
+the CloudFront console, and by using tools such as CloudTrail and CloudWatch.
+
+*** Security
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/security.html
+
+This documentation helps you understand how to apply the shared responsibility
+model when using CloudFront.  The following topics show you how to configure
+CloudFront to meet your security and compliance objectives.  You also learn how
+to use other AWS services that help you to monitor and secure your CloudFront
+resources.
+
+*** Quotas
+
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html
+
+CloudFront is subject to the following quotas (formerly referred to as limits).
+Note that Lambda@Edge has specific quotas as well, that are in addition to the
+default CloudFront quotas.
+
+
 ** Cognito Developer Guide
 
 #+cindex:Cognito developer guide
@@ -3521,7 +3939,6 @@ parameters, available filters, and what is included as output.  It also
 includes examples showing how to type common variations of the command.
 
 : $ aws ec2 describe-instances help
-
 
 * Tools
 :PROPERTIES:
