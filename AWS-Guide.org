@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 13:59
-#+macro:version Version 0.0.32
+#+date:2019-12-31 15:26
+#+macro:version Version 0.0.33
 #+texinfo: @insertcopying
 
 
@@ -54,6 +54,7 @@ https://aws.amazon.com/products/
 **** Blockchain
 
 ** API Gateway
+** API Reference
 ** CloudFront                                                   :networking:
 
 “Fast, highly secure and programmable content delivery network (CDN)”
@@ -302,7 +303,7 @@ security credentials. Provides syntax, options, and usage examples for
 each command.
 
 ** Lambda@Edge
-** AWS Media Services
+** Media Services
 ** Organizations
 
 #+cindex:organizations
@@ -375,6 +376,14 @@ to all AWS customers at no additional charge.
 
 #+cindex:organizations Service Control Policy
 #+cindex:SCP
+
+** SDK for JavaScript Reference
+
+https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/index.html
+
+[[https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/_index.html][Alphabetical Index]]
+
+[[*SDK for JavaScript Documentation][JavaScript SDK Developer Guide]]
 
 ** Security
 *** AWS Shield
@@ -539,6 +548,76 @@ credentials for everyday interaction with AWS.
 *** TLS
 *** CloudTrail
 *** Certificate Manager---ACM
+** Server Name Inidication---SNI
+
+Server Name Indication (SNI) is an extension to the TLS protocol that is
+supported by browsers and clients released after 2010.
+
+See [[SNI][Using SNI to Serve HTTPS Requests]]
+** Service Endpoints
+
+https://docs.aws.amazon.com/general/latest/gr/rande.html
+
+#+cindex:service endpoint
+#+cindex:endpoint
+To connect programmatically to an AWS service, you use an /endpoint/.  An
+/endpoint/ is the URL of the entry point for an AWS web service.  The AWS SDKs
+and the AWS Command Line Interface (AWS CLI) automatically use the default
+endpoint for each service in an AWS Region.  But you can specify an alternate
+endpoint for your API requests.
+
+If a service supports Regions, the resources in each Region are independent of
+similar resources in other Regions.  For example, you can create an Amazon EC2
+instance or an Amazon SQS queue in one Region.  When you do, the instance or
+queue is independent of instances or queues in all other Regions.
+
+*** Regional Endpoints
+
+#+cindex:Regions
+#+cindex:Regional endpoints
+Most Amazon Web Services offer a /Regional endpoint/ that you can use to make
+your requests.  The general syntax of a Regional endpoint is as follows.
+
+: protocol://service-code.region-code.amazonaws.com
+
+The following table lists the name and code of each Region.
+
+| Code                    | Name      |
+|-------------------------+-----------|
+| US East (Ohio)          | us-east-2 |
+| US East (N. Virginia)   | us-east-1 |
+| US West (N. California) | us-west-1 |
+| US West (Oregon)        | us-west-2 |
+| ...                     |           |
+|-------------------------+-----------|
+
+Some services, such as IAM, do not support Regions.  Thus, the endpoints for
+those services do not include a Region.  Other services, such as Amazon EC2,
+support Regions but let you specify an endpoint that does not include a Region,
+such as =https://ec2.amazonaws.com=.  When you use an endpoint with no Region,
+AWS routes the Amazon EC2 request to US East (N. Virginia) (us-east-1), which
+is the default Region for API calls.
+
+*** FIPs Endpoints
+#+cindex:FIPS endpoints
+
+Some AWS services offer FIPS endpoints in selected Regions.  Unlike standard
+AWS endpoints, FIPS endpoints use a TLS software library that complies with
+Federal Information Processing Standards (FIPS) standards.  These endpoints
+might be required by enterprises that interact with the United States
+government.
+
+*** View the Service Endpoints
+
+#+cindex:endpoints, search
+To view the supported endpoints for an AWS service, open [[https://docs.aws.amazon.com/general/latest/gr/aws-service-information.html][Service Endpoints and
+Quotas]], search for the service name, and click the link to open the page for
+that service.
+
+To view the supported endpoints for all AWS services in the documentation
+without switching pages, view the information in the [[https://docs.aws.amazon.com/general/latest/gr/aws-general.pdf#aws-service-information][Service Endpoints and
+Quotas]] page in the PDF instead.
+
 ** Simple Storage Service---S3
 “Object storage built to store and retrieve any amount of data from anywhere”
 
@@ -606,6 +685,16 @@ S3 features include:
 - Amazon S3 Glacier (S3 Glacier)
 - Amazon S3 Glacier Deep Archive (S3 Glacier Deep Archive)
 
+** Systems Manager
+
+https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html
+
+AWS Systems Manager is an AWS service that you can use to view and control your
+infrastructure on AWS.  Using the Systems Manager console, you can view
+operational data from multiple AWS services and automate operational tasks
+across your AWS resources.  Systems Manager helps you maintain security and
+compliance by scanning your managed instances and reporting on (or taking
+corrective action on) any policy violations it detects.
 ** Virtual Private Cloud---VPC
 
 “Provision a logically isolated section of the AWS cloud where you can launch
@@ -712,12 +801,6 @@ Amazon VPC ingress routing allows you to easily deploy network and security
 appliances, including third-party offerings, inline to the inbound or outbound
 Amazon VPC traffic.  Inline traffic inspection helps you screen and secure
 traffic to protect your workloads from malicious actors.
-** Server Name Inidication---SNI
-
-Server Name Indication (SNI) is an extension to the TLS protocol that is
-supported by browsers and clients released after 2010.
-
-See [[SNI][Using SNI to Serve HTTPS Requests]]
 
 * AWS Documentation
 
@@ -1762,7 +1845,7 @@ The AWS SDK for JavaScript enables developers to build libraries and
 applications that use AWS services.  You can use the JavaScript API in the
 browser and inside Node.js applications on the server.
 
-*** Developer Guide
+#+texinfo:@heading SDK for JavaScript Developer Guide
 
 Introduces you to using JavaScript with AWS services and resources, both in
 browser scripts and in Node.js applications.  Describes how to set up the SDK,
@@ -1771,7 +1854,7 @@ Node.js and browser code examples for working with popular AWS services.
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/welcome.html
 
-**** What Is the AWS SDK for JavaScript
+*** What Is the AWS SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/welcome.html
 
@@ -1850,7 +1933,7 @@ various web services.
 
 You can browse the SDK for JavaScript examples in the [[https://docs.aws.amazon.com/code-samples/latest/catalog/code-catalog-javascript.html][AWS Code Sample Catalog]].
 
-**** Getting Started with the AWS SDK for JavaScript
+*** Getting Started with the AWS SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started.html
 
@@ -1859,13 +1942,303 @@ scripts or Node.js.  This section has two getting started exercises that show
 you how to work with the SDK for JavaScript in each of these JavaScript
 environments.
 
-***** Getting Started in a Browser Script
+**** Getting Started in a Browser Script
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-browser.html
 
-***** Getting Started in Node.js
+**** Getting Started in Node.js
 
 [[*Getting Started in Node.js SDK][Getting Started in Node.js SDK]]
+
+*** Setting Up the SDK for JavaScript
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up.html
+
+The topics in this section explain how to install the SDK for JavaScript for
+use in web browsers and with Node.js.  It also shows how to load the SDK so you
+can access the web services supported by the SDK.
+
+#+texinfo:@heading Installing the SDK for JavaScript
+
+The preferred way to install the AWS SDK for JavaScript for Node.js is to use
+~npm~:
+
+: npm install aws-sdk
+
+In the event you see this error message:
+
+: npm WARN deprecated node-uuid@1.4.8: Use uuid module instead
+
+Type these commands at the command line:
+
+: npm uninstall --save node-uuid
+: npm install --save uuid
+
+#+texinfo:@subheading Installing Using Bower
+
+[[https://bower.io/][Bower]] is a package manager for the web. After you install Bower, you can use it
+to install the SDK. To install the SDK using Bower, type the following into a
+terminal window:
+
+: bower install aws-sdk-js
+
+#+texinfo:@subheading The Browser
+
+You don't have to install the SDK to use it in browser scripts. You can load
+the hosted SDK package directly from Amazon Web Services with a script in your
+HTML pages. The hosted SDK package supports the subset of AWS services that
+enforce cross-origin resource sharing (CORS). For more information, see [[load-sdk-for-js-in-browser][Loading
+the SDK for JavaScript]].
+
+You can download minified and non-minified distributable versions of the
+current AWS SDK for JavaScript from GitHub at:
+
+https://github.com/aws/aws-sdk-js/tree/master/dist
+
+*** Loading the SDK for JavaScript
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-the-jssdk.html
+
+After you install the SDK, you can load the AWS package in your node
+application using ~require~.
+
+: var AWS = require('aws-sdk');
+
+#+texinfo:@heading In the Browser
+<<load-sdk-for-js-in-browser>>
+
+The quickest way to get started with the SDK is to load the hosted SDK package
+directly from Amazon Web Services.  To do this, add a =<script>= element to
+your HTML pages in the following form:
+
+: <script src="https://sdk.amazonaws.com/js/aws-sdk-SDK_VERSION_NUMBER.min.js"></script>
+
+To find the current =SDK_VERSION_NUMBER=, see the API Reference for the SDK for
+JavaScript at:
+
+https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/index.html.
+
+After the SDK loads in your page, the SDK is available from the global variable
+AWS (or ~window.AWS~).
+
+If you bundle your code and module dependencies using [[http://browserify.org/][browserify]], you load the
+SDK using require, just as you do in Node.js.
+
+*** Configuring the SDK for JavaScript
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/configuring-the-jssdk.html
+
+#+cindex:configure JS SDK
+Before you use the SDK for JavaScript to invoke web services using the API, you
+must configure the SDK.  At a minimum, you must configure these settings:
+
+- The /Region/ in which you will request services.
+
+- The /credentials/ that authorize your access to SDK resources.
+
+
+#+cindex:permisions
+In addition to these settings, you may also have to configure /permissions/ for
+your AWS resources.  For example, you can limit access to an Amazon S3 bucket
+or restrict an Amazon DynamoDB table for read-only access.
+
+The topics in this section describe various ways to configure the SDK for
+JavaScript for Node.js and JavaScript running in a web browser.
+
+**** Using the Global Configuration Object
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/global-config-object.html
+
+#+cindex:configure SDK for JS
+There are two ways to configure the SDK:
+
+#+cindex:configuration, JS SDK
+#+cindex:service object configuration
+#+cindex:AWS.Config
+#+cindex:global configuration object
+- Set the global configuration using ~AWS.Config~.
+
+- Pass extra configuration information to a service object.
+
+
+#+cindex:global configuration
+#+cindex:AWS.Config
+#+cindex:service-level configuration
+Setting global configuration with ~AWS.Config~ is often easier to get started,
+but service-level configuration can provide more control over individual
+services.  The global configuration specified by ~AWS.Config~ provides default
+settings for service objects that you create subsequently, simplifying their
+configuration.  However, you can update the configuration of individual service
+objects when your needs vary from the global configuration.
+
+***** Setting Global Configuration
+
+#+cindex:global configuration object
+#+cindex:AWS.Config, global configuration object
+After you load the ~aws-sdk~ package in your code you can use the AWS global
+variable to access the SDK's classes and interact with individual services.
+The SDK includes a global configuration object, ~AWS.Config~, that you can use to
+specify the SDK configuration settings required by your application.
+
+Configure the SDK by setting ~AWS.Config~ properties according to your
+application needs.  The following table summarizes ~AWS.Config~ properties
+commonly used to set the configuration of the SDK.
+
+| Configuration Options | Description                                                                             |
+|-----------------------+-----------------------------------------------------------------------------------------|
+| credentials           | Required. Specifies the credentials used to determine access to services and resources. |
+| region                | Required. Specifies the Region in which requests for services are made.                 |
+| maxRetries            | Optional. Specifies the maximum number of times a given request is retried.             |
+| logger                | Optional. Specifies a logger object to which debugging information is written.          |
+| update                | Optional. Updates the current configuration with new values.                            |
+|-----------------------+-----------------------------------------------------------------------------------------|
+
+For more information about the configuration object, see [[https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html][Class: AWS.Config]] in
+the API Reference.
+
+#+texinfo:@heading Global Configuration Examples
+
+#+cindex:AWS.Config constructor
+You must set the Region and the credentials in ~AWS.Config~.  You can set these
+properties as part of the ~AWS.Config~ constructor, as shown in the following
+browser script example:
+
+#+begin_src js :eval no
+  var myCredentials = new AWS.CognitoIdentityCredentials({IdentityPoolId:'IDENTITY_POOL_ID'});
+  var myConfig = new AWS.Config({
+      credentials: myCredentials,
+      region: 'us-west-2'
+  });
+#+end_src
+
+#+cindex:@code{AWS.Config.update()}
+You can also set these properties after creating ~AWS.Config~ using the update
+method, as shown in the following example that updates the Region:
+
+#+begin_src js :eval no
+myConfig = new AWS.Config();
+myConfig.update({region: 'us-east-1'});
+#+end_src
+
+#+cindex:@code{getCredentials()} static method of AWS.config
+You can get your default credentials by calling the static ~getCredentials()~
+method of ~AWS.config~:
+
+#+begin_src js :eval no
+var AWS = require("aws-sdk");
+
+AWS.config.getCredentials(function(err) {
+  if (err) console.log(err.stack);
+  // credentials not loaded
+  else {
+    console.log("Access key:", AWS.config.credentials.accessKeyId);
+    console.log("Secret access key:", AWS.config.credentials.secretAccessKey);
+  }
+});
+#+end_src
+
+#+cindex:@code{AWS.config.region} property
+#+cindex:@code{region} property
+Similarly, if you have set your region correctly in your config file, you get
+that value by setting the =AWS_SDK_LOAD_CONFIG= environment variable is set to
+a truthy value and calling the static =region= property of ~AWS.config~:
+
+#+begin_src js :eval no
+var AWS = require("aws-sdk");
+
+console.log("Region: ", AWS.config.region);
+#+end_src
+
+***** Setting Configuration Per Service
+
+#+cindex:service configuration
+Each service that you use in the SDK for JavaScript is accessed through a
+service object that is part of the API for that service.  For example, to
+access the Amazon S3 service you create the Amazon S3 service object.  You can
+specify configuration settings that are specific to a service as part of the
+constructor for that service object.  When you set configuration values on a
+service object, the constructor takes all of the configuration values used by
+~AWS.Config~, including credentials.
+
+For example, if you need to access Amazon EC2 objects in multiple Regions,
+create an EC2 service object for each Region and then set the Region
+configuration of each service object accordingly.
+
+: var ec2_regionA = new AWS.EC2({region: 'ap-southeast-2', maxRetries: 15, apiVersion: '2014-10-01'});
+: var ec2_regionB = new AWS.EC2({region: 'us-east-1', maxRetries: 15, apiVersion: '2014-10-01'});
+
+You can also set configuration values specific to a service when configuring
+the SDK with ~AWS.Config~.  The global configuration object supports many
+service-specific configuration options.  For more information about
+service-specific configuration, see [[https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html][Class: AWS.Config]] in the AWS SDK for
+JavaScript API Reference.
+
+***** Immutable Configuration Data
+
+Global configuration changes apply to requests for all newly created service
+objects.  Newly created service objects are configured with the current global
+configuration data first and then any local configuration options.  Updates you
+make to the global AWS.config object don't apply to previously created service
+objects.
+
+Existing service objects must be manually updated with new configuration data
+or you must create and use a new service object that has the new configuration
+data.  The following example creates a new Amazon S3 service object with new
+configuration data:
+
+: s3 = new AWS.S3(s3.config);
+
+**** Setting the AWS Region
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-region.html
+
+A Region is a named set of AWS resources in the same geographical area.  An
+example of a Region is us-east-1, which is the US East (N. Virginia) Region.
+You specify a Region when configuring the SDK for JavaScript so that the SDK
+accesses the resources in that Region.  Some services are available only in
+specific Regions.
+
+The SDK for JavaScript doesn't select a Region by default.  However, you can
+set the Region using an environment variable, a shared config file, or the
+global configuration object.
+
+***** In a Client Class Constructor
+
+When you instantiate a service object, you can specify the Region for that
+resource as part of the client class constructor, as shown here
+
+: var s3 = new AWS.S3({apiVersion: '2006-03-01', region: 'us-west-2'});
+
+***** Using the Global Configuration Object
+
+To set the Region in your JavaScript code, update the ~AWS.Config~ global
+configuration object as shown here.
+
+: AWS.config.update({region: 'us-east-1'});
+
+***** Using an Environment Variable
+
+
+
+***** Using a Shared Config File
+
+***** Order of Precedence for Setting the Region
+
+**** Specifying Custom Endpoints
+
+**** Getting Your Credentials
+
+**** Setting Credentials
+
+**** Locking API Versions
+
+**** Node.js Considerations
+
+**** Browser Script Considerations
+
+**** Bundling Applications with Webpack
+
+**** SDK Metrics in the AWS SDK for JavaScript
 
 *** API Reference
 
@@ -1883,7 +2256,6 @@ to perform specific tasks for AWS services using various programming languages
 and supported technologies.  Be aware that the PDF is over 25 MB.
 
 https://docs.aws.amazon.com/code-samples/latest/catalog/welcome.html
-
 ** SDKs and Toolkits
 
 https://docs.aws.amazon.com/index.html
