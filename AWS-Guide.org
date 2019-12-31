@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 09:37
-#+macro:version Version 0.0.30
+#+date:2019-12-31 10:06
+#+macro:version Version 0.0.31
 #+texinfo: @insertcopying
 
 
@@ -4306,6 +4306,107 @@ informal chats, live event feeds, launch news, or community stories.
 - Upcoming events
 
 - Twitter
+
+* Software Development Kits---SDKs
+
+** Node.js SDK
+
+“AWS SDK for JavaScript in Node.js”
+
+https://aws.amazon.com/sdk-for-node-js/
+
+Get started quickly using AWS with the AWS SDK for JavaScript in Node.js.  The
+SDK helps take the complexity out of coding by providing JavaScript objects for
+AWS services including Amazon S3, Amazon EC2, DynamoDB, and Amazon SWF.  The
+single, downloadable package includes the AWS JavaScript Library and
+documentation.
+
+- Download [[https://github.com/aws/aws-sdk-js/releases][AWS SDK for JavaScript]]
+
+- [[https://github.com/aws/aws-sdk-js][Get the source on GitHub]]
+
+- Install using npm
+  : npm install aws-sdk
+
+
+*** AWS SDK for Node.js 3.0 Developer Preview
+
+We are happy to announce the developer preview of the AWS SDK for Node.js
+version 3.  This version of the SDK is a major rewrite of the 2.x code base.
+It’s written in TypeScript and adds frequently requested features, like
+modularized packages.  In 3.x service client packages are created statically
+instead of dynamically at the runtime which improves performance and debugging
+experience.  The developer preview is your chance to influence the direction of
+the new AWS SDK for Node.js.  Tell us what you like and what you don’t like.
+Your feedback matters to us.  Find details on various ways to give feedback at
+the bottom of this post.
+
+- [[https://aws.amazon.com/blogs/developer/new-aws-sdk-for-javascript-developer-preview/][New AWS SDK for JavaScript – Developer Preview]]
+
+*** Explore Javascript on AWS
+
+“Find all the tools, documentation, and sample code you need to develop secure,
+reliable, and scalable Javascript applications on the AWS cloud.”
+
+https://aws.amazon.com/developer/language/javascript/
+
+**** Learn
+
+“Dive deep and discover. Expand and explore.”
+
+Read and watch guidance from experts on AWS. See how to get the most from
+AWS. Find solutions to common challenges. Gain the knowledge to get the most
+from the AWS cloud.
+
+- [[https://aws.amazon.com/code/JavaScript][Sample Code]]
+
+- [[http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/][Developer Guide]]
+
+- [[https://aws.amazon.com/whitepapers/][Whitepapers]]
+
+- [[https://aws.amazon.com/getting-started/tutorials/create-a-serverless-workflow-step-functions-lambda/][Create a Serverless Workflow]]
+
+**** Develop
+
+“Design and code. Build and test. Run and debug.”
+
+[[https://aws.amazon.com/sdkfornodejs/][Get Started with SDK]]
+
+Get started building browser applications and server applications with the AWS
+SDK for JavaScript. Get the libraries, code samples, and documentation you need
+to build on AWS.
+
+#+texinfo:@heading Resources
+
+- [[https://aws.amazon.com/sdkfornodejs/][AWS SDK for JavaScript in Node.js]]
+
+- [[https://aws.amazon.com/sdkforbrowser/][AWS SDK for JavaScript in the Browser]]
+
+- [[https://aws.github.io/aws-amplify/][AWS Amplify Library for Web and React Native]]
+
+- [[Deploy Node.js on Elastic Beanstalk ][Deploy Node.js on Elastic Beanstalk]]
+
+- [[http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html][Deploy Node.js on AWS OpsWorks]]
+
+**** Connect
+
+“Raise questions. Get answers. Connect to AWS.”
+
+Join the community of developers developing secure, reliable, and scalable
+applications on the AWS cloud. Make the connections that will shift your
+development into the fast lane.
+
+#+texinfo:@heading Resources
+
+- [[http://developer.amazonwebservices.com/connect/forum.jspa?forumID=148][Community Forum]]
+
+- [[http://developer.amazonwebservices.com/connect/forum.jspa?forumID=148][Developer Blog]]
+
+- [[https://github.com/aws/][AWS on GitHub]]
+
+** JavaScript SDK
+
+https://aws.amazon.com/sdk-for-browser/
 
 * Bootstrap
 :PROPERTIES:
