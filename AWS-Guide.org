@@ -3,14 +3,12 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 23:14
-#+macro:version Version 0.0.39
+#+date:2019-12-31 23:53
+#+macro:version Version 0.0.40
 #+texinfo: @insertcopying
 
 
 * AWS Glossary
-
-NEW GLOSSARY
 
 https://docs.aws.amazon.com/general/latest/gr/glos-chap.html
 
@@ -6416,6 +6414,7 @@ https://aws.amazon.com/sdk-for-browser/
 :header-args: :eval never-export
 :appendix: t
 :END:
+
 ** Makefile
 
 #+texinfo:@heading Tangling
@@ -6426,6 +6425,14 @@ functions ~get-org-fiename~ and ~get-file-version~ are elisp functions that use
 the current buffer to find the filename and the current version.  The scripts
 would have to be done a bit differently to make them work from an external
 source.
+
+#+texinfo:@heading Exporting
+
+This Makefile has the ability to export to TEXI, but the export produces a very
+different set of HTML files than when the export is done from within the ORG
+file; plus each program requests permission to run, whereas this does not occur
+when exporting from within the ORG file.  Thus, the export should always be
+done from within the ORG file until this problem can be resolved.
 
 #+texinfo:@heading Environment Variables Instead of Credentials File
 
@@ -6442,6 +6449,8 @@ changed.  However, the ~makeinfo --html~ command updates every single file, not
 just ones that have changed, so anytime the main Org file changes, every single
 HTML file will be re-saved, thus eliminating any advantage of the ~sync~
 function.
+
+I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Replace][below]].
 
 #+name:Makefile
 #+begin_src makefile :tangle Makefile :noweb tangle
@@ -6504,8 +6513,9 @@ function.
 
   html: $(DIR)
   $(DIR): $(TEXI)
-	  [[ -d $(OLDDIR) ]] && rm -rf $(OLDDIR) || echo "no $(OLDDIR)"
-	  [[ -d $(DIR) ]] && mv $(DIR) $(OLDDIR) || echo "no $(DIR)"
+	  [[ -d $(DIR) ]] && { \
+		  [[ -d $(OLDDIR) ]] && rm -rf $(OLDDIR) || :; \
+		  mv $(DIR) $(OLDDIR); } || :
 	  makeinfo --html $(TEXI)
 	  $(CMPRPL) $(DIR) $(OLDDIR)
 
@@ -6639,7 +6649,7 @@ avoid deleting the ~aws-guide-old~ directory for as long as possible.
 	      # echo "$oldfile and $newfile are equal"
 	      cp -pf $oldfile $newfile
 	  else
-	      echo "Keeping $oldfile"
+	      echo "Keeping $newfile"
 	  fi
       else
 	  echo "$oldfile does not exist in newfile"
