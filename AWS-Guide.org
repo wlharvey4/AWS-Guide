@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 16:23
-#+macro:version Version 0.0.35
+#+date:2019-12-31 18:09
+#+macro:version Version 0.0.36
 #+texinfo: @insertcopying
 
 
@@ -2644,7 +2644,787 @@ invoked generates a response that is sent back to the requestor.  The response
 contains data if the operation was successful or error information if the
 operation was unsuccessful.
 
-*** API Reference
+#+cindex:@code{AWS.Request} object
+#+cindex:@code{AWS.Response} object
+Invoking an AWS service includes the full request and response lifecycle of an
+operation on a service object, including any retries that are attempted.  A
+request is encapsulated in the SDK by the ~AWS.Request~ object.  The response
+is encapsulated in the SDK by the ~AWS.Response~ object, which is provided to
+the requestor through one of several techniques, such as a callback function or
+a JavaScript promise.
+
+**** Creating and Calling Service Objects
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/creating-and-calling-service-objects.html
+
+The JavaScript API supports most available AWS services. Each service class in
+the JavaScript API provides access to every API call in its service.
+
+- [[js-sdk-api-reference][API Reference]]
+
+  #+cindex:SDK package
+When using the SDK in Node.js, you add the SDK package to your application
+using ~require~, which provides support for all current services.
+
+: var AWS = require('aws-sdk');
+
+#+texinfo:@heading SDK with browser JavaScript
+
+#+cindex:browser JavaScript
+When using the SDK with browser JavaScript, you load the SDK package to your
+browser scripts using the AWS-hosted SDK package.  To load the SDK package, add
+the following =<script>= element:
+
+: <script src="https://sdk.amazonaws.com/js/aws-sdk-SDK_VERSION_NUMBER.min.js"></script>
+
+To find the current =SDK_VERSION_NUMBER, see the API Reference for the SDK for
+JavaScript at: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/index.html.
+
+#+cindex:default services
+#+cindex:CORS
+The default hosted SDK package provides support for a subset of the available
+AWS services.  For a list of the default services in the hosted SDK package for
+the browser, see Supported Services in the API Reference.  You can use the SDK
+with other services if CORS security checking is disabled.  In this case, you
+can build a custom version of the SDK to include the additional services you
+require.  For more information on building a custom version of the SDK, see
+Building the SDK for Browsers.
+
+***** Requiring Individual Services
+
+Requiring the SDK for JavaScript as shown previously includes the entire SDK
+into your code.  Alternately, you can choose to require only the individual
+services used by your code.  Consider the following code used to create an
+Amazon S3 service object.
+
+#+begin_src js :eval no
+// Import the AWS SDK
+var AWS = require('aws-sdk');
+
+// Set credentials and Region
+// This can also be done directly on the service client
+AWS.config.update({region: 'us-west-1', credentials: {YOUR_CREDENTIALS}});
+
+var s3 = new AWS.S3({apiVersion: '2006-03-01'});
+#+end_src
+
+In the previous example, the ~require~ function specifies the entire SDK.  The
+amount of code to transport over the network as well as the memory overhead of
+your code would be substantially smaller if only the portion of the SDK you
+require for the Amazon S3 service was included.  To require an individual
+service, call the ~require~ function as shown, including the service
+constructor in all lower case.
+
+: require('aws-sdk/clients/SERVICE');
+
+Here is what the code to create the previous Amazon S3 service object looks
+like when it includes only the Amazon S3 portion of the SDK.
+
+#+begin_src js :eval no
+// Import the Amazon S3 service client
+var S3 = require('aws-sdk/clients/s3');
+ 
+// Set credentials and Region
+var s3 = new S3({
+    apiVersion: '2006-03-01',
+    region: 'us-west-1', 
+    credentials: {YOUR_CREDENTIALS}
+  });
+#+end_src
+
+You can still access the global AWS namespace without every service attached to
+it.
+
+#+cindex:AWS global namespace
+: require('aws-sdk/global');
+
+This is a useful technique when applying the same configuration across multiple
+individual services, for example to provide the same credentials to all
+services.  Requiring individual services should reduce loading time and memory
+consumption in Node.js.  When done along with a bundling tool such as
+Browserify or webpack, requiring individual services results in the SDK being a
+fraction of the full size.  This helps with memory or disk-space constrained
+environments such as an IoT device or in a Lambda function.
+
+***** Creating Service Objects
+
+#+cindex:service object
+To access service features through the JavaScript API, you first create a
+/service object/ through which you access a set of features provided by the
+underlying client class.  Generally there is one client class provided for each
+service; however, some services divide access to their features among multiple
+client classes.
+
+To use a feature, you must create an instance of the class that provides access
+to that feature.  The following example shows creating a service object for
+DynamoDB from the AWS.DynamoDB client class.
+
+: var dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+
+#+cindex:service-specific configuration
+By default, a service object is configured with the global settings also used
+to configure the SDK.  However, you can configure a service object with runtime
+configuration data that is specific to that service object.  Service-specific
+configuration data is applied after applying the global configuration settings.
+
+In the following example, an Amazon EC2 service object is created with
+configuration for a specific Region but otherwise uses the global
+configuration.
+
+: var ec2 = new AWS.EC2({region: 'us-west-2', apiVersion: '2014-10-01'});
+
+In addition to supporting service-specific configuration applied to an
+individual service object, you can also apply service-specific configuration to
+all newly created service objects of a given class.  For example, to configure
+all service objects created from the Amazon EC2 class to use the US West
+(Oregon) (us-west-2) Region, add the following to the ~AWS.config~ global
+configuration object.
+
+: AWS.config.ec2 = {region: 'us-west-2', apiVersion: '2016-04-01'};
+
+***** Locking the API Version of a Service Object
+
+You can lock a service object to a specific API version of a service by
+specifying the =apiVersion= option when creating the object.  In the following
+example, a DynamoDB service object is created that is locked to a specific API
+version.
+
+: var dynamodb = new AWS.DynamoDB({apiVersion: '2011-12-05'});
+
+***** Specifying Service Object Parameters
+
+#+cindex:parameters
+When calling a method of a service object, pass parameters in JSON as required
+by the API.  For example, in Amazon S3, to get an object for a specified bucket
+and key, pass the following parameters to the ~getObject~ method.
+
+: s3.getObject({Bucket: 'bucketName', Key: 'keyName'});
+
+#+cindex:bind
+In addition, you can bind values to individual parameters when creating a
+service object using the =params= parameter.  The value of the =params=
+parameter of service objects is a map that specifies one or more of the
+parameter values defined by the service object.  The following example shows
+the Bucket parameter of an Amazon S3 service object being bound to a bucket
+named =myBucket=.
+
+: var s3bucket = new AWS.S3({params: {Bucket: 'myBucket'}, apiVersion: '2006-03-01' });
+
+By binding the service object to a bucket, the =s3bucket= service object treats
+the =myBucket= parameter value as a default value that no longer needs to be
+specified for subsequent operations.  Any bound parameter values are ignored
+when using the object for operations where the parameter value isn't
+applicable.  You can override this bound parameter when making calls on the
+service object by specifying a new value.
+
+#+begin_example
+var s3bucket = new AWS.S3({ params: {Bucket: 'myBucket'}, apiVersion: '2006-03-01' });
+s3bucket.getObject({Key: 'keyName'});
+// ...
+s3bucket.getObject({Bucket: 'myOtherBucket', Key: 'keyOtherName'});
+#+end_example
+
+**** Logging AWS SDK for JavaScript Calls
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/logging-sdk-calls.html
+
+#+cindex:logger
+The AWS SDK for JavaScript is instrumented with a built-in logger so you can
+log API calls you make with the SDK for JavaScript.
+
+To turn on the logger and print log entries in the console, add the following
+statement to your code.
+
+: AWS.config.logger = console;
+
+Here is an example of the log output.
+
+: [AWS s3 200 0.185s 0 retries] createMultipartUpload({ Bucket: 'js-sdk-test-bucket', Key: 'issues_1704' })
+
+***** Using a Third-Party Logger
+
+You can also use a third-party logger, provided it has ~log()~ or ~write()~
+operations to write to a log file or server.  You must install and set up your
+custom logger as instructed before you can use it with the SDK for JavaScript.
+
+**** Calling Services Asychronously
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/calling-services-asynchronously.html
+
+#+cindex:asynchronous calls
+All requests made through the SDK are asynchronous.  This is important to keep
+in mind when writing browser scripts.  JavaScript running in a web browser
+typically has just a single execution thread.  After making an asynchronous
+call to an AWS service, the browser script continues running and in the process
+can try to execute code that depends on that asynchronous result before it
+returns.
+
+Making asynchronous calls to an AWS service includes managing those calls so
+your code doesn't try to use data before the data is available.  The topics in
+this section explain the need to manage asynchronous calls and detail different
+techniques you can use to manage them.
+
+Rather than using promises, you should consider using async/await.  Async
+functions are simpler and take less boilerplate than using promises.  Await can
+only be used in an async function to asynchronously wait for a value.
+
+***** Managing Asychronous Calls
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/making-asynchronous-calls.html
+
+***** Using an Anonymous Callback Function
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-a-callback-function.html
+
+#+cindex:anonymous callback function
+Each service object method that creates an ~AWS.Request~ object can accept an
+anonymous callback function as the last parameter.  The signature of this
+callback function is:
+
+#+begin_src js :eval no
+function(error, data) {
+    // callback handling code
+}
+#+end_src
+
+#+cindex:callback function
+#+cindex:data parameter
+#+cindex:error parameter
+This callback function executes when either a successful response or error data
+returns.  If the method call succeeds, the contents of the response are
+available to the callback function in the =data= parameter.  If the call
+doesn't succeed, the details about the failure are provided in the =error=
+parameter.
+
+Typically the code inside the callback function tests for an error, which it
+processes if one is returned.  If an error is not returned, the code then
+retrieves the data in the response from the data parameter.  The basic form of
+the callback function looks like this example.
+
+#+begin_src js :eval no
+function(error, data) {
+    if (error) {
+        // error handling code
+        console.log(error);
+    } else {
+        // data handling code
+        console.log(data);
+    }
+}
+#+end_src
+
+In the previous example, the details of either the error or the returned data
+are logged to the console.  Here is an example that shows a callback function
+passed as part of calling a method on a service object.
+
+#+begin_src js :eval no
+new AWS.EC2({apiVersion: '2014-10-01'}).describeInstances(function(error, data) {
+  if (error) {
+    console.log(error); // an error occurred
+  } else {
+    console.log(data); // request succeeded
+  }
+});
+#+end_src
+
+****** Accessing the Request and Response Objects
+
+Within the callback function, the JavaScript keyword ~this~ refers to the
+underlying ~AWS.Response~ object for most services.  In the following example,
+the =httpResponse= property of an ~AWS.Response~ object is used within a
+callback function to log the raw response data and headers to help with
+debugging.
+
+#+begin_src js :eval no
+new AWS.EC2({apiVersion: '2014-10-01'}).describeInstances(function(error, data) {
+  if (error) {
+    console.log(error); // an error occurred
+    // Using this keyword to access AWS.Response object and properties
+    console.log("Response data and headers: " + JSON.stringify(this.httpResponse));
+  } else {
+    console.log(data); // request succeeded
+  }
+});
+#+end_src
+
+In addition, because the ~AWS.Response~ object has a =Request= property that
+contains the =AWS.Request= that was sent by the original method call, you can
+also access the details of the request that was made.
+
+***** Using a Request Object Event Listener
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-a-response-event-handler.html
+
+If you do not create and pass an anonymous callback function as a parameter
+when you call a service object method, the method call generates an
+~AWS.Request~ object that must be manually sent using its ~send()~ method.
+
+#+cindex:event listener
+#+cindex:AWS.Request object event listener
+To process the response, you must create an event listener for the
+~AWS.Request~ object to register a callback function for the method call.  The
+following example shows how to create the ~AWS.Request~ object for calling a
+service object method and the event listener for the successful return.
+
+#+begin_src js :eval no
+// create the AWS.Request object
+var request = new AWS.EC2({apiVersion: '2014-10-01'}).describeInstances();
+
+// register a callback event handler
+request.on('success', function(response) {
+  // log the successful data response
+  console.log(response.data); 
+});
+
+// send the request
+request.send();
+#+end_src
+
+After the ~send~ method on the ~AWS.Request~ object is called, the event
+handler executes when the service object receives an ~AWS.Response~ object.
+
+****** Chaining Multiple Callbacks
+
+#+cindex:chain event listeners
+You can register multiple callbacks on any request object.  Multiple callbacks
+can be registered for different events or the same event.  Also, you can chain
+callbacks as shown in the following example.
+
+#+begin_src js :eval n
+orequest.
+  on('success', function(response) {
+    console.log("Success!");
+  }).
+  on('error', function(response) {
+    console.log("Error!");
+  }).
+  on('complete', function() {
+    console.log("Always!");
+  }).
+  send();
+#+end_src
+
+****** Request Object Completion Events
+
+The ~AWS.Request~ object raises these completion events based on the response
+of each service operation method:
+
+- success
+- error
+- complete
+
+
+You can register a callback function in response to any of these events.  For a
+complete list of all request object events, see =Class: AWS.Request= in the API
+Reference.
+
+****** The success Event
+
+#+cindex:success event
+The =success= event is raised upon a successful response received from the
+service object.  Here is how you register a callback function for this event.
+
+#+begin_src js :eval no
+request.on('success', function(response) { 
+  // event handler code
+});
+#+end_src
+
+#+cindex:data property
+The response provides a =data= property that contains the serialized response
+data from the service.  For example, the following call to the ~listBuckets()~
+method of the Amazon S3 service object:
+
+#+begin_src js :eval no
+s3.listBuckets.on('success', function(response) {
+  console.log(response.data);
+}).send();
+#+end_src
+
+returns the response and then prints the following =data= property contents to
+the console.
+
+#+begin_example
+{ Owner: { ID: '...', DisplayName: '...' },
+  Buckets: 
+   [ { Name: 'someBucketName', CreationDate: someCreationDate },
+     { Name: 'otherBucketName', CreationDate: otherCreationDate } ],
+  RequestId: '...' }
+#+end_example
+
+****** The error Event
+
+#+cindex:error event
+The =error= event is raised upon an error response received from the service
+object.  Here is how you register a callback function for this event.
+
+#+begin_src js :eval no
+request.on('error', function(error, response) { 
+  // event handling code
+});
+#+end_src
+
+#+cindex:error object
+When the =error= event is raised, the value of the response's data property is
+null and the error property contains the error data.  The associated =error=
+object is passed as the first parameter to the registered callback function.
+For example, the following code:
+
+#+begin_src js :eval no
+s3.config.credentials.accessKeyId = 'invalid';
+s3.listBuckets().on('error', function(error, response) {
+  console.log(error);
+}).send();
+#+end_src
+
+returns the error and then prints the following error data to the console.
+
+: { code: 'Forbidden', message: null }
+
+****** The complete Event
+
+#+cindex:complete event
+The =complete= event is raised when a service object call has finished,
+regardless of whether the call results in success or error.  Here is how you
+register a callback function for this event.
+
+#+begin_src js :eval no
+request.on('complete', function(response) { 
+  // event handler code
+});
+#+end_src
+
+Use the =complete= event callback to handle any request cleanup that must
+execute regardless of success or error.  If you use response data inside a
+callback for the =complete= event, first check the =response.data= or
+=response.error= properties before attempting to access either one, as shown in
+the following example.
+
+#+begin_src js :eval no
+request.on('complete', function(response) {
+  if (response.error) {
+    // an error occurred, handle it
+  } else {
+    // we can use response.data here
+  }
+}).send();
+#+end_src
+
+****** Request Object HTTP Events
+
+=The =AWS.Request= object raises these HTTP events based on the response of each
+service operation method:
+
+#+attr_texinfo: :indic code
+- httpHeaders :: The =httpHeaders= event is raised when headers are sent by the
+                 remote server.  The =statusCode= parameter to the callback
+                 function is the HTTP status code.  The =headers= parameter
+                 contains the response headers.
+
+		 : function(statusCode, headers, response)
+
+- httpData :: The =httpData= event is raised to stream response data packets
+              from the service.  Here is how you register a callback function
+              for this event.  This event is typically used to receive large
+              responses in chunks when loading the entire response into memory
+              is not practical. This event has an additional chunk parameter
+              that contains a portion of the actual data from the server.
+
+	      : function(chunk, response)
+
+- httpUploadProgress :: The =httpUploadProgress= event is raised when the HTTP
+     request has uploaded more data.  The =progress= parameter to the callback
+     function contains an object with the loaded and total bytes of the
+     request.
+
+     : function(progress, response)
+
+- httpDownloadProgress :: Similarly, the =httpDownloadProgress= event is raised
+     when the HTTP request has downloaded more data.  The =progress= parameter
+     to the callback function contains an object with the loaded and total
+     bytes of the request.
+
+    : function(progress, response)
+
+- httpError :: The =httpError= event is raised when the HTTP request fails.
+               The =error= parameter to the callback function contains the
+               error that was thrown.
+
+	       : function(error, response)
+
+- httpDone :: The =httpDone= event is raised when the server finishes sending
+              data.
+
+	      : function(response)
+
+
+You can register a callback function in response to any of these events.
+
+***** Using JavaScript Promises
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-promises.html
+
+#+cindex:promise
+#+cindex:@code{AWS.Request.promise()} method
+#+cindex:@code{send()} method
+The =AWS.Request.promise= method provides a way to call a service operation and
+manage asynchronous flow instead of using callbacks.  In Node.js and browser
+scripts, an =AWS.Request= object is returned when a service operation is called
+without a callback function.  You can call the request's ~send()~ method to
+make the service call.
+
+However, =AWS.Request.promise= immediately starts the service call and returns
+a promise that is either fulfilled with the response data property or rejected
+with the response error property.
+
+#+begin_src js :eval no
+var request = new AWS.EC2({apiVersion: '2014-10-01'}).describeInstances();
+
+// create the promise object
+var promise = request.promise();
+
+// handle promise's fulfilled/rejected states
+promise.then(
+  function(data) {
+    /* process the data */
+  },
+  function(error) {
+    /* handle the error */
+  }
+);
+#+end_src
+
+The next example returns a promise that's fulfilled with a =data= object, or
+rejected with an =error= object.  Using promises, a single callback isn't
+responsible for detecting errors.  Instead, the correct callback is called
+based on the success or failure of a request.
+
+#+begin_src js :eval no
+var s3 = new AWS.S3({apiVersion: '2006-03-01', region: 'us-west-2'});
+var params = {
+  Bucket: 'bucket',
+  Key: 'example2.txt',
+  Body: 'Uploaded text using the promise-based method!'
+};
+var putObjectPromise = s3.putObject(params).promise();
+putObjectPromise.then(function(data) {
+  console.log('Success');
+}).catch(function(err) {
+  console.log(err);
+});
+#+end_src
+
+***** Coordinating Multiple Promises
+
+In some situations, your code must make multiple asynchronous calls that
+require action only when they have all returned successfully.  If you manage
+those individual asynchronous method calls with promises, you can create an
+additional promise that uses the ~all()~ method.  This method fulfills this
+umbrella promise if and when the array of promises that you pass into the
+method are fulfilled.  The callback function is passed an array of the values
+of the promises passed to the ~all()~ method.
+
+In the following example, an AWS Lambda function must make three asynchronous
+calls to Amazon DynamoDB but can only complete after the promises for each call
+are fulfilled.
+
+#+begin_src js :eval no
+Promise.all([firstPromise, secondPromise, thirdPromise]).then(function(values) {
+  
+  console.log("Value 0 is " + values[0].toString);
+  console.log("Value 1 is " + values[1].toString);
+  console.log("Value 2 is " + values[2].toString);
+
+  // return the result to the caller of the Lambda function
+  callback(null, values);
+});
+#+end_src
+
+***** Using async/await
+
+***** Requests With a Node.js Stream Object
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/requests-using-stream-objects.html
+
+#+cindex:stream
+#+cindex:@code{createReadStream()} method
+#+cindex:raw HTTP stream
+#+cindex:HTTP, raw
+You can create a request that streams the returned data directly to a Node.js
+=Stream= object by calling the ~createReadStream()~ method on the request.
+Calling ~createReadStream()~ returns the raw HTTP stream managed by the
+request.  The raw data stream can then be piped into any Node.js Stream object.
+
+This technique is useful for service calls that return raw data in their
+payload, such as calling ~getObject()~ on an Amazon S3 service object to stream
+data directly into a file, as shown in this example.
+
+#+begin_src js :eval no
+var s3 = new AWS.S3({apiVersion: '2006-03-01'});
+var params = {Bucket: 'myBucket', Key: 'myImageFile.jpg'};
+var file = require('fs').createWriteStream('/path/to/file.jpg');
+s3.getObject(params).createReadStream().pipe(file);
+#+end_src
+
+When you stream data from a request using ~createReadStream()~, only the raw
+HTTP data is returned.  The SDK does not post-process the data.
+
+Because Node.js is unable to rewind most streams, if the request initially
+succeeds, then retry logic is disabled for the rest of the response.  In the
+event of a socket failure while streaming, the SDK won't attempt to retry or
+send more data to the stream.  Your application logic needs to identify such
+streaming failures and handle them.
+
+Avoid using a callback to trap errors in the ~getObject()~ call, such as when
+the key is not valid, as this tactic results in a race condition where two
+requests are opened at once, but the data from both are piped to the same
+destination.
+
+The solution is to attach an error event listener to the Amazon S3 stream, as
+shown in the following example.
+
+#+begin_src js :eval no
+var fileStream = fs.createWriteStream('/path/to/file.jpg');
+var s3Stream = s3.getObject({Bucket: 'myBucket', Key: 'myImageFile.jpg'}).createReadStream();
+
+// Listen for errors returned by the service
+s3Stream.on('error', function(err) {
+    // NoSuchKey: The specified key does not exist
+    console.error(err);
+});
+
+s3Stream.pipe(fileStream).on('error', function(err) {
+    // capture any errors that occur when writing data to the file
+    console.error('File Stream:', err);
+}).on('close', function() {
+    console.log('Done.');
+});
+#+end_src
+
+**** Using the Response Object
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/the-response-object.html
+
+After a service object method has been called, it returns an ~AWS.Response~
+object by passing it to your callback function.  You access the contents of the
+response through the properties of the ~AWS.Response~ object.  There are two
+properties of the ~AWS.Response~ object you use to access the contents of the
+response:
+
+- =data= property
+
+- =error= property
+
+
+When using the standard callback mechanism, these two properties are provided
+as parameters on the anonymous callback function as shown in the following
+example.
+
+#+begin_src js :eval no
+function(error, data) {
+    if (error) {
+        // error handling code
+        console.log(error);
+    } else {
+        // data handling code
+        console.log(data);
+    }
+}
+#+end_src
+
+***** Accessing Data Returned in the Response Object
+
+The =data= property of the =AWS.Response= object contains the serialized data
+returned by the service request.  When the request is successful, the data
+property contains an object that contains a map to the data returned.  The data
+property can be null if an error occurs.
+
+Here is an example of calling the ~getItem()~ method of a DynamoDB table to
+retrieve the file name of an image file to use as part of a game.
+
+#+begin_src js :eval no
+// Initialize parameters needed to call DynamoDB
+var slotParams = {
+    Key : {'slotPosition' : {N: '0'}},
+    TableName : 'slotWheels',
+    ProjectionExpression: 'imageFile'
+};
+
+// prepare request object for call to DynamoDB
+var request = new AWS.DynamoDB({region: 'us-west-2', apiVersion: '2012-08-10'}).getItem(slotParams);
+// log the name of the image file to load in the slot machine
+request.on('success', function(response) {
+    // logs a value like "cherries.jpg" returned from DynamoDB
+    console.log(response.data.Item.imageFile.S);
+});
+// submit DynamoDB request
+request.send();
+#+end_src
+
+For this example, the DynamoDB table is a lookup of images that show the
+results of a slot machine pull as specified by the parameters in ~slotParams~.
+
+Upon a successful call of the ~getItem~ method, the =data= property of the
+~AWS.Response~ object contains an =Item= object returned by DynamoDB.  The
+returned data is accessed according to the request's =ProjectionExpression=
+parameter, which in this case means the =imageFile= member of the =Item=
+object.  Because the =imageFile= member holds a string value, you access the
+file name of the image itself through the value of the S child member of
+=imageFile=.
+
+***** Paging Through Returned Data
+
+Sometimes the contents of the =data= property returned by a service request
+span multiple pages.  You can access the next page of data by calling the
+~response.nextPage()~ method.  This method sends a new request.  The response
+from the request can be captured either with a callback or with success and
+error listeners.
+
+You can check to see if the data returned by a service request has additional
+pages of data by calling the ~response.hasNextPage()~ method.  This method
+returns a boolean to indicate whether calling ~response.nextPage()~ returns
+additional data.
+
+#+begin_src js :eval no
+s3.listObjects({Bucket: 'bucket'}).on('success', function handlePage(response) {
+    // do something with response.data
+    if (response.hasNextPage()) {
+        response.nextPage().on('success', handlePage).send();
+    }
+}).send();
+#+end_src
+
+***** Accessing Error Information from a Response Object
+
+The error property of the =AWS.Response= object contains the available error
+data in the event of a service error or transfer error.  The error returned
+takes the following form.
+
+: { code: 'SHORT_UNIQUE_ERROR_CODE', message: 'a descriptive error message' }
+
+In the case of an error, the value of the =data= property is =null=.  If you
+handle events that can be in a failure state, always check whether the =error=
+property was set before attempting to access the value of the =data= property.
+
+***** Accessing the Originating Request Object
+
+The =request= property provides access to the originating ~AWS.Request~ object.
+It can be useful to refer to the original ~AWS.Request~ object to access the
+original parameters it sent.  In the following example, the =request= property
+is used to access the =Key= parameter of the original service request.
+
+#+begin_src js :eval no
+s3.getObject({Bucket: 'bucket', Key: 'key'}).on('success', function(response) {
+   console.log("Key was", response.request.params.Key);
+}).send();
+#+end_src
+
+**** Working with JSON
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/working-with-json.html
+
+*** JavaScript SDK API Reference
+<<js-sdk-api-reference>>
 
 Describes in detail all the API operations for the AWS SDK for JavaScript.  In
 addition, it provides sample requests, responses, and errors for the supported
