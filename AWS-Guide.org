@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 16:12
-#+macro:version Version 0.0.34
+#+date:2019-12-31 16:23
+#+macro:version Version 0.0.35
 #+texinfo: @insertcopying
 
 
@@ -2564,8 +2564,9 @@ in order of recommendation:
 
 3. Hard coded in the script [fn:1]
 
+***** TODO Using Amazon Cognito Identity to Authenticate Users
 
-***** Using Amazon Cognito Identity to Authenticate Users
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-browser-credentials-cognito.html
 
 ***** Using Web Federated Identity to Authenticate Users
 
@@ -2573,13 +2574,75 @@ in order of recommendation:
 
 **** Locking API Versions
 
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/locking-api-versions.html
+
 **** Node.js Considerations
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/node-js-considerations.html
+
+Although Node.js code is JavaScript, using the AWS SDK for JavaScript in
+Node.js can differ from using the SDK in browser scripts.  Some API methods
+work in Node.js but not in browser scripts, as well as the other way around.
+And successfully using some APIs depends on your familiarity with common
+Node.js coding patterns, such as importing and using other Node.js modules like
+the File System (fs) module.
+
+***** Using Built-In Node-js Modules
+
+***** Using NPM Packages
+
+***** Configuring maxSockets in Node-js
+
+***** Reusing Connections with Keep-Alive in Node-js
+
+***** Configuring Proxies for Node-js
+
+***** Registering Certificate Bundles in Node.js
 
 **** Browser Script Considerations
 
-**** Bundling Applications with Webpack
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/browser-js-considerations.html
+
+The following topics describe special considerations for using the AWS SDK for
+JavaScript in browser scripts.
+
+***** Building the SDK for Browsers
+
+***** TODO Cross-Origin Resource Sharing---CORS
+
+**** TODO Bundling Applications with Webpack
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/webpack.html
 
 **** SDK Metrics in the AWS SDK for JavaScript
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/metrics.html
+
+*** Working with Services in the SDK for JavaScript
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/working-with-services.html
+
+#+cindex:services, access by SDK
+#+cindex:client classes
+#+cindex:service interface objects
+#+cindex:service objects
+The AWS SDK for JavaScript provides access to services that it supports through
+a collection of client classes.  From these client classes, you create service
+interface objects, commonly called service objects.  Each supported AWS service
+has one or more client classes that offer low-level APIs for using service
+features and resources.
+
+#+texinfo:@heading Request-Response Pattern
+
+#+cindex:request-response pattern
+The services exposed through the SDK for JavaScript follow the
+/request-response pattern/ to exchange messages with calling applications.  In
+this pattern, the code invoking a service submits an HTTP/HTTPS request to an
+endpoint for the service.  The request contains parameters needed to
+successfully invoke the specific feature being called.  The service that is
+invoked generates a response that is sent back to the requestor.  The response
+contains data if the operation was successful or error information if the
+operation was unsuccessful.
 
 *** API Reference
 
