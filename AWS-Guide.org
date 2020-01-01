@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 18:18
-#+macro:version Version 0.0.37
+#+date:2019-12-31 22:13
+#+macro:version Version 0.0.38
 #+texinfo: @insertcopying
 
 
@@ -1834,7 +1834,7 @@ This section shows how to create a group in the IAM system.
 
 This section shows how to attach a policy that lets any user in the group
 perform any action on any resource in the AWS account.  You do this by
-attaching the [[ AWS managed policy][AWS managed policy]] called =AdministratorAccess= to the =Admins=
+attaching the AWS managed policy called =AdministratorAccess= to the =Admins=
 group.  For more information about policies, see [[https://docs.aws.amazon.com/IAM/latest/UserGuide/access.html][Access Management]].
 
 ** SDK for JavaScript Documentation
@@ -3465,9 +3465,9 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/tutorials.html
 The following tutorials show you how to perform different tasks related to
 using the AWS SDK for JavaScript.
 
-**** Tutorial: Setting Up Node.js on an Amazon EC2 Instance
+**** Tutorial---Setting Up Node-js on an Amazon EC2 Instance
 
-**** Tutorial: Creating and Using Lambda Functions
+**** Tutorial---Creating and Using Lambda Functions
 
 *** Security Considerations
 
@@ -6385,7 +6385,7 @@ to build on AWS.
 
 - [[https://aws.github.io/aws-amplify/][AWS Amplify Library for Web and React Native]]
 
-- [[Deploy Node.js on Elastic Beanstalk ][Deploy Node.js on Elastic Beanstalk]]
+- [[http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_nodejs.html][Deploy Node.js on Elastic Beanstalk]]
 
 - [[http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html][Deploy Node.js on AWS OpsWorks]]
 
@@ -6447,6 +6447,10 @@ function.
   PROG  = <<get-org-filename()>>
   VERS  = <<get-file-version()>>
 
+  ### TOOLS
+  TOOLS = tools
+  CMPRPL = $(TOOLS)/cmprpl
+
   ### TEXINFO
   ORG   = $(PROG).org
   TEXI  = $(PROG).texi
@@ -6456,6 +6460,7 @@ function.
 
   ### HTML DIR
   DIR   = <<get-org-lc-filename()>>
+  OLDDIR= $(DIR)-old
   INDEX = index.html
 
   ### AWS
@@ -6497,7 +6502,9 @@ function.
 
   html: $(DIR)
   $(DIR): $(TEXI)
+	  -mv -f $(DIR) $(OLDDIR)
 	  makeinfo --html $(TEXI)
+	  $(CMPRPL) $(DIR) $(OLDDIR)
 
   pdf: $(PDF)
   $(PDF): $(TEXI)
@@ -6517,7 +6524,7 @@ function.
 	  -rm *.{texi*,info,html,pdf}
 
   clean-dist: clean
-	  -rm -rf $(DIR) $(BUILD)
+	  -rm -rf $(DIR) $(BUILD) $(TOOLS)
 
   sync:
 	  $(SYNC)
@@ -6580,11 +6587,50 @@ function.
     (concat "v" (match-string-no-properties 1)))
 #+end_src
 
+#+begin_src emacs-lisp
+(org-babel-tangle-file "AWS-Guide.org")
+#+end_src
+
+** Compare Replace
+#+name:cmprpl
+#+header: :mkdirp t
+#+header: :shebang "#!/usr/bin/env bash"
+#+begin_src sh :tangle tools/cmprpl
+  [[ $# -eq 2 ]] || { echo "ERROR: Incorrect command line arguments"; exit 1; }
+  NEWDIR=$1
+  OLDDIR=$2
+
+  # echo Size is $#
+  # echo NEWDIR IS $NEWDIR
+  # echo OLDDIR is $OLDDIR
+
+  [ -d $NEWDIR ] && echo $NEWDIR exists || { echo "ERROR: $NEWDIR does not exist"; exit 1; }
+  [ -d $OLDDIR ] && echo $OLDDIR exists || { echo "SKIPPING: $OLDDIR does not exist"; exit 0; }
+
+  for oldfile in $OLDDIR/*
+  do
+      newfile=$NEWDIR/$(basename $oldfile)
+      if [ -e $newfile ]
+      then
+	  # echo "$newfile exists in both directories"
+	  if cmp -s $newfile $oldfile
+	  then
+	      # echo "$oldfile and $newfile are equal"
+	      cp -vpf $oldfile $newfile
+	  else
+	      echo "$oldfile and $newfile are NOT equal"
+	  fi
+      else
+	  echo "$oldfile does not exist in both dirs"
+      fi
+  done
+#+end_src
+
 * Copying
 :PROPERTIES:
 :copying:  t
 :END:
-{{{title}}} {{{version}}} printed {{{date}}}
+{{{title}}}
 
 Copyright \copy 2019 {{{author}}}
 
@@ -6602,7 +6648,7 @@ and secret access key.
 [fn:2] Deprecation warning: The use of require('uuid') is deprecated and will
 not be supported after version 3.x of this module. Instead, use
 require('uuid/[v1|v3|v4|v5]') as shown in the examples below.
-: const uuidv1 = require('uuid/v1');
+=const uuidv1 = require('uuid/v1');=
 
 * Export Configuraton                                              :noexport:
 
