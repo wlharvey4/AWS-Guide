@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-01 11:36
-#+macro:version Version 0.0.41
+#+date:2020-01-01 12:04
+#+macro:version Version 0.0.42
 #+texinfo: @insertcopying
 
 
@@ -30,6 +30,10 @@ There are limits to managing permissions using ACLs.
 - you cannot grant conditional permissions.
 
 - you cannot explicilty deny permissions
+
+
+[[*Managing Access with ACLs][Managing Access with ACLs in S3]]
+
 ** Amazon Web Services
 
 https://aws.amazon.com/
@@ -271,6 +275,8 @@ AWS Identity and Access Management (IAM) is a web service for securely
 controlling access to AWS services. With IAM, you can centrally manage
 users, security credentials such as access keys, and permissions that
 control which AWS resources users and applications can access.
+
+[[*Identity and Access Management in Amazon S3][IAM in S3]]
 
 *** IAM User Guide
 
@@ -3576,15 +3582,203 @@ https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.htm
 *** iOS
 https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.html
 
+** Simple Storage Service---S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html
+
+*** Introduction to Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/Introduction.html
+
+*** Making Requests
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/MakingRequests.html
+
+*** Buckets
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html
+
+*** Access Points
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/access-points.html
+
+*** Objects
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingObjects.html
+
+*** Security
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/security.html
+
+**** Data Protection in Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/DataDurability.html
+
+**** Identity and Access Management in Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-access-control.html
+
+***** Overview of Managing Access
+
+***** How Amazon S3 Authorizes a Request
+
+***** Guidelines for Using the Available Access Policy Options
+
+***** Example Walkthroughs---Managing Access to Your Amazon S3 Resources
+
+***** Using Bucket Policies and User Policies
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html
+
+#+texinfo:@heading Access Policy Options
+
+#+cindex:access policy options
+#+cindex:bucket policy
+#+cindex:user policy
+/Bucket policy/ and /user policy/ are two of the *access policy options*
+available for you to grant permission to your Amazon S3 resources.  Both use
+JSON-based access policy language.  The topics in this section describe the key
+policy language elements, with emphasis on Amazon S3–specific details, and
+provide example bucket and user policies.
+
+****** TODO Access Policy Language Overview
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/access-policy-language-overview.html
+
+#+cindex:bucket policy
+#+cindex:user policy
+The topics in this section describe the basic elements used in bucket and user
+policies as used in Amazon S3.
+
+- [[https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html][Overview of IAM Policies]]
+
+- [[https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html][AWS IAM Policy Reference]]
+
+
+#+texinfo:@heading Common Elements in an Access Policy
+
+In its most basic sense, a policy contains the following elements:
+
+- Resources ::
+
+- Actions ::
+
+- Effect ::
+
+- Principal ::
+
+***** Managing Access with ACLs
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/access-policy-language-overview.html
+
+The following introductory topics explain the basic concepts and options that
+are available for you to manage access to your Amazon S3 resources, and provide
+guidelines for when to use which access policy options.
+
+****** Access Control List Overview
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html
+
+****** Managing ACLs
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/managing-acls.html
+
+***** Using Amazon S3 Block Public Access
+
+**** Logging and Monitoring in Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-incident-response.html
+
+**** Compliance Validation for Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-compliance.html
+
+**** Resilience in Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/disaster-recovery-resiliency.html
+
+**** Infrastructure Security in Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/network-isolation.html
+
+**** Configuration and Vulnerability Analysis in Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/vulnerability-analysis-and-management.html
+
+**** Security Best Practices for Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/security-best-practices.html
+
+*** Performing Batch Operations
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/batch-ops.html
+
+*** Hosting a Static Website
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html
+
+*** Notifications
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html
+
+*** Replication
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html
+
+*** Reqest Routing
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingRouting.html
+
+*** Optimizing Amazon S3 Performance
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/optimizing-performance.html
+
+*** Monitoring Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/monitoring-overview.html
+
+*** Using BitTorrent with Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/S3Torrent.html
+
+*** Handling REST and SOAP Errors
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/HandlingErrors.html
+
+*** Troubleshooting Amazon S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/troubleshooting.html
+
+*** Amazon S3 Server Access Logging
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html
+
+*** SDKs and Explorers
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html
+
+*** Using the SOAP API
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/SOAPAPI3.html
+
+*** Authenticating Requests---AWS Signature Version 2
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/auth-request-sig-v2.html
+
+*** S3 Resources
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/RelatedResources012.html
+
+*** SQL Reference for Amazon S3 Select and Glacier Select
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference.html
+
+
 ** Tutorials and Projects
 
 #+texinfo:@heading Learn with Introductory Tutorials & Projects
 
 - [[https://aws.amazon.com/getting-started/][Tutorials]]
-
-** Simple Storage Service---S3
-
-https://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html
 
 * Developer Center
 
