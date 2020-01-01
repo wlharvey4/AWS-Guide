@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 23:53
-#+macro:version Version 0.0.40
+#+date:2020-01-01 11:36
+#+macro:version Version 0.0.41
 #+texinfo: @insertcopying
 
 
@@ -12,6 +12,24 @@
 
 https://docs.aws.amazon.com/general/latest/gr/glos-chap.html
 
+** Access Control List---ACL
+#+cindex:access control list (ACL)
+#+cindex:ACL (access control list)
+#+cindex:access policy
+#+cindex:permissions, grant, managing
+/Access control lists/ (ACLs) are one of the resource-based access policy
+options (see [[https://docs.aws.amazon.com/AmazonS3/latest/dev/access-control-overview.html][Overview of Managing Access]]) that you can use to manage access to
+your buckets and objects.  You can use ACLs to grant basic read/write
+permissions to other AWS accounts.
+
+There are limits to managing permissions using ACLs.
+
+- you can grant permissions *only* to other AWS accounts; you *cannot* grant
+  permissions to users in your account.
+
+- you cannot grant conditional permissions.
+
+- you cannot explicilty deny permissions
 ** Amazon Web Services
 
 https://aws.amazon.com/
@@ -628,6 +646,12 @@ offers industry-leading scalability, data availability, security, and
 performance.  Amazon S3 provides easy-to-use management features so you can
 organize your data and configure finely-tuned access controls to meet your
 specific business, organizational, and compliance requirements.
+
+[[https://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html][Getting Started]]
+
+[[*Simple Storage Service---S3][Documentation]]
+
+[[*Simple Storage Service REST API][API Reference]]
 
 *** S3 Access Points
 
@@ -3558,7 +3582,11 @@ https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.htm
 
 - [[https://aws.amazon.com/getting-started/][Tutorials]]
 
-* AWS Developer Center
+** Simple Storage Service---S3
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html
+
+* Developer Center
 
 “Welcome developers!  The AWS Developer Center is your homepage for the AWS
 developer community.  Build your first application on AWS, dig into our
@@ -5240,6 +5268,12 @@ When using an implicit grant, the Login with Amazon SDK for JavaScript can
 return the access token as a URL fragment, rather than a query string.  Why
 does this happen? How is the access token utilized? [[https://developer.amazon.com/blogs/post/Tx2XUFUBNT8PRXE/query-strings-and-url-fragments-in-login-with-amazon-responses][Go]]
 
+* API Reference
+
+** Simple Storage Service REST API
+
+https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html
+
 * Getting Started Resource Center
 
 “Learn AWS fundamentals, connect with the AWS developer community, and advance
@@ -6199,6 +6233,10 @@ S3 console.
 ** Configuring the SDK for JavaScript
 *** Setting Credentials in Node.js
 #+cindex:credentials in Node.js
+** Simple Storage Service---Getting Started
+
+https://aws.amazon.com/s3/getting-started/
+
 * AWS Tools
 
 “Tools for developing and managing applications on AWS”
@@ -6409,7 +6447,7 @@ development into the fast lane.
 
 https://aws.amazon.com/sdk-for-browser/
 
-* Bootstrap
+* Makefile and Tools
 :PROPERTIES:
 :header-args: :eval never-export
 :appendix: t
