@@ -3,12 +3,14 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 22:13
-#+macro:version Version 0.0.38
+#+date:2019-12-31 23:14
+#+macro:version Version 0.0.39
 #+texinfo: @insertcopying
 
 
 * AWS Glossary
+
+NEW GLOSSARY
 
 https://docs.aws.amazon.com/general/latest/gr/glos-chap.html
 
@@ -6502,7 +6504,8 @@ function.
 
   html: $(DIR)
   $(DIR): $(TEXI)
-	  -mv -f $(DIR) $(OLDDIR)
+	  [[ -d $(OLDDIR) ]] && rm -rf $(OLDDIR) || echo "no $(OLDDIR)"
+	  [[ -d $(DIR) ]] && mv $(DIR) $(OLDDIR) || echo "no $(DIR)"
 	  makeinfo --html $(TEXI)
 	  $(CMPRPL) $(DIR) $(OLDDIR)
 
@@ -6568,30 +6571,52 @@ function.
 
 ** Get Org Filename
 #+name:get-org-filename
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval yes
 (file-name-base)
 #+end_src
 
 ** Get Org Lowercase Filename
 #+name:get-org-lc-filename
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval yes
 (downcase (file-name-base))
 #+end_src
 
 ** Get File Version
 #+name:get-file-version
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval yes
   (save-excursion
     (goto-char (point-min))
     (re-search-forward "^#\\+macro:version Version \\(\\(?:[[:digit:]]+\\.?\\)\\{3\\}\\)")
     (concat "v" (match-string-no-properties 1)))
 #+end_src
 
-#+begin_src emacs-lisp
+** Compare Replace
+
+#+begin_comment
+The following source code tangles all files during an export operation.  This
+is to make sure the ~cmprpl~ source code exists in the ~tools/~ directory
+before running the Makefile target =html=, as this directory is deleted upon a
+~make clean-dist~.  It also makes sure there is a Makefile on an initial
+export, although the Makefile is never thereafter deleted.  The following code
+is not exported.
+#+end_comment
+
+#+begin_src emacs-lisp :exports results :eval yes :results silent
 (org-babel-tangle-file "AWS-Guide.org")
 #+end_src
 
-** Compare Replace
+The ~cmprpl~ source code attempts to resolve the issue of identical exported
+code having different time stamps, thus defeating the ~aws2 s3 sync~ command.
+This program saves a copy of the current ~aws-guide~ directory prior to
+generating a new one upon encountering a ~make html~ target.  It then compares
+each file in the saved ~aws-guide-old~ directory with the same named file in
+the newly-generated ~aws-guide~ directory.  If the files are identical, the old
+file is copied with time-stamp intact into the new directory.  If the files are
+different, it skips copying and goes to the next file.  By doing this, it is
+hoped to preserve the time stamps of unchanged files going forward so that the
+~aws2 s3 sync~ command will not upload them.  It is therefore important to
+avoid deleting the ~aws-guide-old~ directory for as long as possible.
+
 #+name:cmprpl
 #+header: :mkdirp t
 #+header: :shebang "#!/usr/bin/env bash"
@@ -6599,10 +6624,6 @@ function.
   [[ $# -eq 2 ]] || { echo "ERROR: Incorrect command line arguments"; exit 1; }
   NEWDIR=$1
   OLDDIR=$2
-
-  # echo Size is $#
-  # echo NEWDIR IS $NEWDIR
-  # echo OLDDIR is $OLDDIR
 
   [ -d $NEWDIR ] && echo $NEWDIR exists || { echo "ERROR: $NEWDIR does not exist"; exit 1; }
   [ -d $OLDDIR ] && echo $OLDDIR exists || { echo "SKIPPING: $OLDDIR does not exist"; exit 0; }
@@ -6616,12 +6637,12 @@ function.
 	  if cmp -s $newfile $oldfile
 	  then
 	      # echo "$oldfile and $newfile are equal"
-	      cp -vpf $oldfile $newfile
+	      cp -pf $oldfile $newfile
 	  else
-	      echo "$oldfile and $newfile are NOT equal"
+	      echo "Keeping $oldfile"
 	  fi
       else
-	  echo "$oldfile does not exist in both dirs"
+	  echo "$oldfile does not exist in newfile"
       fi
   done
 #+end_src
