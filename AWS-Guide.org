@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 18:09
-#+macro:version Version 0.0.36
+#+date:2019-12-31 18:18
+#+macro:version Version 0.0.37
 #+texinfo: @insertcopying
 
 
@@ -3423,6 +3423,56 @@ s3.getObject({Bucket: 'bucket', Key: 'key'}).on('success', function(response) {
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/working-with-json.html
 
+*** SDK for JavaScript Code Examples
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/sdk-code-samples.html
+
+The topics in this section contain examples of how to use the AWS SDK for
+JavaScript with the APIs of various services to carry out common tasks.
+
+Find the source code for these examples and others in the AWS documentation
+[[https://github.com/awsdocs/aws-doc-sdk-examples][code examples repository on GitHub]]
+
+**** Amazon CloudWatch Examples
+
+**** Amazon DynamoDB Examples
+
+**** Amazon EC2 Examples
+
+**** AWS Elemental MediaConvert Examples
+
+**** Amazon S3 Glacier Examples
+
+**** AWS IAM Examples
+
+**** Amazon Kinesis Example
+
+**** AWS Lambda Examples
+
+**** Amazon S3 Examples
+
+**** Amazon Simple Email Service Examples
+
+**** Amazon Simple Notification Service Examples
+
+**** Amazon SQS Examples
+
+*** JavaScript SDK Tutorials
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/tutorials.html
+
+#+cindex:tutorials
+The following tutorials show you how to perform different tasks related to
+using the AWS SDK for JavaScript.
+
+**** Tutorial: Setting Up Node.js on an Amazon EC2 Instance
+
+**** Tutorial: Creating and Using Lambda Functions
+
+*** Security Considerations
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/security.html
+
 *** JavaScript SDK API Reference
 <<js-sdk-api-reference>>
 
@@ -3440,6 +3490,24 @@ to perform specific tasks for AWS services using various programming languages
 and supported technologies.  Be aware that the PDF is over 25 MB.
 
 https://docs.aws.amazon.com/code-samples/latest/catalog/welcome.html
+
+*** Additional Resources
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/resources.html
+
+**** JavaScript SDK Forum
+
+https://forums.aws.amazon.com/forum.jspa?forumID=148
+
+**** JavaScript SDK and Developer Guide on GitHub
+
+There are several repositories on GitHub for the SDK for JavaScript.
+
+- The current SDK for JavaScript is available in the [[https://github.com/aws/aws-sdk-js][SDK repo]]
+
+- The SDK for JavaScript Developer Guide (this document) is available in
+  markdown format in its own [[https://github.com/awsdocs/aws-javascript-developer-guide-v2][documentation repo]]
+
 ** SDKs and Toolkits
 
 https://docs.aws.amazon.com/index.html
