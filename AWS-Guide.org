@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2019-12-31 15:26
-#+macro:version Version 0.0.33
+#+date:2019-12-31 16:12
+#+macro:version Version 0.0.34
 #+texinfo: @insertcopying
 
 
@@ -2192,12 +2192,14 @@ configuration data:
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-region.html
 
-A Region is a named set of AWS resources in the same geographical area.  An
-example of a Region is us-east-1, which is the US East (N. Virginia) Region.
+#+cindex:Region
+A /Region/ is a named set of AWS resources in the same geographical area.  An
+example of a Region is =us-east-1=, which is the US East (N. Virginia) Region.
 You specify a Region when configuring the SDK for JavaScript so that the SDK
 accesses the resources in that Region.  Some services are available only in
 specific Regions.
 
+#+cindex:Regionn, set
 The SDK for JavaScript doesn't select a Region by default.  However, you can
 set the Region using an environment variable, a shared config file, or the
 global configuration object.
@@ -2218,17 +2220,356 @@ configuration object as shown here.
 
 ***** Using an Environment Variable
 
-
+You can set the Region using the =AWS_REGION= environment variable.  If you
+define this variable, the SDK for JavaScript reads it and uses it.
 
 ***** Using a Shared Config File
 
+#+cindex:shared config file
+#+cindex:config file, shared
+#+cindex:@env{AWS_SDK_LOAD_CONFIG} environment variable
+Much like the shared credentials file lets you store credentials for use by the
+SDK, you can keep your Region and other configuration settings in a shared file
+named ~config~ that is used by SDKs.  If the =AWS_SDK_LOAD_CONFIG= environment
+variable has been set to a truthy value, the SDK for JavaScript automatically
+searches for a ~config~ file when it loads.  Where you save the ~config~ file
+depends on your operating system:
+
+- Linux, macOS, or Unix users: ~/.aws/config
+
+- Windows users: C:\Users\USER_NAME\.aws\config
+
+If you don't already have a shared ~config~ file, you can create one in the
+designated directory.  In the following example, the ~config~ file sets both
+the Region and the output format.
+
+#+begin_example
+[default]
+   region=us-west-2
+   output=json
+#+end_example
+
 ***** Order of Precedence for Setting the Region
+
+The order of precedence for Region setting is as follows:
+
+- If a Region is passed to a client class constructor, that Region is used.  If
+  not, then...
+
+- If a Region is set on the global configuration object, that Region is used.
+  If not, then...
+
+- If the =AWS_REGION= environment variable is a truthy value, that Region is
+  used.  If not, then...
+
+- If the =AMAZON_REGION= environment variable is a truthy value, that Region is
+  used.  If not, then...
+
+- If the =AWS_SDK_LOAD_CONFIG= environment variable is set to a truthy value
+  and the shared credentials file (=~/.aws/credentials= or the path indicated
+  by =AWS_SHARED_CREDENTIALS_FILE=) contains a Region for the configured
+  profile, that Region is used.  If not, then...
+
+- If the =AWS_SDK_LOAD_CONFIG= environment variable is set to a truthy value
+  and the config file (=~/.aws/config= or the path indicated by
+  =AWS_CONFIG_FILE=) contains a Region for the configured profile, that Region
+  is used.
 
 **** Specifying Custom Endpoints
 
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/specifying-endpoints.html
+
+Calls to API methods in the SDK for JavaScript are made to service endpoint
+URIs.  By default, these endpoints are built from the Region you have
+configured for your code.  However, there are situations in which you need to
+specify a custom endpoint for your API calls.
+
 **** Getting Your Credentials
 
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-your-credentials.html
+
+#+cindex:root credentials
+When you create an AWS account, your account is provided with root credentials.
+Those credentials consist of two access keys:
+
+- Access key ID
+- Secret access key
+
+
+For more information on your access keys, see Understanding and Getting Your
+Security Credentials in the AWS General Reference.
+
+#+cindex:access keys
+#+cindex:access key ID
+#+cindex:secret access key
+Access keys consist of an access key ID and secret access key, which are used
+to sign programmatic requests that you make to AWS.  If you don't have access
+keys, you can create them from the AWS Management Console.  As a best practice,
+do not use the AWS account root user access keys for any task where it's not
+required.  Instead, create a [[create-first_IAM-admin][new administrator IAM user]] with access keys for
+yourself.
+
+#+texinfo:@heading To create access keys for an IAM user
+
+1. AWS Management Console
+
+2. Users
+
+3. Choose User; choose *Security credentials* tab
+
+4. *Access keys* section; choose *Create access keys*
+
+5. Choose *Show*
+
+6. Choose *Download .csv file*
+
+7. Choose *Close*
+
 **** Setting Credentials
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials.html
+
+#+cindex:credentials
+AWS uses credentials to identify who is calling services and whether access to
+the requested resources is allowed.  In AWS, these credentials are typically
+the /access key ID/ and the /secret access key/ that were created along with
+your account.
+
+Whether running in a web browser or in a Node.js server, your JavaScript code
+must obtain valid credentials before it can access services through the API.
+Credentials can be set globally on the configuration object, using
+~AWS.Config~, or per service, by passing credentials directly to a service
+object.
+
+There are several ways to set credentials that differ between Node.js and
+JavaScript in web browsers.  The topics in this section describe how to set
+credentials in Node.js or web browsers.  In each case, the options are
+presented in recommended order.
+
+#+texinfo:@heading Best Practices for Credentials
+
+Properly setting credentials ensures that your application or browser script
+can access the services and resources needed while minimizing exposure to
+security issues that may impact mission critical applications or compromise
+sensitive data.
+
+An important principle to apply when setting credentials is to always grant the
+least privilege required for your task.  It's more secure to provide minimal
+permissions on your resources and add further permissions as needed, rather
+than provide permissions that exceed the least privilege and, as a result, be
+required to fix security issues you might discover later.  For example, unless
+you have a need to read and write individual resources, such as objects in an
+Amazon S3 bucket or a DynamoDB table, set those permissions to read only.
+
+For more information on granting the least privilege, see the [[https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege][Grant Least
+Privilege]] section of the Best Practices topic in the IAM User Guide.
+
+For more information about how to manage your access keys, see [[https://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html][Best Practices
+for Managing AWS Access Keys]] in the AWS General Reference.
+
+**** Setting Credentials in Node.js
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html
+
+#+cindex:credentials, set
+There are several ways in Node.js to supply your credentials to the SDK.  Some
+of these are more secure and others afford greater convenience while developing
+an application.  When obtaining credentials in Node.js, be careful about
+relying on more than one source such as an environment variable and a JSON file
+you load.  You can change the permissions under which your code runs without
+realizing the change has happened.
+
+Here are the ways you can supply your credentials in order of recommendation:
+
+1. Loaded from AWS Identity and Access Management (IAM) roles for Amazon EC2
+
+2. Loaded from the shared credentials file (=~/.aws/credentials=)
+
+3. Loaded from environment variables
+
+4. Loaded from a JSON file on disk
+
+5. Other credential-provider classes provided by the JavaScript SDK
+
+
+If more than one credential source is available to the SDK, the default
+precedence of selection is as follows:
+
+1. Credentials that are explicitly set through the service-client constructor
+
+2. Environment variables
+
+3. The shared credentials file
+
+4. Credentials loaded from the ECS credentials provider (if applicable)
+
+5. Credentials that are obtained by using a credential process specified in the
+   shared AWS config file or the shared credentials file. For more information,
+   see Loading Credentials in Node.js using a Configured Credential Process.
+
+6. Credentials loaded from AWS IAM using the credentials provider of the Amazon
+   EC2 instance (if configured in the instance metadata)
+
+
+The topics in this section describe how to load credentials into Node.js.
+
+***** Loading Credentials in Node.js from IAM Roles for EC2
+
+***** Loading Credentials for a Node.js Lambda Function
+
+***** Loading Credentials in NodeJS from the Shared Credentials File
+<<shared-credentials-file>>
+
+#+cindex:credentials, loading in Node.js
+#+cindex:shared credentials file
+You can keep your AWS credentials data in a shared file used by SDKs and the
+command line interface.
+
+#+begin_cartouche
+*When the SDK for JavaScript loads, it automatically searches the shared
+credentials file, which is named "credentials".*
+#+end_cartouche
+
+Where you keep the shared credentials file depends on your operating system:
+
+- The shared credentials file on Linux, Unix, and macOS: =~/.aws/credentials=
+
+- The shared credentials file on Windows: =C:\Users\USER_NAME\.aws\credentials=
+
+
+If you do not already have a shared credentials file, see [[*Getting Your Credentials][Getting Your
+Credentials]].
+
+#+cindex:credentials file, shared
+#+cindex:shared credentials file
+#+cindex:access_key_id
+#+cindex:secret_access_key
+Once you follow those instructions, you should see text similar to the
+following in the credentials file, where =<YOUR_ACCESS_KEY_ID>= is your access
+key ID and =<YOUR_SECRET_ACCESS_KEY>= is your secret access key:
+
+#+begin_example
+[default]
+aws_access_key_id = <YOUR_ACCESS_KEY_ID>
+aws_secret_access_key = <YOUR_SECRET_ACCESS_KEY>
+#+end_example
+
+#+cindex:profiles
+The =[default]= section heading specifies a default profile and associated
+values for credentials.  You can create additional profiles in the same shared
+configuration file, each with its own credential information.  The following
+example shows a configuration file with the default profile and two additional
+profiles:
+
+#+begin_example
+[default] ; default profile
+aws_access_key_id = <DEFAULT_ACCESS_KEY_ID>
+aws_secret_access_key = <DEFAULT_SECRET_ACCESS_KEY>
+    
+[personal-account] ; personal account profile
+aws_access_key_id = <PERSONAL_ACCESS_KEY_ID>
+aws_secret_access_key = <PERSONAL_SECRET_ACCESS_KEY>
+    
+[work-account] ; work account profile
+aws_access_key_id = <WORK_ACCESS_KEY_ID>
+aws_secret_access_key = <WORK_SECRET_ACCESS_KEY>
+#+end_example
+
+#+cindex:@env{AWS_PROFILE} environment variable
+By default, the SDK checks the =AWS_PROFILE= environment variable to determine
+which profile to use.  If the =AWS_PROFILE= variable is not set in your
+environment, the SDK uses the credentials for the =[default]= profile.  To use
+one of the alternate profiles, set or change the value of the =AWS_PROFILE=
+environment variable.  For example, given the configuration file shown above,
+to use the credentials from the work account, set the =AWS_PROFILE= environment
+variable to =work-account= (as appropriate for your operating system).
+
+After setting the environment variable (if needed), you can run a file named
+~script.js~ that uses the SDK as follows:
+
+: $ node script.js
+
+#+cindex:prcess.env.AWS_PROFILE
+#+cindex:credential provider
+You can also explicitly select the profile used by the SDK, either by setting
+~process.env.AWS_PROFILE~ before loading the SDK, or by selecting the
+credential provider as shown in the following example:
+
+#+cindex:AWS.config.credentials
+#+begin_src js :eval no
+#+cindex:SharedIniFileCredentials
+var credentials = new AWS.SharedIniFileCredentials({profile: 'work-account'});
+AWS.config.credentials = credentials;
+#+end_src
+
+***** Loading Credentials in Node.js from Environment Variables
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html
+
+#+cindex:credential environment variables
+#+cindex:AWS_ACCESS_KEY_ID
+#+cindex:AWS_SECRET_ACCESS_KEY
+#+cindex:AWS_SESSION_TOKEN
+The SDK automatically detects AWS credentials set as variables in your
+environment and uses them for SDK requests, eliminating the need to manage
+credentials in your application.  The environment variables that you set to
+provide your credentials are:
+
+- =AWS_ACCESS_KEY_ID=
+- =AWS_SECRET_ACCESS_KEY=
+- =AWS_SESSION_TOKEN= (optional)
+
+***** Loading Credentials in Node.js from a JSON File
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-json-file.html
+
+#+cindex:@file{config.json} configuration file
+#+cindex:JSON configuration file
+You can load configuration and credentials from a JSON document on disk using
+~AWS.config.loadFromPath()~.  The path specified is relative to the current
+working directory of your process.  For example, to load credentials from a
+~config.json~ file with the following content:
+
+: { "accessKeyId": <YOUR_ACCESS_KEY_ID>, "secretAccessKey": <YOUR_SECRET_ACCESS_KEY>, "region": "us-east-1" }
+
+#+cindex:@code{AWS.config.loadFromPath()}
+Use the following command:
+
+: AWS.config.loadFromPath('./config.json');
+
+Loading credentials from a JSON document is not supported in browser scripts.
+
+***** Loading Credentials in Node.js using a Configured Credential Process
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-configured-credential-process.html
+
+You can source credentials by using a method that isn't built into the SDK.  To
+do this, specify a credential process in the shared AWS conﬁg file or the
+shared credentials file.  If the AWS_SDK_LOAD_CONFIG environment variable is
+set to a truthy value, the SDK will prefer the process specified in the config
+file over the process specified in the credentials file (if any).
+
+**** Setting Credentials in a Web Browser
+
+https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-browser.html
+
+There are several ways to supply your credentials to the SDK from browser
+scripts.  Some of these are more secure and others afford greater convenience
+while developing a script.  Here are the ways you can supply your credentials
+in order of recommendation:
+
+1. Using Amazon Cognito Identity to authenticate users and supply credentials
+
+2. Using web federated identity
+
+3. Hard coded in the script [fn:1]
+
+
+***** Using Amazon Cognito Identity to Authenticate Users
+
+***** Using Web Federated Identity to Authenticate Users
+
+***** Web Federated Identity Examples
 
 **** Locking API Versions
 
@@ -4883,7 +5224,7 @@ This command installs the SDK for JavaScript in your project, and updates
 Next, install the ~uuid~ module to the project by typing the following at the
 command line, which installs the module and updates ~package.json~.  For more
 information about uuid, see the module's page at
-https://www.npmjs.com/package/uuid [fn:1]
+https://www.npmjs.com/package/uuid [fn:2]
 
 *** Step 4---Write the Node.js Code
 
@@ -4944,147 +5285,9 @@ If the upload is successful, you'll see a confirmation message at the command
 line.  You can also find the bucket and the uploaded text object in the Amazon
 S3 console.
 
-** Setting Up the SDK for JavaScript
-
 ** Configuring the SDK for JavaScript
-*** Using the Global Configuration Object
-
-*** Setting the AWS Region
-
-*** Specifying Custom Endpoints
-
-*** Getting Your Credentials
-
-https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-your-credentials.html
-
-#+cindex:root credentials
-When you create an AWS account, your account is provided with root credentials.
-Those credentials consist of two access keys:
-
-- Access key ID
-- Secret access key
-
-
-For more information on your access keys, see Understanding and Getting Your
-Security Credentials in the AWS General Reference.
-
-#+cindex:access keys
-#+cindex:access key ID
-#+cindex:secret access key
-Access keys consist of an access key ID and secret access key, which are used
-to sign programmatic requests that you make to AWS.  If you don't have access
-keys, you can create them from the AWS Management Console.  As a best practice,
-do not use the AWS account root user access keys for any task where it's not
-required.  Instead, create a [[create-first_IAM-admin][new administrator IAM user]] with access keys for
-yourself.
-
-#+texinfo:@heading To create access keys for an IAM user
-
-1. AWS Management Console
-
-2. Users
-
-3. Choose User; choose *Security credentials* tab
-
-4. *Access keys* section; choose *Create access keys*
-
-5. Choose *Show*
-
-6. Choose *Download .csv file*
-
-7. Choose *Close*
-
 *** Setting Credentials in Node.js
 #+cindex:credentials in Node.js
-**** Credentials for EC2 from IAM Roles
-
-**** Credentials for a Node.js Lambda Function
-
-**** Loading Credentials in NodeJS from the Shared Credentials File
-<<shared-credentials-file>>
-
-#+cindex:credentials, loading in Node.js
-#+cindex:shared credentials file
-You can keep your AWS credentials data in a shared file used by SDKs and the
-command line interface.
-
-#+begin_cartouche
-*When the SDK for JavaScript loads, it automatically searches the shared
-credentials file, which is named "credentials".*
-#+end_cartouche
-
-Where you keep the shared credentials file depends on your operating system:
-
-- The shared credentials file on Linux, Unix, and macOS: =~/.aws/credentials=
-
-- The shared credentials file on Windows: =C:\Users\USER_NAME\.aws\credentials=
-
-
-If you do not already have a shared credentials file, see [[*Getting Your Credentials][Getting Your
-Credentials]].
-
-#+cindex:credentials file, shared
-#+cindex:shared credentials file
-#+cindex:access_key_id
-#+cindex:secret_access_key
-Once you follow those instructions, you should see text similar to the
-following in the credentials file, where =<YOUR_ACCESS_KEY_ID>= is your access
-key ID and =<YOUR_SECRET_ACCESS_KEY>= is your secret access key:
-
-#+begin_example
-[default]
-aws_access_key_id = <YOUR_ACCESS_KEY_ID>
-aws_secret_access_key = <YOUR_SECRET_ACCESS_KEY>
-#+end_example
-
-#+cindex:profiles
-The =[default]= section heading specifies a default profile and associated
-values for credentials.  You can create additional profiles in the same shared
-configuration file, each with its own credential information.  The following
-example shows a configuration file with the default profile and two additional
-profiles:
-
-#+begin_example
-[default] ; default profile
-aws_access_key_id = <DEFAULT_ACCESS_KEY_ID>
-aws_secret_access_key = <DEFAULT_SECRET_ACCESS_KEY>
-    
-[personal-account] ; personal account profile
-aws_access_key_id = <PERSONAL_ACCESS_KEY_ID>
-aws_secret_access_key = <PERSONAL_SECRET_ACCESS_KEY>
-    
-[work-account] ; work account profile
-aws_access_key_id = <WORK_ACCESS_KEY_ID>
-aws_secret_access_key = <WORK_SECRET_ACCESS_KEY>
-#+end_example
-
-#+cindex:@env{AWS_PROFILE} environment variable
-By default, the SDK checks the =AWS_PROFILE= environment variable to determine
-which profile to use.  If the =AWS_PROFILE= variable is not set in your
-environment, the SDK uses the credentials for the =[default]= profile.  To use
-one of the alternate profiles, set or change the value of the =AWS_PROFILE=
-environment variable.  For example, given the configuration file shown above,
-to use the credentials from the work account, set the =AWS_PROFILE= environment
-variable to =work-account= (as appropriate for your operating system).
-
-After setting the environment variable (if needed), you can run a file named
-~script.js~ that uses the SDK as follows:
-
-: $ node script.js
-
-#+cindex:prcess.env.AWS_PROFILE
-#+cindex:credential provider
-You can also explicitly select the profile used by the SDK, either by setting
-~process.env.AWS_PROFILE~ before loading the SDK, or by selecting the
-credential provider as shown in the following example:
-
-#+cindex:AWS.config.credentials
-#+begin_src js :eval no
-#+cindex:SharedIniFileCredentials
-var credentials = new AWS.SharedIniFileCredentials({profile: 'work-account'});
-AWS.config.credentials = credentials;
-#+end_src
-
 * AWS Tools
 
 “Tools for developing and managing applications on AWS”
@@ -5479,15 +5682,18 @@ Copyright \copy 2019 {{{author}}}
 :unnumbered: t
 :index:    cp
 :END:
-
 * Footnotes
 
-[fn:1] Deprecation warning: The use of require('uuid') is deprecated and will
+[fn:1]We do not recommend hard coding your AWS credentials in your
+scripts. Hard coding credentials poses a risk of exposing your access key ID
+and secret access key.
+
+[fn:2] Deprecation warning: The use of require('uuid') is deprecated and will
 not be supported after version 3.x of this module. Instead, use
 require('uuid/[v1|v3|v4|v5]') as shown in the examples below.
 : const uuidv1 = require('uuid/v1');
 
-* End                                                              :noexport:
+* Export Configuraton                                              :noexport:
 
 
 #+texinfo_filename:aws-guide.info
@@ -5502,6 +5708,8 @@ require('uuid/[v1|v3|v4|v5]') as shown in the examples below.
 #+options: toc:t H:4 num:3
 
 
+
+* Local Variables                                                  :noexport:
 # Local Variables:
 # fill-column: 79
 # indent-tabs-mode: t
