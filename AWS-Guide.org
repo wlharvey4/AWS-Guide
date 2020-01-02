@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-02 11:52
-#+macro:version Version 0.0.47
+#+date:2020-01-02 12:04
+#+macro:version Version 0.0.48
 #+texinfo: @insertcopying
 
 
@@ -6762,8 +6762,8 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
   EXCL_INCL = --exclude "*" --include "*.html"
   GRANTS = --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
   REGION = --region us-west-2
-  S3SYNC = $(S3) sync --dryrun $(EXCL_INCL) $(SRC) $(DST_OLD) $(REGION) $(GRANTS)
-  S3MOVE = $(S3) mv --dryrun --recursive $(DST_OLD) $(DST_NEW) $(REGION) $(GRANTS)
+  S3SYNC = $(S3) sync $(EXCL_INCL) $(SRC) $(DST_OLD) $(REGION) $(GRANTS)
+  S3MOVE = $(S3) mv --recursive $(DST_OLD) $(DST_NEW) $(REGION) $(GRANTS)
 
   default: open-html
 
@@ -6771,9 +6771,14 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
 	   open-pdf clean clean-dist help sync
 
   show-version:
-	  @echo $(VERS)
-	  @echo $(PROG)
-	  @echo $(DIR)
+	  @echo PROG $(PROG)
+	  @echo VERS $(VERS)
+	  @echo S3VERS $(S3VERS)
+	  @echo DIR $(DIR)
+	  @echo OLDDIR $(OLDDIR)
+	  @echo SRC $(SRC)
+	  @echo DST_OLD $(DST_OLD)
+	  @echo DST_NEW $(DST_NEW)
 
   all: texi info html pdf
 
@@ -6817,9 +6822,9 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
   clean-dist: clean
 	  -rm -rf $(DIR) $(BUILD) $(TOOLS)
 
-  sync:	html
-	  $(SYNC)
-	  $(MOVE)
+  sync:
+	  $(S3SYNC)
+	  $(S3MOVE)
 
   help:
 	  @echo '"make default" makes the .texi file \
@@ -6895,7 +6900,7 @@ the Makefile.
 
 #+caption:Get S3 Version
 #+name:get-s3-version
-#+begin_src sh :eval yes :results output
+#+begin_src sh :eval yes
 verpre=$(aws2 s3 ls s3://pinecone-forest.com/aws-guide/)
 ver=${verpre/*PRE /}
 echo "${ver}"
@@ -6979,7 +6984,7 @@ benefits from the AWS S3 ~sync~ command.
 
 #+name:s3synclocal
 #+header: :mkdirp yes :shebang "#!/usr/bin/env bash" :noweb yes
-#+begin_src sh :tangle tools/s3synclocal
+#+begin_src sh :eval no
   verpre=$(aws2 s3 ls pinecone-forest.com/aws-guide/)
   ver=${verpre/*PRE /}
   echo "Version: ${ver}"
