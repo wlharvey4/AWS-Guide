@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-02 11:04
-#+macro:version Version 0.0.46
+#+date:2020-01-02 11:52
+#+macro:version Version 0.0.47
 #+texinfo: @insertcopying
 
 
@@ -6732,8 +6732,9 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
 #+name:Makefile
 #+begin_src makefile :tangle Makefile :noweb tangle
   ### PROGRAM
-  PROG  = <<get-org-filename()>>
-  VERS  = <<get-file-version()>>
+  PROG   = <<get-org-filename()>>
+  VERS   = <<get-file-version()>>
+  S3VERS = <<get-s3-version()>>
 
   ### TOOLS
   TOOLS = tools
@@ -6756,10 +6757,13 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
   AWS  = aws2
   S3   = $(AWS) s3
   SRC  = $(DIR)/
-  DST  = $(HOME)/$(DIR)/$(VERS)/
+  DST_OLD = $(HOME)/$(DIR)/$(S3VERS)
+  DST_NEW = $(HOME)/$(DIR)/$(VERS)
+  EXCL_INCL = --exclude "*" --include "*.html"
   GRANTS = --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
   REGION = --region us-west-2
-  SYNC = $(S3) sync $(SRC) $(DST) $(GRANTS) $(REGION)
+  S3SYNC = $(S3) sync --dryrun $(EXCL_INCL) $(SRC) $(DST_OLD) $(REGION) $(GRANTS)
+  S3MOVE = $(S3) mv --dryrun --recursive $(DST_OLD) $(DST_NEW) $(REGION) $(GRANTS)
 
   default: open-html
 
@@ -6813,8 +6817,9 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
   clean-dist: clean
 	  -rm -rf $(DIR) $(BUILD) $(TOOLS)
 
-  sync:
-	  tools/s3synclocal
+  sync:	html
+	  $(SYNC)
+	  $(MOVE)
 
   help:
 	  @echo '"make default" makes the .texi file \
@@ -6883,7 +6888,17 @@ the Makefile.
   (save-excursion
     (goto-char (point-min))
     (re-search-forward "^#\\+macro:version Version \\(\\(?:[[:digit:]]+\\.?\\)\\{3\\}\\)")
-    (concat "v" (match-string-no-properties 1)))
+    (concat "v" (match-string-no-properties 1) "/"))
+#+end_src
+
+** Get S3 Version
+
+#+caption:Get S3 Version
+#+name:get-s3-version
+#+begin_src sh :eval yes :results output
+verpre=$(aws2 s3 ls s3://pinecone-forest.com/aws-guide/)
+ver=${verpre/*PRE /}
+echo "${ver}"
 #+end_src
 
 ** Compare Replace
@@ -6977,9 +6992,9 @@ benefits from the AWS S3 ~sync~ command.
        --region us-west-2
   aws2 s3 mv \
        --recursive \
-       --region us-west-2 \
        s3://pinecone-forest.com/aws-guide/${ver} \
        s3://pinecone-forest.com/aws-guide/<<get-file-version()>> \
+       --region us-west-2 \
        --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers \
 #+end_src
 
