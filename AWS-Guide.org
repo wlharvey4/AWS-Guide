@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-01 12:04
-#+macro:version Version 0.0.42
+#+date:2020-01-01 21:40
+#+macro:version Version 0.0.43
 #+texinfo: @insertcopying
 
 
@@ -32,7 +32,7 @@ There are limits to managing permissions using ACLs.
 - you cannot explicilty deny permissions
 
 
-[[*Managing Access with ACLs][Managing Access with ACLs in S3]]
+[[managing-access-with-acls][Managing Access with ACLs in S3]]
 
 ** Amazon Web Services
 
@@ -3668,6 +3668,7 @@ In its most basic sense, a policy contains the following elements:
 - Principal ::
 
 ***** Managing Access with ACLs
+<<managing-access-with-acls>>
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/access-policy-language-overview.html
 
@@ -3678,6 +3679,51 @@ guidelines for when to use which access policy options.
 ****** Access Control List Overview
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html
+
+#+cindex:access control list (ACL)
+#+cindex:ACL (access control list)
+#+cindex:manage access
+#+cindex:subresource
+#+cindex:groups
+#+cindex:access permission
+Amazon S3 access control lists (ACLs) enable you to manage access to buckets
+and objects.  Each bucket and object has an ACL attached to it as a
+subresource.  It defines which AWS /accounts/ or /groups/ are granted access
+and the /type/ of access.  When a request is received against a resource,
+Amazon S3 checks the corresponding ACL to verify that the requester has the
+necessary /access permissions/.
+
+#+cindex:default ACL
+#+cindex:resource owner
+When you create a bucket or an object, Amazon S3 creates a /default ACL/ that
+grants the resource owner full control over the resource.  This is shown in the
+following sample bucket ACL (the default object ACL has the same structure):
+
+#+attr_texinfo: :options Example,ex:sampacl
+#+begin_float
+#+texinfo:@caption{Sample Bucket ACL}
+#+begin_example
+<?xml version="1.0" encoding="UTF-8"?>
+<AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <Owner>
+    <ID>*** Owner-Canonical-User-ID ***</ID>
+    <DisplayName>owner-display-name</DisplayName>
+  </Owner>
+  <AccessControlList>
+    <Grant>
+      <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+               xsi:type="Canonical User">
+        <ID>*** Owner-Canonical-User-ID ***</ID>
+        <DisplayName>display-name</DisplayName>
+      </Grantee>
+      <Permission>FULL_CONTROL</Permission>
+    </Grant>
+  </AccessControlList>
+</AccessControlPolicy> 
+#+end_example
+#+end_float
+
+The sample ACL includes an Owner element that identifies the owner by the AWS account's canonical user ID.
 
 ****** Managing ACLs
 
@@ -3772,7 +3818,6 @@ https://docs.aws.amazon.com/AmazonS3/latest/dev/RelatedResources012.html
 *** SQL Reference for Amazon S3 Select and Glacier Select
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference.html
-
 
 ** Tutorials and Projects
 
@@ -6766,7 +6811,7 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
 
   clean:
 	  -rm *~
-	  -rm *.{texi*,info,html,pdf}
+	  -rm *.{texi*,info*,html,pdf}
 
   clean-dist: clean
 	  -rm -rf $(DIR) $(BUILD) $(TOOLS)
@@ -6812,18 +6857,30 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
    the INFO and PDF versions)
 
 ** Get Org Filename
+This program simply uses the name of the buffer to obtain the name of the
+filename to add to the Makefile.
+
+#+caption:Get Org Filename program
 #+name:get-org-filename
 #+begin_src emacs-lisp :eval yes
 (file-name-base)
 #+end_src
 
 ** Get Org Lowercase Filename
+This program simply downcases the buffer filename to use as a directory name
+for the HTML output.
+
+#+caption:Get Org Lowercase Filename program
 #+name:get-org-lc-filename
 #+begin_src emacs-lisp :eval yes
 (downcase (file-name-base))
 #+end_src
 
 ** Get File Version
+This program scans the current buffer for the version number and places it into
+the Makefile.
+
+#+caption:Get File Version program
 #+name:get-file-version
 #+begin_src emacs-lisp :eval yes
   (save-excursion
@@ -6859,6 +6916,7 @@ hoped to preserve the time stamps of unchanged files going forward so that the
 ~aws2 s3 sync~ command will not upload them.  It is therefore important to
 avoid deleting the ~aws-guide-old~ directory for as long as possible.
 
+#+caption:Compare Replace program
 #+name:cmprpl
 #+header: :mkdirp t
 #+header: :shebang "#!/usr/bin/env bash"
@@ -6889,6 +6947,18 @@ avoid deleting the ~aws-guide-old~ directory for as long as possible.
   done
 #+end_src
 
+* List of Programs
+:PROPERTIES:
+:appendix: t
+:END:
+#+texinfo:@listoffloats Listing
+
+* List of Examples
+:PROPERTIES:
+:appendix: t
+:END:
+#+texinfo:@listoffloats Example
+
 * Copying
 :PROPERTIES:
 :copying:  t
@@ -6897,7 +6967,7 @@ avoid deleting the ~aws-guide-old~ directory for as long as possible.
 
 Copyright \copy 2019 {{{author}}}
 
-* Main Index
+* Concept Index
 :PROPERTIES:
 :unnumbered: t
 :index:    cp
