@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-01 22:49
-#+macro:version Version 0.0.44
+#+date:2020-01-02 11:01
+#+macro:version Version 0.0.45
 #+texinfo: @insertcopying
 
 
@@ -6814,7 +6814,7 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
 	  -rm -rf $(DIR) $(BUILD) $(TOOLS)
 
   sync:
-	  $(SYNC)
+	  tools/s3synclocal
 
   help:
 	  @echo '"make default" makes the .texi file \
@@ -6958,6 +6958,29 @@ benefits from the AWS S3 ~sync~ command.
 			     cp -vp $newfile $oldfile; }
   done
 
+#+end_src
+
+** S3 Sync Local
+
+#+name:s3synclocal
+#+header: :mkdirp yes :shebang "#!/usr/bin/env bash" :noweb yes
+#+begin_src sh :tangle tools/s3synclocal
+  verpre=$(aws2 s3 ls pinecone-forest.com/aws-guide/)
+  ver=${verpre/*PRE /}
+  echo "Version: ${ver}"
+  aws2 s3 sync \
+       aws-guide s3://pinecone-forest.com/aws-guide/${ver} \
+       --exclude "*" \
+       --include "*.html" \
+       --delete \
+       --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers \
+       --region us-west-2
+  aws2 s3 mv \
+       --recursive \
+       --region us-west-2 \
+       --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers \
+       s3://pinecone-forest.com/aws-guide/${ver} \
+       s3://pinecone-forest.com/aws-guide/<<get-file-version()>>
 #+end_src
 
 * List of Programs
