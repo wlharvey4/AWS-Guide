@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-01 21:40
-#+macro:version Version 0.0.43
+#+date:2020-01-01 22:49
+#+macro:version Version 0.0.44
 #+texinfo: @insertcopying
 
 
@@ -6790,9 +6790,6 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
 
   html: $(DIR)
   $(DIR): $(TEXI)
-	  [[ -d $(DIR) ]] && { \
-		  [[ -d $(OLDDIR) ]] && rm -rf $(OLDDIR) || :; \
-		  mv $(DIR) $(OLDDIR); } || :
 	  makeinfo --html $(TEXI)
 	  $(CMPRPL) $(DIR) $(OLDDIR)
 
@@ -6905,16 +6902,23 @@ is not exported.
 #+end_src
 
 The ~cmprpl~ source code attempts to resolve the issue of identical exported
-code having different time stamps, thus defeating the ~aws2 s3 sync~ command.
-This program saves a copy of the current ~aws-guide~ directory prior to
-generating a new one upon encountering a ~make html~ target.  It then compares
-each file in the saved ~aws-guide-old~ directory with the same named file in
-the newly-generated ~aws-guide~ directory.  If the files are identical, the old
-file is copied with time-stamp intact into the new directory.  If the files are
-different, it skips copying and goes to the next file.  By doing this, it is
-hoped to preserve the time stamps of unchanged files going forward so that the
-~aws2 s3 sync~ command will not upload them.  It is therefore important to
-avoid deleting the ~aws-guide-old~ directory for as long as possible.
+code having different time stamps, thus defeating the benefit provided by the
+~aws2 s3 sync~ command uploading only changed files.
+
+This program makes sure that a generated HTML directory exists: $NEWDIR.  If it
+doesn’t, then it is in an improper state and the program stops with an error
+message.
+
+The program then checks if an old directory exists, $OLDDIR.  If one doesn’t,
+then one is created by copying the current new directory.  This provides a
+baseline for comparisons going forward.
+
+The program then loops through all of the files in the new directory and copies
+any that do not exist in the old directory.  Now both directories should be in
+sync.
+
+It is important to retain the $OLDDIR for as long as possible to reap the most
+benefits from the AWS S3 ~sync~ command.
 
 #+caption:Compare Replace program
 #+name:cmprpl
@@ -6925,26 +6929,35 @@ avoid deleting the ~aws-guide-old~ directory for as long as possible.
   NEWDIR=$1
   OLDDIR=$2
 
-  [ -d $NEWDIR ] && echo $NEWDIR exists || { echo "ERROR: $NEWDIR does not exist"; exit 1; }
-  [ -d $OLDDIR ] && echo $OLDDIR exists || { echo "SKIPPING: $OLDDIR does not exist"; exit 0; }
+  [ -d $NEWDIR ] || { echo "ERROR: $NEWDIR does not exist"; exit 1; }
+  [ -d $OLDDIR ] || { echo "CREATING: $OLDDIR does not exist"; cp -a $NEWDIR $OLDDIR; exit 0; }
 
   for oldfile in $OLDDIR/*
   do
       newfile=$NEWDIR/$(basename $oldfile)
       if [ -e $newfile ]
       then
-	  # echo "$newfile exists in both directories"
-	  if cmp -s $newfile $oldfile
-	  then
-	      # echo "$oldfile and $newfile are equal"
-	      cp -pf $oldfile $newfile
-	  else
-	      echo "Keeping $newfile"
-	  fi
+	      if cmp -s $newfile $oldfile
+	      then
+	          printf "${GREEN}copying OLD to NEW${CLEAR}: "
+	          cp -vp $oldfile $newfile
+	      else
+	          printf "${MAGENTA}copying NEW to OLD${CLEAR}: "
+	          cp -vp $newfile $oldfile
+	      fi
       else
-	  echo "$oldfile does not exist in newfile"
+	      printf "${RED}removing OLD:${CLEAR} "
+	      rm -v $oldfile
       fi
   done
+
+  for newfile in $NEWDIR/*
+  do
+      oldfile=$OLDDIR/$(basename $newfile)
+      [[ -e $oldfile ]] || { printf "${BLUE}copying NEW to OLD${CLEAR}: "
+			     cp -vp $newfile $oldfile; }
+  done
+
 #+end_src
 
 * List of Programs
