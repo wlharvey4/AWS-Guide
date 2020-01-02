@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-02 12:04
-#+macro:version Version 0.0.48
+#+date:2020-01-02 12:19
+#+macro:version Version 0.0.49
 #+texinfo: @insertcopying
 
 
@@ -6727,7 +6727,10 @@ just ones that have changed, so anytime the main Org file changes, every single
 HTML file will be re-saved, thus eliminating any advantage of the ~sync~
 function.
 
-I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Replace][below]].
+I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Replace][below]],
+including the combined operations of ~sync~ and ~mv~.
+
+*** TODO Invalidate the prior version’s index.html
 
 #+name:Makefile
 #+begin_src makefile :tangle Makefile :noweb tangle
@@ -6822,7 +6825,7 @@ I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Rep
   clean-dist: clean
 	  -rm -rf $(DIR) $(BUILD) $(TOOLS)
 
-  sync:
+  sync: $(DIR)
 	  $(S3SYNC)
 	  $(S3MOVE)
 
@@ -6978,29 +6981,6 @@ benefits from the AWS S3 ~sync~ command.
 			     cp -vp $newfile $oldfile; }
   done
 
-#+end_src
-
-** S3 Sync Local
-
-#+name:s3synclocal
-#+header: :mkdirp yes :shebang "#!/usr/bin/env bash" :noweb yes
-#+begin_src sh :eval no
-  verpre=$(aws2 s3 ls pinecone-forest.com/aws-guide/)
-  ver=${verpre/*PRE /}
-  echo "Version: ${ver}"
-  aws2 s3 sync \
-       aws-guide s3://pinecone-forest.com/aws-guide/${ver} \
-       --exclude "*" \
-       --include "*.html" \
-       --delete \
-       --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers \
-       --region us-west-2
-  aws2 s3 mv \
-       --recursive \
-       s3://pinecone-forest.com/aws-guide/${ver} \
-       s3://pinecone-forest.com/aws-guide/<<get-file-version()>> \
-       --region us-west-2 \
-       --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers \
 #+end_src
 
 * List of Programs
