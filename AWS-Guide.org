@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-02 22:08
-#+macro:version Version 0.0.50
+#+date:2020-01-03 09:05
+#+macro:version Version 0.0.51
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -80,15 +80,32 @@ https://aws.amazon.com/products/
 
 ** API Gateway
 ** API Reference
-** CloudFront                                                   :networking:
+** CloudFront
+
+https://aws.amazon.com/cloudfront/
 
 “Fast, highly secure and programmable content delivery network (CDN)”
 
-[[https://aws.amazon.com/cloudfront/][CloudFront Home]]
+Amazon CloudFront is a fast content delivery network (CDN) service that
+securely delivers data, videos, applications, and APIs to customers globally
+with low latency, high transfer speeds, all within a developer-friendly
+environment.  CloudFront is integrated with AWS – both physical locations that
+are directly connected to the AWS global infrastructure, as well as other AWS
+services.  CloudFront works seamlessly with services including AWS Shield for
+DDoS mitigation, Amazon S3, Elastic Load Balancing or Amazon EC2 as origins for
+your applications, and Lambda@Edge to run custom code closer to customers’
+users and to customize the user experience.  Lastly, if you use AWS origins
+such as Amazon S3, Amazon EC2 or Elastic Load Balancing, you don’t pay for any
+data transferred between these services and CloudFront.
 
-[[https://docs.aws.amazon.com/cloudfront/index.html][CloudFront Documentation]]
+[[*CloudFront Developer Guide][CloudFront Developer Guide]]
 
-[[*CloudFront Documentation][CloudFront]]
+[[*CloudFront API Reference][CloudFront API Reference]]
+
+“Amazon CloudFront speeds up distribution of your static and dynamic web
+content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
+request your content, CloudFront delivers it through a worldwide network of
+edge locations that provide low latency and high performance.”
 
 #+cindex:CloudFront
 - *CloudFront* :: An AWS content delivery service that helps you improve the
@@ -109,11 +126,6 @@ applications, and =Lambda@Edge= to run custom code closer to customers’ users
 and to customize the user experience.  Lastly, if you use AWS origins such as
 Amazon S3, Amazon EC2 or Elastic Load Balancing, you don’t pay for any data
 transferred between these services and CloudFront.
-
-Amazon CloudFront speeds up distribution of your static and dynamic web
-content, such as ~.html~, ~.css~, ~.php~, image, and media files.  When users
-request your content, CloudFront delivers it through a worldwide network of
-edge locations that provide low latency and high performance.
 
 *** Benefits
 
@@ -279,7 +291,7 @@ controlling access to AWS services. With IAM, you can centrally manage
 users, security credentials such as access keys, and permissions that
 control which AWS resources users and applications can access.
 
-[[*Identity and Access Management in Amazon S3][IAM in S3]]
+[[*Identity and Access Management---IAM---User Guide][Identity and Access Management---IAM---User Guide]]
 
 *** IAM User Guide
 
@@ -837,32 +849,21 @@ traffic to protect your workloads from malicious actors.
 
 * AWS Documentation
 
-“Find user guides, developer guides, API references, tutorials, and more.”
+#+cindex:Documentation
+https://docs.aws.amazon.com/index.html
 
-- [[https://aws.amazon.com/documentation/][View all Documentation]]
+“Find user guides, developer guides, API references, tutorials, and more.”
 
 - [[https://github.com/awsdocs][Amazon Web Services --- Documentation on GitHub]]
 
-#+texinfo:@heading Start building with SDKs and tools
+** CloudFront Developer Guide
 
-#+texinfo:@subheading Access and manage AWS services with your preferred development language or platform
-
-https://docs.aws.amazon.com/index.html
-
-
-** CloudFront Documentation
-
-[[https://docs.aws.amazon.com/cloudfront/index.html][CloudFront Documentation]]
-
-*** CloudFront Developer Guide
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html
 
 Provides an overview of Amazon CloudFront, detailed feature descriptions,
 procedures for using the console, and an explanation of the API.
 
-- [[https://github.com/awsdocs/amazon-cloudfront-developer-guide/tree/master/doc_source][The open source version of the Amazon CloudFront documentation]]
-
-
-*** CloudFront API Reference
+- [[https://github.com/awsdocs/amazon-cloudfront-developer-guide/tree/master/doc_source][Amazon CloudFront Documentation Sources on GitHub]]
 
 *** What CloudFront Is
 
@@ -1602,7 +1603,7 @@ cookies:
 CloudFront assumes that URLs that contain any of those query string parameters
 are signed URLs and therefore won't look at signed cookies.
 
-** Cognito Documentation
+*** Cognito Documentation
 
 “Amazon Cognito is a service that you can use to create unique identities for
 your users, authenticate these identities with identity providers, and save
@@ -1611,7 +1612,7 @@ mobile user data in the AWS Cloud.”
 #+cindex:Cognito documentation
 [[https://docs.aws.amazon.com/cognito/index.html]]
 
-*** Cognito API Reference
+**** Cognito API Reference
 
 “Describes all of the REST API actions for user pools in detail.”
 
@@ -1620,14 +1621,16 @@ https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/Welc
 #+cindex:Cognito API reference
 This API reference provides information about /user pools/ in Amazon Cognito
 User Pools.
-** Command Line Interface Command Reference
+*** CLI Command Reference
+
+https://docs.aws.amazon.com/cli/latest/reference/
+
+“The AWS Command Line Interface is a unified tool to manage your AWS services.”
+#+cindex:Command Line Interface reference
 
 [[http://docs.aws.amazon.com/cli/latest/userguide/][CLI User Guide]]
 
-#+cindex:Command Line Interface
-The AWS Command Line Interface is a unified tool to manage your AWS services.
-
-[[https://docs.aws.amazon.com/cli/latest/reference/][AWS CLI API Reference]]
+[[https://docs.aws.amazon.com/cli/latest/reference/][CLI API Reference]]
 
 #+texinfo:@heading Synopsis
 
@@ -1644,9 +1647,9 @@ The AWS Command Line Interface is a unified tool to manage your AWS services.
 The synopsis for each command shows its parameters and their usage. Optional
 parameters are shown in square brackets.
 
-*** cloudfront
+**** CLI CloudFront Command Reference
 
-[[https://docs.aws.amazon.com/cli/latest/reference/cloudfront/index.html][CloudFront API Reference]]
+https://docs.aws.amazon.com/cli/latest/reference/cloudfront/index.html
 
 Local link to [[*CloudFront Developer Guide][CloudFront Developer Guide]]
 
@@ -1654,7 +1657,7 @@ Local link to [[*CloudFront Developer Guide][CloudFront Developer Guide]]
 This is the Amazon CloudFront API Reference.  This guide is for developers who
 need detailed information about CloudFront API actions, data types, and errors.
 
-*** s3
+**** s3
 <<s3 API>>
 
 #+cindex:s3 API
@@ -1663,7 +1666,7 @@ S3 commands provided.
 
 https://docs.aws.amazon.com/cli/latest/reference/s3/index.html
 
-**** Path Argument Type
+***** Path Argument Type
 
 #+cindex:path argument type
 #+cindex:@code{LocalPath}
@@ -1679,7 +1682,7 @@ are two types of path arguments: =LocalPath= and =S3Uri=.
            must be written in the form:
 	   : s3://mybucket/mykey
 
-**** Order of Path Arguments
+***** Order of Path Arguments
 
 Every command takes one or two positional path arguments.
 
@@ -1692,7 +1695,7 @@ Every command takes one or two positional path arguments.
   is the local file/directory or S3 object/prefix/bucket that is being operated
   on.
 
-**** Single Local File and S3 Object Operations
+***** Single Local File and S3 Object Operations
 
 Some commands perform operations only on single files and S3 objects.  The
 following commands are single file/object operations if no
@@ -1718,7 +1721,7 @@ file or object.  Otherwise, if there is no slash at the end, the file or object
 will be saved under the name provided.  See examples in ~cp~ and ~mv~ to
 illustrate this description.
 
-**** Directory and S3 Prefix Operations
+***** Directory and S3 Prefix Operations
 
 Some commands only perform operations on the contents of a local directory or
 S3 prefix/bucket.  Adding or omitting a forward slash or back slash to the end
@@ -1731,7 +1734,7 @@ prefix/bucket operation:
 - rb
 - ls
 
-**** Use of Exclude and Include Filters
+***** Use of Exclude and Include Filters
 
 Currently, there is no support for the use of UNIX style wildcards in a
 command's path arguments.  However, most commands have
@@ -1769,7 +1772,7 @@ been excluded from an @@texinfo:@option{--exclude}@@ filter.  If you only want
 to upload files with a particular extension, you need to first exclude all
 files, then re-include the files with the particular extension.
 
-**** Available Commands
+***** Available Commands
 
 #+texinfo:@heading Available Commands
 
@@ -1799,29 +1802,29 @@ files, then re-include the files with the particular extension.
 
 	     : aws s3 website s3://my-bucket/ --index-document index.html --error-document error.html
 
-*** s3 API
+**** s3 API
 <<s3api>>
 
 https://docs.aws.amazon.com/cli/latest/reference/s3api/index.html
 
-*** s3control
+**** s3control
 
 AWS S3 Control provides access to Amazon S3 control plane operations.
 
 https://docs.aws.amazon.com/cli/latest/reference/s3control/index.html
 
-** General Resources
+*** General Resources
 
-** Identity and Access Management
-*** IAM User Guide
+*** Identity and Access Management
+**** IAM User Guide
 
 https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
 
-**** Getting Started
+***** Getting Started
 
 https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started.html
 
-***** Creating Your First IAM Admin User and Group
+****** Creating Your First IAM Admin User and Group
 <<create-first_IAM-admin>>
 
 https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html
@@ -1859,18 +1862,18 @@ If you followed the steps in the previous section, you used the AWS Management
 Console to set up an administrators group while creating the IAM user in your
 AWS account.  This procedure shows an alternative way to create a group.
 
-***** Creating a Group---AWS CLI
+****** Creating a Group---AWS CLI
 
 This section shows how to create a group in the IAM system.
 
-***** Attaching a Policy to the Group---AWS CLI
+****** Attaching a Policy to the Group---AWS CLI
 
 This section shows how to attach a policy that lets any user in the group
 perform any action on any resource in the AWS account.  You do this by
 attaching the AWS managed policy called =AdministratorAccess= to the =Admins=
 group.  For more information about policies, see [[https://docs.aws.amazon.com/IAM/latest/UserGuide/access.html][Access Management]].
 
-** SDK for JavaScript Documentation
+*** SDK for JavaScript Documentation
 
 https://docs.aws.amazon.com/sdk-for-javascript/
 
@@ -1887,7 +1890,7 @@ Node.js and browser code examples for working with popular AWS services.
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/welcome.html
 
-*** What Is the AWS SDK for JavaScript
+**** What Is the AWS SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/welcome.html
 
@@ -1966,7 +1969,7 @@ various web services.
 
 You can browse the SDK for JavaScript examples in the [[https://docs.aws.amazon.com/code-samples/latest/catalog/code-catalog-javascript.html][AWS Code Sample Catalog]].
 
-*** Getting Started with the AWS SDK for JavaScript
+**** Getting Started with the AWS SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started.html
 
@@ -1975,15 +1978,15 @@ scripts or Node.js.  This section has two getting started exercises that show
 you how to work with the SDK for JavaScript in each of these JavaScript
 environments.
 
-**** Getting Started in a Browser Script
+***** Getting Started in a Browser Script
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-started-browser.html
 
-**** Getting Started in Node.js
+***** Getting Started in Node.js
 
 [[*Getting Started in Node.js SDK][Getting Started in Node.js SDK]]
 
-*** Setting Up the SDK for JavaScript
+**** Setting Up the SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up.html
 
@@ -2028,7 +2031,7 @@ current AWS SDK for JavaScript from GitHub at:
 
 https://github.com/aws/aws-sdk-js/tree/master/dist
 
-*** Loading the SDK for JavaScript
+**** Loading the SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-the-jssdk.html
 
@@ -2057,7 +2060,7 @@ AWS (or ~window.AWS~).
 If you bundle your code and module dependencies using [[http://browserify.org/][browserify]], you load the
 SDK using require, just as you do in Node.js.
 
-*** Configuring the SDK for JavaScript
+**** Configuring the SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/configuring-the-jssdk.html
 
@@ -2078,7 +2081,7 @@ or restrict an Amazon DynamoDB table for read-only access.
 The topics in this section describe various ways to configure the SDK for
 JavaScript for Node.js and JavaScript running in a web browser.
 
-**** Using the Global Configuration Object
+***** Using the Global Configuration Object
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/global-config-object.html
 
@@ -2104,7 +2107,7 @@ settings for service objects that you create subsequently, simplifying their
 configuration.  However, you can update the configuration of individual service
 objects when your needs vary from the global configuration.
 
-***** Setting Global Configuration
+****** Setting Global Configuration
 
 #+cindex:global configuration object
 #+cindex:AWS.Config, global configuration object
@@ -2182,7 +2185,7 @@ var AWS = require("aws-sdk");
 console.log("Region: ", AWS.config.region);
 #+end_src
 
-***** Setting Configuration Per Service
+****** Setting Configuration Per Service
 
 #+cindex:service configuration
 Each service that you use in the SDK for JavaScript is accessed through a
@@ -2206,7 +2209,7 @@ service-specific configuration options.  For more information about
 service-specific configuration, see [[https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html][Class: AWS.Config]] in the AWS SDK for
 JavaScript API Reference.
 
-***** Immutable Configuration Data
+****** Immutable Configuration Data
 
 Global configuration changes apply to requests for all newly created service
 objects.  Newly created service objects are configured with the current global
@@ -2221,7 +2224,7 @@ configuration data:
 
 : s3 = new AWS.S3(s3.config);
 
-**** Setting the AWS Region
+***** Setting the AWS Region
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-region.html
 
@@ -2237,26 +2240,26 @@ The SDK for JavaScript doesn't select a Region by default.  However, you can
 set the Region using an environment variable, a shared config file, or the
 global configuration object.
 
-***** In a Client Class Constructor
+****** In a Client Class Constructor
 
 When you instantiate a service object, you can specify the Region for that
 resource as part of the client class constructor, as shown here
 
 : var s3 = new AWS.S3({apiVersion: '2006-03-01', region: 'us-west-2'});
 
-***** Using the Global Configuration Object
+****** Using the Global Configuration Object
 
 To set the Region in your JavaScript code, update the ~AWS.Config~ global
 configuration object as shown here.
 
 : AWS.config.update({region: 'us-east-1'});
 
-***** Using an Environment Variable
+****** Using an Environment Variable
 
 You can set the Region using the =AWS_REGION= environment variable.  If you
 define this variable, the SDK for JavaScript reads it and uses it.
 
-***** Using a Shared Config File
+****** Using a Shared Config File
 
 #+cindex:shared config file
 #+cindex:config file, shared
@@ -2282,7 +2285,7 @@ the Region and the output format.
    output=json
 #+end_example
 
-***** Order of Precedence for Setting the Region
+****** Order of Precedence for Setting the Region
 
 The order of precedence for Region setting is as follows:
 
@@ -2308,7 +2311,7 @@ The order of precedence for Region setting is as follows:
   =AWS_CONFIG_FILE=) contains a Region for the configured profile, that Region
   is used.
 
-**** Specifying Custom Endpoints
+***** Specifying Custom Endpoints
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/specifying-endpoints.html
 
@@ -2317,7 +2320,8 @@ URIs.  By default, these endpoints are built from the Region you have
 configured for your code.  However, there are situations in which you need to
 specify a custom endpoint for your API calls.
 
-**** Getting Your Credentials
+***** Getting Your Credentials
+<<getting-your-credentials>>
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-your-credentials.html
 
@@ -2358,7 +2362,7 @@ yourself.
 
 7. Choose *Close*
 
-**** Setting Credentials
+***** Setting Credentials
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials.html
 
@@ -2400,7 +2404,7 @@ Privilege]] section of the Best Practices topic in the IAM User Guide.
 For more information about how to manage your access keys, see [[https://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html][Best Practices
 for Managing AWS Access Keys]] in the AWS General Reference.
 
-**** Setting Credentials in Node.js
+***** Setting Credentials in Node.js
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html
 
@@ -2446,11 +2450,11 @@ precedence of selection is as follows:
 
 The topics in this section describe how to load credentials into Node.js.
 
-***** Loading Credentials in Node.js from IAM Roles for EC2
+****** Loading Credentials in Node.js from IAM Roles for EC2
 
-***** Loading Credentials for a Node.js Lambda Function
+****** Loading Credentials for a Node.js Lambda Function
 
-***** Loading Credentials in NodeJS from the Shared Credentials File
+****** Loading Credentials in NodeJS from the Shared Credentials File
 <<shared-credentials-file>>
 
 #+cindex:credentials, loading in Node.js
@@ -2470,8 +2474,8 @@ Where you keep the shared credentials file depends on your operating system:
 - The shared credentials file on Windows: =C:\Users\USER_NAME\.aws\credentials=
 
 
-If you do not already have a shared credentials file, see [[*Getting Your Credentials][Getting Your
-Credentials]].
+If you do not already have a shared credentials file, 
+- see [[getting-your-credentials][Getting Your Credentials]].
 
 #+cindex:credentials file, shared
 #+cindex:shared credentials file
@@ -2535,7 +2539,7 @@ var credentials = new AWS.SharedIniFileCredentials({profile: 'work-account'});
 AWS.config.credentials = credentials;
 #+end_src
 
-***** Loading Credentials in Node.js from Environment Variables
+****** Loading Credentials in Node.js from Environment Variables
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html
 
@@ -2552,7 +2556,7 @@ provide your credentials are:
 - =AWS_SECRET_ACCESS_KEY=
 - =AWS_SESSION_TOKEN= (optional)
 
-***** Loading Credentials in Node.js from a JSON File
+****** Loading Credentials in Node.js from a JSON File
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-json-file.html
 
@@ -2572,7 +2576,7 @@ Use the following command:
 
 Loading credentials from a JSON document is not supported in browser scripts.
 
-***** Loading Credentials in Node.js using a Configured Credential Process
+****** Loading Credentials in Node.js using a Configured Credential Process
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-configured-credential-process.html
 
@@ -2582,7 +2586,7 @@ shared credentials file.  If the AWS_SDK_LOAD_CONFIG environment variable is
 set to a truthy value, the SDK will prefer the process specified in the config
 file over the process specified in the credentials file (if any).
 
-**** Setting Credentials in a Web Browser
+***** Setting Credentials in a Web Browser
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-browser.html
 
@@ -2597,19 +2601,19 @@ in order of recommendation:
 
 3. Hard coded in the script [fn:1]
 
-***** TODO Using Amazon Cognito Identity to Authenticate Users
+****** TODO Using Amazon Cognito Identity to Authenticate Users
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-browser-credentials-cognito.html
 
-***** Using Web Federated Identity to Authenticate Users
+****** Using Web Federated Identity to Authenticate Users
 
-***** Web Federated Identity Examples
+****** Web Federated Identity Examples
 
-**** Locking API Versions
+***** Locking API Versions
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/locking-api-versions.html
 
-**** Node.js Considerations
+***** Node.js Considerations
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/node-js-considerations.html
 
@@ -2620,38 +2624,38 @@ And successfully using some APIs depends on your familiarity with common
 Node.js coding patterns, such as importing and using other Node.js modules like
 the File System (fs) module.
 
-***** Using Built-In Node-js Modules
+****** Using Built-In Node-js Modules
 
-***** Using NPM Packages
+****** Using NPM Packages
 
-***** Configuring maxSockets in Node-js
+****** Configuring maxSockets in Node-js
 
-***** Reusing Connections with Keep-Alive in Node-js
+****** Reusing Connections with Keep-Alive in Node-js
 
-***** Configuring Proxies for Node-js
+****** Configuring Proxies for Node-js
 
-***** Registering Certificate Bundles in Node.js
+****** Registering Certificate Bundles in Node.js
 
-**** Browser Script Considerations
+***** Browser Script Considerations
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/browser-js-considerations.html
 
 The following topics describe special considerations for using the AWS SDK for
 JavaScript in browser scripts.
 
-***** Building the SDK for Browsers
+****** Building the SDK for Browsers
 
-***** TODO Cross-Origin Resource Sharing---CORS
+****** TODO Cross-Origin Resource Sharing---CORS
 
-**** TODO Bundling Applications with Webpack
+***** TODO Bundling Applications with Webpack
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/webpack.html
 
-**** SDK Metrics in the AWS SDK for JavaScript
+***** SDK Metrics in the AWS SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/metrics.html
 
-*** Working with Services in the SDK for JavaScript
+**** Working with Services in the SDK for JavaScript
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/working-with-services.html
 
@@ -2686,7 +2690,7 @@ is encapsulated in the SDK by the ~AWS.Response~ object, which is provided to
 the requestor through one of several techniques, such as a callback function or
 a JavaScript promise.
 
-**** Creating and Calling Service Objects
+***** Creating and Calling Service Objects
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/creating-and-calling-service-objects.html
 
@@ -2723,7 +2727,7 @@ can build a custom version of the SDK to include the additional services you
 require.  For more information on building a custom version of the SDK, see
 Building the SDK for Browsers.
 
-***** Requiring Individual Services
+****** Requiring Individual Services
 
 Requiring the SDK for JavaScript as shown previously includes the entire SDK
 into your code.  Alternately, you can choose to require only the individual
@@ -2779,7 +2783,7 @@ Browserify or webpack, requiring individual services results in the SDK being a
 fraction of the full size.  This helps with memory or disk-space constrained
 environments such as an IoT device or in a Lambda function.
 
-***** Creating Service Objects
+****** Creating Service Objects
 
 #+cindex:service object
 To access service features through the JavaScript API, you first create a
@@ -2815,7 +2819,7 @@ configuration object.
 
 : AWS.config.ec2 = {region: 'us-west-2', apiVersion: '2016-04-01'};
 
-***** Locking the API Version of a Service Object
+****** Locking the API Version of a Service Object
 
 You can lock a service object to a specific API version of a service by
 specifying the =apiVersion= option when creating the object.  In the following
@@ -2824,7 +2828,7 @@ version.
 
 : var dynamodb = new AWS.DynamoDB({apiVersion: '2011-12-05'});
 
-***** Specifying Service Object Parameters
+****** Specifying Service Object Parameters
 
 #+cindex:parameters
 When calling a method of a service object, pass parameters in JSON as required
@@ -2857,7 +2861,7 @@ s3bucket.getObject({Key: 'keyName'});
 s3bucket.getObject({Bucket: 'myOtherBucket', Key: 'keyOtherName'});
 #+end_example
 
-**** Logging AWS SDK for JavaScript Calls
+***** Logging AWS SDK for JavaScript Calls
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/logging-sdk-calls.html
 
@@ -2874,13 +2878,13 @@ Here is an example of the log output.
 
 : [AWS s3 200 0.185s 0 retries] createMultipartUpload({ Bucket: 'js-sdk-test-bucket', Key: 'issues_1704' })
 
-***** Using a Third-Party Logger
+****** Using a Third-Party Logger
 
 You can also use a third-party logger, provided it has ~log()~ or ~write()~
 operations to write to a log file or server.  You must install and set up your
 custom logger as instructed before you can use it with the SDK for JavaScript.
 
-**** Calling Services Asychronously
+***** Calling Services Asychronously
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/calling-services-asynchronously.html
 
@@ -2901,11 +2905,11 @@ Rather than using promises, you should consider using async/await.  Async
 functions are simpler and take less boilerplate than using promises.  Await can
 only be used in an async function to asynchronously wait for a value.
 
-***** Managing Asychronous Calls
+****** Managing Asychronous Calls
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/making-asynchronous-calls.html
 
-***** Using an Anonymous Callback Function
+****** Using an Anonymous Callback Function
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-a-callback-function.html
 
@@ -2960,7 +2964,7 @@ new AWS.EC2({apiVersion: '2014-10-01'}).describeInstances(function(error, data) 
 });
 #+end_src
 
-****** Accessing the Request and Response Objects
+******* Accessing the Request and Response Objects
 
 Within the callback function, the JavaScript keyword ~this~ refers to the
 underlying ~AWS.Response~ object for most services.  In the following example,
@@ -2984,7 +2988,7 @@ In addition, because the ~AWS.Response~ object has a =Request= property that
 contains the =AWS.Request= that was sent by the original method call, you can
 also access the details of the request that was made.
 
-***** Using a Request Object Event Listener
+****** Using a Request Object Event Listener
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-a-response-event-handler.html
 
@@ -3016,7 +3020,7 @@ request.send();
 After the ~send~ method on the ~AWS.Request~ object is called, the event
 handler executes when the service object receives an ~AWS.Response~ object.
 
-****** Chaining Multiple Callbacks
+******* Chaining Multiple Callbacks
 
 #+cindex:chain event listeners
 You can register multiple callbacks on any request object.  Multiple callbacks
@@ -3037,7 +3041,7 @@ orequest.
   send();
 #+end_src
 
-****** Request Object Completion Events
+******* Request Object Completion Events
 
 The ~AWS.Request~ object raises these completion events based on the response
 of each service operation method:
@@ -3051,7 +3055,7 @@ You can register a callback function in response to any of these events.  For a
 complete list of all request object events, see =Class: AWS.Request= in the API
 Reference.
 
-****** The success Event
+******* The success Event
 
 #+cindex:success event
 The =success= event is raised upon a successful response received from the
@@ -3085,7 +3089,7 @@ the console.
   RequestId: '...' }
 #+end_example
 
-****** The error Event
+******* The error Event
 
 #+cindex:error event
 The =error= event is raised upon an error response received from the service
@@ -3114,7 +3118,7 @@ returns the error and then prints the following error data to the console.
 
 : { code: 'Forbidden', message: null }
 
-****** The complete Event
+******* The complete Event
 
 #+cindex:complete event
 The =complete= event is raised when a service object call has finished,
@@ -3143,7 +3147,7 @@ request.on('complete', function(response) {
 }).send();
 #+end_src
 
-****** Request Object HTTP Events
+******* Request Object HTTP Events
 
 =The =AWS.Request= object raises these HTTP events based on the response of each
 service operation method:
@@ -3193,7 +3197,7 @@ service operation method:
 
 You can register a callback function in response to any of these events.
 
-***** Using JavaScript Promises
+****** Using JavaScript Promises
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-promises.html
 
@@ -3247,7 +3251,7 @@ putObjectPromise.then(function(data) {
 });
 #+end_src
 
-***** Coordinating Multiple Promises
+****** Coordinating Multiple Promises
 
 In some situations, your code must make multiple asynchronous calls that
 require action only when they have all returned successfully.  If you manage
@@ -3273,9 +3277,9 @@ Promise.all([firstPromise, secondPromise, thirdPromise]).then(function(values) {
 });
 #+end_src
 
-***** Using async/await
+****** Using async/await
 
-***** Requests With a Node.js Stream Object
+****** Requests With a Node.js Stream Object
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/requests-using-stream-objects.html
 
@@ -3334,7 +3338,7 @@ s3Stream.pipe(fileStream).on('error', function(err) {
 });
 #+end_src
 
-**** Using the Response Object
+***** Using the Response Object
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/the-response-object.html
 
@@ -3365,7 +3369,7 @@ function(error, data) {
 }
 #+end_src
 
-***** Accessing Data Returned in the Response Object
+****** Accessing Data Returned in the Response Object
 
 The =data= property of the =AWS.Response= object contains the serialized data
 returned by the service request.  When the request is successful, the data
@@ -3405,7 +3409,7 @@ object.  Because the =imageFile= member holds a string value, you access the
 file name of the image itself through the value of the S child member of
 =imageFile=.
 
-***** Paging Through Returned Data
+****** Paging Through Returned Data
 
 Sometimes the contents of the =data= property returned by a service request
 span multiple pages.  You can access the next page of data by calling the
@@ -3427,7 +3431,7 @@ s3.listObjects({Bucket: 'bucket'}).on('success', function handlePage(response) {
 }).send();
 #+end_src
 
-***** Accessing Error Information from a Response Object
+****** Accessing Error Information from a Response Object
 
 The error property of the =AWS.Response= object contains the available error
 data in the event of a service error or transfer error.  The error returned
@@ -3439,7 +3443,7 @@ In the case of an error, the value of the =data= property is =null=.  If you
 handle events that can be in a failure state, always check whether the =error=
 property was set before attempting to access the value of the =data= property.
 
-***** Accessing the Originating Request Object
+****** Accessing the Originating Request Object
 
 The =request= property provides access to the originating ~AWS.Request~ object.
 It can be useful to refer to the original ~AWS.Request~ object to access the
@@ -3452,11 +3456,11 @@ s3.getObject({Bucket: 'bucket', Key: 'key'}).on('success', function(response) {
 }).send();
 #+end_src
 
-**** Working with JSON
+***** Working with JSON
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/working-with-json.html
 
-*** SDK for JavaScript Code Examples
+**** SDK for JavaScript Code Examples
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/sdk-code-samples.html
 
@@ -3466,31 +3470,31 @@ JavaScript with the APIs of various services to carry out common tasks.
 Find the source code for these examples and others in the AWS documentation
 [[https://github.com/awsdocs/aws-doc-sdk-examples][code examples repository on GitHub]]
 
-**** Amazon CloudWatch Examples
+***** Amazon CloudWatch Examples
 
-**** Amazon DynamoDB Examples
+***** Amazon DynamoDB Examples
 
-**** Amazon EC2 Examples
+***** Amazon EC2 Examples
 
-**** AWS Elemental MediaConvert Examples
+***** AWS Elemental MediaConvert Examples
 
-**** Amazon S3 Glacier Examples
+***** Amazon S3 Glacier Examples
 
-**** AWS IAM Examples
+***** AWS IAM Examples
 
-**** Amazon Kinesis Example
+***** Amazon Kinesis Example
 
-**** AWS Lambda Examples
+***** AWS Lambda Examples
 
-**** Amazon S3 Examples
+***** Amazon S3 Examples
 
-**** Amazon Simple Email Service Examples
+***** Amazon Simple Email Service Examples
 
-**** Amazon Simple Notification Service Examples
+***** Amazon Simple Notification Service Examples
 
-**** Amazon SQS Examples
+***** Amazon SQS Examples
 
-*** JavaScript SDK Tutorials
+**** JavaScript SDK Tutorials
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/tutorials.html
 
@@ -3498,15 +3502,15 @@ https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/tutorials.html
 The following tutorials show you how to perform different tasks related to
 using the AWS SDK for JavaScript.
 
-**** Tutorial---Setting Up Node-js on an Amazon EC2 Instance
+***** Tutorial---Setting Up Node-js on an Amazon EC2 Instance
 
-**** Tutorial---Creating and Using Lambda Functions
+***** Tutorial---Creating and Using Lambda Functions
 
-*** Security Considerations
+**** Security Considerations
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/security.html
 
-*** JavaScript SDK API Reference
+**** JavaScript SDK API Reference
 <<js-sdk-api-reference>>
 
 Describes in detail all the API operations for the AWS SDK for JavaScript.  In
@@ -3515,7 +3519,7 @@ web services protocols.
 
 https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/
 
-*** Code Sample Catelog
+**** Code Sample Catelog
 
 Contains code examples and other types of examples to help accelerate your
 development of applications that work with AWS services.  The examples show how
@@ -3524,15 +3528,15 @@ and supported technologies.  Be aware that the PDF is over 25 MB.
 
 https://docs.aws.amazon.com/code-samples/latest/catalog/welcome.html
 
-*** Additional Resources
+**** Additional Resources
 
 https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/resources.html
 
-**** JavaScript SDK Forum
+***** JavaScript SDK Forum
 
 https://forums.aws.amazon.com/forum.jspa?forumID=148
 
-**** JavaScript SDK and Developer Guide on GitHub
+***** JavaScript SDK and Developer Guide on GitHub
 
 There are several repositories on GitHub for the SDK for JavaScript.
 
@@ -3541,95 +3545,95 @@ There are several repositories on GitHub for the SDK for JavaScript.
 - The SDK for JavaScript Developer Guide (this document) is available in
   markdown format in its own [[https://github.com/awsdocs/aws-javascript-developer-guide-v2][documentation repo]]
 
-** SDKs and Toolkits
+*** SDKs and Toolkits
 
 https://docs.aws.amazon.com/index.html
 
 https://aws.amazon.com/getting-started/tools-sdks/
 
-*** Command Line Interface
+**** Command Line Interface
 https://aws.amazon.com/cli/
 
-*** JavaScript
+**** JavaScript
 https://aws.amazon.com/sdk-for-browser/
 
-*** Python
+**** Python
 https://aws.amazon.com/sdk-for-python/
 
-*** PHP
+**** PHP
 https://aws.amazon.com/sdk-for-php/
 
-*** .NET
+**** .NET
 https://aws.amazon.com/sdk-for-net/
 
-*** Ruby
+**** Ruby
 https://aws.amazon.com/sdk-for-ruby/
 
-*** Java
+**** Java
 https://aws.amazon.com/sdk-for-java/
 
-*** Go
+**** Go
 https://aws.amazon.com/sdk-for-go/
 
-*** Node
+**** Node
 https://docs.aws.amazon.com/sdk-for-javascript/
 
 https://aws.amazon.com/sdk-for-node-js/
 
-*** C++
+**** C++
 https://aws.amazon.com/sdk-for-cpp/
 
-*** Android
+**** Android
 https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.html
 
-*** iOS
+**** iOS
 https://docs.aws.amazon.com/aws-mobile/latest/developerguide/getting-started.html
 
-** Simple Storage Service---S3
+*** Simple Storage Service---S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html
 
-*** Introduction to Amazon S3
+**** Introduction to Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/Introduction.html
 
-*** Making Requests
+**** Making Requests
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/MakingRequests.html
 
-*** Buckets
+**** Buckets
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html
 
-*** Access Points
+**** Access Points
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/access-points.html
 
-*** Objects
+**** Objects
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingObjects.html
 
-*** Security
+**** Security
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/security.html
 
-**** Data Protection in Amazon S3
+***** Data Protection in Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/DataDurability.html
 
-**** Identity and Access Management in Amazon S3
+***** Identity and Access Management in Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-access-control.html
 
-***** Overview of Managing Access
+****** Overview of Managing Access
 
-***** How Amazon S3 Authorizes a Request
+****** How Amazon S3 Authorizes a Request
 
-***** Guidelines for Using the Available Access Policy Options
+****** Guidelines for Using the Available Access Policy Options
 
-***** Example Walkthroughs---Managing Access to Your Amazon S3 Resources
+****** Example Walkthroughs---Managing Access to Your Amazon S3 Resources
 
-***** Using Bucket Policies and User Policies
+****** Using Bucket Policies and User Policies
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html
 
@@ -3644,7 +3648,7 @@ JSON-based access policy language.  The topics in this section describe the key
 policy language elements, with emphasis on Amazon S3–specific details, and
 provide example bucket and user policies.
 
-****** TODO Access Policy Language Overview
+******* TODO Access Policy Language Overview
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/access-policy-language-overview.html
 
@@ -3670,7 +3674,7 @@ In its most basic sense, a policy contains the following elements:
 
 - Principal ::
 
-***** Managing Access with ACLs
+****** Managing Access with ACLs
 <<managing-access-with-acls>>
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/access-policy-language-overview.html
@@ -3679,7 +3683,7 @@ The following introductory topics explain the basic concepts and options that
 are available for you to manage access to your Amazon S3 resources, and provide
 guidelines for when to use which access policy options.
 
-****** Access Control List Overview
+******* Access Control List Overview
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html
 
@@ -3728,105 +3732,109 @@ following sample bucket ACL (the default object ACL has the same structure):
 
 The sample ACL includes an Owner element that identifies the owner by the AWS account's canonical user ID.
 
-****** Managing ACLs
+******* Managing ACLs
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/managing-acls.html
 
-***** Using Amazon S3 Block Public Access
+****** Using Amazon S3 Block Public Access
 
-**** Logging and Monitoring in Amazon S3
+***** Logging and Monitoring in Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-incident-response.html
 
-**** Compliance Validation for Amazon S3
+***** Compliance Validation for Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-compliance.html
 
-**** Resilience in Amazon S3
+***** Resilience in Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/disaster-recovery-resiliency.html
 
-**** Infrastructure Security in Amazon S3
+***** Infrastructure Security in Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/network-isolation.html
 
-**** Configuration and Vulnerability Analysis in Amazon S3
+***** Configuration and Vulnerability Analysis in Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/vulnerability-analysis-and-management.html
 
-**** Security Best Practices for Amazon S3
+***** Security Best Practices for Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/security-best-practices.html
 
-*** Performing Batch Operations
+**** Performing Batch Operations
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/batch-ops.html
 
-*** Hosting a Static Website
+**** Hosting a Static Website
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html
 
-*** Notifications
+**** Notifications
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html
 
-*** Replication
+**** Replication
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html
 
-*** Reqest Routing
+**** Reqest Routing
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingRouting.html
 
-*** Optimizing Amazon S3 Performance
+**** Optimizing Amazon S3 Performance
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/optimizing-performance.html
 
-*** Monitoring Amazon S3
+**** Monitoring Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/monitoring-overview.html
 
-*** Using BitTorrent with Amazon S3
+**** Using BitTorrent with Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/S3Torrent.html
 
-*** Handling REST and SOAP Errors
+**** Handling REST and SOAP Errors
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/HandlingErrors.html
 
-*** Troubleshooting Amazon S3
+**** Troubleshooting Amazon S3
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/troubleshooting.html
 
-*** Amazon S3 Server Access Logging
+**** Amazon S3 Server Access Logging
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html
 
-*** SDKs and Explorers
+**** SDKs and Explorers
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html
 
-*** Using the SOAP API
+**** Using the SOAP API
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/SOAPAPI3.html
 
-*** Authenticating Requests---AWS Signature Version 2
+**** Authenticating Requests---AWS Signature Version 2
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/auth-request-sig-v2.html
 
-*** S3 Resources
+**** S3 Resources
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/RelatedResources012.html
 
-*** SQL Reference for Amazon S3 Select and Glacier Select
+**** SQL Reference for Amazon S3 Select and Glacier Select
 
 https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference.html
 
-** Tutorials and Projects
+*** Tutorials and Projects
 
 #+texinfo:@heading Learn with Introductory Tutorials & Projects
 
 - [[https://aws.amazon.com/getting-started/][Tutorials]]
+
+** Identity and Access Management---IAM---User Guide
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
 
 * Developer Center
 
@@ -5515,6 +5523,17 @@ does this happen? How is the access token utilized? [[https://developer.amazon.c
 ** Simple Storage Service REST API
 
 https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html
+
+
+** CloudFront API Reference
+
+https://docs.aws.amazon.com/cloudfront/latest/APIReference/Welcome.html
+
+“This is the Amazon CloudFront API Reference. This guide is for developers who
+need detailed information about CloudFront API actions, data types, and
+errors.”
+
+- See The Amazon CloudFront Developer Guide
 
 * Getting Started Resource Center
 
