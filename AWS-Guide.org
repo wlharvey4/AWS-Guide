@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-03 09:05
-#+macro:version Version 0.0.51
+#+date:2020-01-04 08:45
+#+macro:version Version 0.0.52
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6758,6 +6758,7 @@ TODO Invalidate the prior version’s index.html
 #+begin_src makefile :tangle Makefile :noweb tangle
   ### PROGRAM
   PROG   = <<get-org-filename()>>
+  DIR    = <<get-org-lc-filename()>>
   VERS   = <<get-file-version()>>
   S3VERS = <<get-s3-version()>>
 
@@ -6770,10 +6771,9 @@ TODO Invalidate the prior version’s index.html
   TEXI  = $(PROG).texi
   INFO  = $(PROG).info
   PDF   = $(PROG).pdf
-  BUILD = $(PROG).t2d
+  HTML  = $(DIR)/index.html
 
   ### HTML DIR
-  DIR   = <<get-org-lc-filename()>>
   OLDDIR= $(DIR)-old
   INDEX = index.html
 
@@ -6782,6 +6782,7 @@ TODO Invalidate the prior version’s index.html
   AWS  = aws2
   S3   = $(AWS) s3
   SRC  = $(DIR)/
+
   DST_OLD = $(HOME)/$(DIR)/$(S3VERS)
   DST_NEW = $(HOME)/$(DIR)/$(VERS)
   EXCL_INCL = --exclude "*" --include "*.html"
@@ -6790,7 +6791,7 @@ TODO Invalidate the prior version’s index.html
   S3SYNC = $(S3) sync $(EXCL_INCL) $(SRC) $(DST_OLD) $(REGION) $(GRANTS)
   S3MOVE = $(S3) mv --recursive $(DST_OLD) $(DST_NEW) $(REGION) $(GRANTS)
 
-  default: open-html
+  default: texi info html pdf
 
   PHONY: default all texi info html pdf open-org open-texi open-html \
 	   open-pdf clean clean-dist help sync
@@ -6815,42 +6816,43 @@ TODO Invalidate the prior version’s index.html
 
   texi: $(TEXI)
   $(TEXI): $(ORG)
-	  emacs --batch \
-	  --eval '(progn (require '\''ob-shell)(find-file "$(ORG)")(setq org-confirm-babel-evaluate nil) \
-	  (require '\''ox-texinfo)(org-export-to-file '\''texinfo "$(TEXI)"))'
+	  emacs --batch --eval '\
+	  (progn \
+	    (find-file "$(ORG)") \
+	    (setq org-confirm-babel-evaluate nil) \
+	    (require '\''ox-texinfo) \
+	    (require '\''ob-shell) \
+	    (org-export-to-file '\''texinfo "$(TEXI)"))'
+
+  open-texi: texi
+	  emacsclient $(TEXI) &
 
   info: $(INFO)
   $(INFO): $(TEXI)
 	  makeinfo $(TEXI)
 
-  html: $(DIR)
-  $(DIR): $(TEXI)
+  html: $(HTML)
+  $HTML: $(TEXI)
 	  makeinfo --html $(TEXI)
 	  $(CMPRPL) $(DIR) $(OLDDIR)
+  open-html: html
+	  open $(HTML)
 
   pdf: $(PDF)
   $(PDF): $(TEXI)
-	  pdftexi2dvi --silent --quiet --build=tidy $(TEXI)
-
-  open-texi: texi
-	  emacsclient $(TEXI) &
-
-  open-html: html
-	  open $(DIR)/$(INDEX)
-
+	  pdftexi2dvi --quiet --build=clean $(TEXI)
   open-pdf: pdf
 	  open $(PDF)
-
-  clean:
-	  -rm *~
-	  -rm *.{texi*,info*,html,pdf}
-
-  clean-dist: clean
-	  -rm -rf $(DIR) $(BUILD) $(TOOLS)
 
   sync: $(DIR)
 	  $(S3SYNC)
 	  [[ $(VERS) != $(S3VERS) ]] && $(S3MOVE) || :
+
+  clean:
+	  -rm *~
+
+  clean-dist: clean
+	  -rm -rf *.{texi*,info*,html*,pdf*} $(DIR) $(BUILD) $(TOOLS)
 
   help:
 	  @echo '"make default" makes the .texi file \
@@ -6930,8 +6932,9 @@ version number is echoed.
 
 #+caption:Get S3 Version
 #+name:get-s3-version
+#+header: :var dir=get-org-lc-filename()
 #+begin_src sh :eval yes
-verpre=$(aws2 s3 ls s3://pinecone-forest.com/aws-guide/)
+verpre=$(aws2 s3 ls s3://pinecone-forest.com/${dir}/) ### TODO
 ver=${verpre/*PRE /}
 echo "${ver}"
 #+end_src
@@ -6979,13 +6982,13 @@ benefits from the AWS S3 ~sync~ command.
   NEWDIR=$1
   OLDDIR=$2
 
-  [ -d $NEWDIR ] || { echo "ERROR: $NEWDIR does not exist"; exit 1; }
-  [ -d $OLDDIR ] || { echo "CREATING: $OLDDIR does not exist"; cp -a $NEWDIR $OLDDIR; exit 0; }
+  [[ -d $NEWDIR ]] || { echo "ERROR: $NEWDIR does not exist"; exit 1; }
+  [[ -d $OLDDIR ]] || { echo "CREATING: $OLDDIR does not exist"; cp -a $NEWDIR $OLDDIR; exit 0; }
 
   for oldfile in $OLDDIR/*
   do
       newfile=$NEWDIR/$(basename $oldfile)
-      if [ -e $newfile ]
+      if [[ -e $newfile ]]
       then
 	      if cmp -s $newfile $oldfile
 	      then
@@ -7007,7 +7010,6 @@ benefits from the AWS S3 ~sync~ command.
       [[ -e $oldfile ]] || { printf "${BLUE}copying NEW to OLD${CLEAR}: "
 			     cp -vp $newfile $oldfile; }
   done
-
 #+end_src
 
 * List of Programs
