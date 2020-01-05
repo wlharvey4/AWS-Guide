@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-04 19:56
-#+macro:version Version 0.0.54
+#+date:2020-01-04 20:17
+#+macro:version Version 0.0.56
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6960,8 +6960,10 @@ export, although the Makefile is never thereafter deleted.  The following code
 is not exported.
 #+end_comment
 
-#+begin_src emacs-lisp :exports results :eval yes :results silent
-(org-babel-tangle-file "AWS-Guide.org")
+#+name:tangle-org-file
+#+header: :exports results :eval yes :results silent
+#+begin_src emacs-lisp
+(org-babel-tangle-file (buffer-file-name))
 #+end_src
 
 The ~cmprpl~ source code attempts to resolve the issue of identical exported
