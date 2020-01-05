@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-04 08:45
-#+macro:version Version 0.0.52
+#+date:2020-01-04 18:27
+#+macro:version Version 0.0.53
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6783,8 +6783,8 @@ TODO Invalidate the prior version’s index.html
   S3   = $(AWS) s3
   SRC  = $(DIR)/
 
-  DST_OLD = $(HOME)/$(DIR)/$(S3VERS)
-  DST_NEW = $(HOME)/$(DIR)/$(VERS)
+  DST_OLD = $(HOME)/$(DIR)-$(S3VERS)
+  DST_NEW = $(HOME)/$(DIR)-$(VERS)
   EXCL_INCL = --exclude "*" --include "*.html"
   GRANTS = --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
   REGION = --region us-west-2
