@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-04 18:27
-#+macro:version Version 0.0.53
+#+date:2020-01-04 19:56
+#+macro:version Version 0.0.54
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6832,7 +6832,7 @@ TODO Invalidate the prior version’s index.html
 	  makeinfo $(TEXI)
 
   html: $(HTML)
-  $HTML: $(TEXI)
+  $(HTML): $(TEXI)
 	  makeinfo --html $(TEXI)
 	  $(CMPRPL) $(DIR) $(OLDDIR)
   open-html: html
@@ -6844,7 +6844,7 @@ TODO Invalidate the prior version’s index.html
   open-pdf: pdf
 	  open $(PDF)
 
-  sync: $(DIR)
+  sync: $(HTML)
 	  $(S3SYNC)
 	  [[ $(VERS) != $(S3VERS) ]] && $(S3MOVE) || :
 
@@ -6925,18 +6925,28 @@ the Makefile.
 #+end_src
 
 ** Get S3 Version
-This program calls the ~aws2 s3 ls~ command on the bucket associated with this
-program to receive the name of the current uploaded version.  AWS returns this
-“directory” with the prefix of =PRE=, which is stripped and the resulting
-version number is echoed.
+:PROPERTIES:
+:dependency: ">= bash v4"
+:END:
+This program obtains the version number of the code currently uploaded to the
+S3 bucket by obtaining a directly listing of top-level directories, which are
+in the form ~PRE <dir>-v#.#.#/~, and performs a regular expression search with
+a parenthesized match on the version numbers.  The program will exit with an
+error if there is no match, but will return the version number as a string if
+there is a match.
+
+Note that the regular expression matching requires at least Bash version 4 or
+above.
 
 #+caption:Get S3 Version
 #+name:get-s3-version
 #+header: :var dir=get-org-lc-filename()
 #+begin_src sh :eval yes
-verpre=$(aws2 s3 ls s3://pinecone-forest.com/${dir}/) ### TODO
-ver=${verpre/*PRE /}
-echo "${ver}"
+  re=${dir}'-(v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)'
+  verpre=$(aws2 s3 ls s3://pinecone-forest.com/) ### TODO
+  [[ $verpre =~ $re ]] && : || { printf "${RED} ERROR get-s3-version: no match${CLEAR}"; exit 1; }
+  ver=${BASH_REMATCH[1]}
+  echo "${ver}"
 #+end_src
 
 ** Compare Replace
