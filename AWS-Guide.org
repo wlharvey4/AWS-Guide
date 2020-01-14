@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-13 22:19
-#+macro:version Version 0.0.61
+#+date:2020-01-13 22:23
+#+macro:version Version 0.0.62
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
