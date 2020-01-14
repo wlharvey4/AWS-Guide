@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-13 21:32
-#+macro:version Version 0.0.59
+#+date:2020-01-13 21:49
+#+macro:version Version 0.0.60
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6729,7 +6729,7 @@ https://aws.amazon.com/sdk-for-browser/
 #+header: :tangle Makefile
 #+header: :noweb tangle
 #+begin_src makefile
-  TEMPLATE = ~/Dev/Templates2/Org/Template.org
+  TEMPLATE = $(ORG_TEMPLATE)
 
   ### PROGRAM
   PROG   = <<get-org-filename()>>
@@ -6752,6 +6752,9 @@ https://aws.amazon.com/sdk-for-browser/
   ### HTML DIR
   DIR_OLD= $(DIR)-old
   INDEX = index.html
+
+  ### GITHUB
+  TOKEN = $(GITHUB_TOKEN)
 
   ### AWS
   BUCKET = s3://$(AWS_S3_BUCKET)
@@ -6837,13 +6840,14 @@ https://aws.amazon.com/sdk-for-browser/
   sync: $(HTML)
 	  $(S3SYNC)
 	  [[ $(VERS) != $(S3VERS) ]] && $(S3MOVE) || :
+	  make homepage
 
   homepage: $(ORG)
 	  curl -i \
 	       -H "Authorization: token $(TOKEN)" \
 	       -H "Content-Type: application/json" \
 	       -X PATCH \
-	       -d '{"homepage":"https://$(AWS_S3_BUCKET)/$(S3VERS)"}' \
+	       -d '{"homepage":"https://$(AWS_S3_BUCKET)/$(DIR)-$(S3VERS)"}' \
 	       https://api.github.com/repos/wlharvey4/AWS-Guide
 
   update: $(ORG)
