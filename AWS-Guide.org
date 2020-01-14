@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-11 08:34
-#+macro:version Version 0.0.57
+#+date:2020-01-13 21:05
+#+macro:version Version 0.0.58
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6708,9 +6708,8 @@ development into the fast lane.
 
 https://aws.amazon.com/sdk-for-browser/
 
-* Makefile and Tools
+* Build Tools
 :PROPERTIES:
-:header-args: :eval never-export
 :appendix: t
 :END:
 
@@ -6719,53 +6718,25 @@ https://aws.amazon.com/sdk-for-browser/
 :appendix: t
 :END:
 
-#+texinfo:@heading Tangling
-
-This Makefile must be tangled from within the Org buffer (as opposed to being
-tangled from another Org buffer or from a batch script) because the two
-functions ~get-org-fiename~ and ~get-file-version~ are elisp functions that use
-the current buffer to find the filename and the current version.  The scripts
-would have to be done a bit differently to make them work from an external
-source.
-
-#+texinfo:@heading Exporting
-
-This Makefile has the ability to export to TEXI, but the export produces a very
-different set of HTML files than when the export is done from within the ORG
-file; plus each program requests permission to run, whereas this does not occur
-when exporting from within the ORG file.  Thus, the export should always be
-done from within the ORG file until this problem can be resolved.
-
-#+texinfo:@heading Environment Variables Instead of Credentials File
-
-For some reason when running the ~sync~ command via this Makefile, ~aws2~ was
-not able to locate my credential information stored in the =~/.aws/credentials=
-file created by running ~aws2 configure~.  Therefore, I placed my keys into
-environment variables instead, and added the @@texinfo:@option{--region}@@
-option explicitly to the command.  This solved the problem.
-
-#+texinfo:@heading Sync Command Problem
-
-The ~sync~ command compares files and only uploads files that have been
-changed.  However, the ~makeinfo --html~ command updates every single file, not
-just ones that have changed, so anytime the main Org file changes, every single
-HTML file will be re-saved, thus eliminating any advantage of the ~sync~
-function.
-
-I have attempted to solve this problem; see the ~cmprpl~ program, [[*Compare Replace][below]],
-including the combined operations of ~sync~ and ~mv~.
-
-TODO Invalidate the prior version’s index.html
+# curl -i 
+#      -H "authorization: token $token" 
+#      -H "content-type: application/json" 
+#      -X PATCH 
+#      -d '{"homepage":"https://pinecone-forest.com/aws-guide-v0.0.56"}'
+#      https://api.github.com/repos/wlharvey4/AWS-Guide
 
 #+name:Makefile
 #+header: :tangle Makefile
 #+header: :noweb tangle
 #+begin_src makefile
+  TEMPLATE = ~/Dev/Templates2/Org/Template.org
+
   ### PROGRAM
   PROG   = <<get-org-filename()>>
   DIR    = <<get-org-lc-filename()>>
   VERS   = <<get-file-version()>>
   S3VERS = <<get-s3-version()>>
+  USER   = <<get-github-user-info()>>
 
   ### TOOLS
   TOOLS  = tools
@@ -6796,29 +6767,33 @@ TODO Invalidate the prior version’s index.html
   S3SYNC = $(S3) sync $(EXCL_INCL) $(SRC) $(DST_OLD) $(REGION) $(GRANTS)
   S3MOVE = $(S3) mv --recursive $(DST_OLD) $(DST_NEW) $(REGION) $(GRANTS)
 
-  default: texi info html pdf
+  default: check texi info html pdf
 
-  PHONY:  check default all \
+  PHONY: check default all \
 	  texi info html pdf \
 	  open-org open-texi open-html open-pdf \
-	  clean clean-dist help sync
+	  clean clean-dist help sync update
 
-  show-version:
-	  @echo EMACSLOADPATH $(EMACSLOADPATH)
-	  @echo AWS_S3_BUCKET $(AWS_S3_BUCKET)
-	  @echo PROG $(PROG)
-	  @echo VERS $(VERS)
-	  @echo S3VERS $(S3VERS)
-	  @echo DIR $(DIR)
-	  @echo DIROLD $(DIROLD)
-	  @echo SRC $(SRC)
-	  @echo DST_OLD $(DST_OLD)
-	  @echo DST_NEW $(DST_NEW)
+  show-versions:
+	  @echo EMACSLOADPATH:	$(EMACSLOADPATH)
+	  @echo AWS_S3_BUCKET:	$(AWS_S3_BUCKET)
+	  @echo GITHUB_TOKEN:	is set
+	  @echo PROG:		$(PROG)
+	  @echo VERS:		$(VERS)
+	  @echo S3VERS:		$(S3VERS)
+	  @echo DIR:		$(DIR)
+	  @echo DIROLD:		$(DIROLD)
+	  @echo SRC:		$(SRC)
+	  @echo DST_OLD:	$(DST_OLD)
+	  @echo DST_NEW:	$(DST_NEW)
 
   check:
-	  @[[ -z $${AWS_S3_BUCKET} ]] && \
+	  [[ -z $${AWS_S3_BUCKET} ]] && \
 	     { printf "$${RED}\$$AWS_S3_BUCKET $${CYAN}must be set.$${CLEAR}\n"; exit 1; } || \
 	     printf "$${GREEN}\$${AWS_S3_BUCKET}: $${CYAN}$${AWS_S3_BUCKET}$${CLEAR}\n";
+	  [[ -z $${GITHUB_TOKEN} ]] && \
+	     { printf "$${RED}\$$GITHUB_TOKEN $${CYAN}must be set.$${CLEAR}\n"; exit 1; } || \
+	     printf "$${GREEN}\$${GITHUB_TOKEN}: set\n";
 
   open-org: $(ORG)
 	  emacsclient $(ORG) &
@@ -6862,19 +6837,50 @@ TODO Invalidate the prior version’s index.html
 	  $(S3SYNC)
 	  [[ $(VERS) != $(S3VERS) ]] && $(S3MOVE) || :
 
+  homepage: $(ORG)
+	  curl -i \
+	       -H "Authorization: token $(TOKEN)" \
+	       -H "Content-Type: application/json" \
+	       -X PATCH \
+	       -d '{"homepage":"https://$(AWS_S3_BUCKET)/$(S3VERS)"}' \
+	       https://api.github.com/repos/wlharvey4/AWS-Guide
+
+  update: $(ORG)
+	  emacs -Q --batch --eval \
+	  '(progn \
+	     (require (quote org)) \
+	     (require (quote ob)) \
+	     (require (quote ob-shell)) \
+	     (find-file "$(TEMPLATE)") \
+	     (goto-char (point-min)) \
+	     (search-forward "* Build Tools") \
+	     (org-beginning-of-line) \
+	     (org-copy-subtree) \
+	     (kill-buffer) \
+	     (find-file "$(ORG)") \
+	     (goto-char (point-min)) \
+	     (search-forward "* Build Tools") \
+	     (org-beginning-of-line) \
+	     (org-yank) \
+	     (org-cut-subtree) \
+	     (save-buffer) \
+	     (kill-buffer) \
+	     (setq org-confirm-babel-evaluate nil) \
+	     (org-babel-tangle-file "$(ORG)"))'
+
   clean:
 	  -rm *~
 
   clean-dist: clean
-	  -rm -rf *.{texi*,info*,html*,pdf*} $(DIR) $(BUILD) $(TOOLS)
+	  -rm -rf *.{texi*,info*,html*,pdf*} $(DIR) $(TOOLS)
 
   help:
-	  @echo '"make default" makes the .texi file \
-	  the html files, and opens the index.html file'
+	  @echo '"make default" makes the .texi file, the .info file, \
+	  the html files, and the .pdf file.'
 	  @echo
 
-	  @echo '"make all" makes the .texi, .info, .pdf, and html distribution'
 	  @echo '"make sync" syncs the html files in the AWS S3 bucket BUCKET; \
+	  you must have your AWS S3 bucket name in the env var AWS_S3_BUCKET; \
 	  You must have your AWS credentials installed in ~/.aws/credentials'
 	  @echo
 
@@ -6944,11 +6950,11 @@ the Makefile.
 :dependency: ">= bash v4"
 :END:
 This program obtains the version number of the code currently uploaded to the
-S3 bucket by obtaining a directly listing of top-level directories, which are
+S3 bucket by obtaining a directory listing of top-level directories, which are
 in the form ~PRE <dir>-v#.#.#/~, and performs a regular expression search with
-a parenthesized match on the version numbers.  The program will exit with an
-error if there is no match, but will return the version number as a string if
-there is a match.
+a parenthesized match on the version numbers.  The program will exit with 'nil'
+if there is no match, but will return the version number as a string if there
+is a match.
 
 Note that the regular expression matching requires at least Bash version 4 or
 above.
@@ -6979,6 +6985,12 @@ above.
 		echo -n "nil"
       fi
   fi
+#+end_src
+
+** Get GitHub User Info
+#+name:get-github-user-info
+#+begin_src sh :eval yes :results output
+  node -pe 'JSON.parse(process.argv[1]).html_url' "$(curl -H "Authorization: token $(cat ~/.git/personal)" https://api.github.com/user)"
 #+end_src
 
 ** Compare Replace
@@ -7060,6 +7072,7 @@ the most benefits from the AWS S3 ~sync~ command.
   done
 #+end_src
 
+
 * List of Programs
 :PROPERTIES:
 :appendix: t
@@ -7107,7 +7120,7 @@ require('uuid/[v1|v3|v4|v5]') as shown in the examples below.
 #+texinfo_dir_desc:AWS guide
 #+texinfo_printed_title:Amazon Web Services Guide
 
-#+options: toc:t H:4 num:3
+#+options: toc:nil H:4 num:3
 
 
 
