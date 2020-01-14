@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-13 21:49
-#+macro:version Version 0.0.60
+#+date:2020-01-13 22:19
+#+macro:version Version 0.0.61
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6839,15 +6839,14 @@ https://aws.amazon.com/sdk-for-browser/
 
   sync: $(HTML)
 	  $(S3SYNC)
-	  [[ $(VERS) != $(S3VERS) ]] && $(S3MOVE) || :
-	  make homepage
+	  [[ $(VERS) != $(S3VERS) ]] && { $(S3MOVE); make homepage; } || :
 
   homepage: $(ORG)
 	  curl -i \
 	       -H "Authorization: token $(TOKEN)" \
 	       -H "Content-Type: application/json" \
 	       -X PATCH \
-	       -d '{"homepage":"https://$(AWS_S3_BUCKET)/$(DIR)-$(S3VERS)"}' \
+	       -d '{"homepage":"https://$(AWS_S3_BUCKET)/$(DIR)-$(VERS)"}' \
 	       https://api.github.com/repos/wlharvey4/AWS-Guide
 
   update: $(ORG)
