@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-13 22:23
-#+macro:version Version 0.0.62
+#+date:2020-01-14 00:12
+#+macro:version Version 0.0.63
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6732,7 +6732,7 @@ https://aws.amazon.com/sdk-for-browser/
   TEMPLATE = $(ORG_TEMPLATE)
 
   ### PROGRAM
-  PROG   = <<get-org-filename()>>
+  REPO   = <<get-org-filename()>>
   DIR    = <<get-org-lc-filename()>>
   VERS   = <<get-file-version()>>
   S3VERS = <<get-s3-version()>>
@@ -6743,10 +6743,10 @@ https://aws.amazon.com/sdk-for-browser/
   CMPRPL = $(TOOLS)/cmprpl
 
   ### TEXINFO
-  ORG   = $(PROG).org
-  TEXI  = $(PROG).texi
-  INFO  = $(PROG).info
-  PDF   = $(PROG).pdf
+  ORG   = $(REPO).org
+  TEXI  = $(REPO).texi
+  INFO  = $(REPO).info
+  PDF   = $(REPO).pdf
   HTML  = $(DIR)/index.html
 
   ### HTML DIR
@@ -6782,7 +6782,7 @@ https://aws.amazon.com/sdk-for-browser/
 	  @echo AWS_S3_BUCKET:	$(AWS_S3_BUCKET)
 	  @echo GITHUB_TOKEN:	is set
 	  @echo USER:		$(USER)
-	  @echo PROG:		$(PROG)
+	  @echo REPO:		$(REPO)
 	  @echo VERS:		$(VERS)
 	  @echo S3VERS:		$(S3VERS)
 	  @echo DIR:		$(DIR)
@@ -6847,7 +6847,7 @@ https://aws.amazon.com/sdk-for-browser/
 	       -H "Content-Type: application/json" \
 	       -X PATCH \
 	       -d '{"homepage":"https://$(AWS_S3_BUCKET)/$(DIR)-$(VERS)"}' \
-	       https://api.github.com/repos/wlharvey4/AWS-Guide
+	       https://api.github.com/repos/$(USER)/$(REPO)
 
   update: $(ORG)
 	  emacs -Q --batch --eval \
