@@ -3,8 +3,8 @@
 #+title:AWS Guide
 #+subtitle:{{{version}}} {{{date}}}
 #+author:Pinecone062
-#+date:2020-01-14 00:12
-#+macro:version Version 0.0.63
+#+date:2020-01-16 08:33
+#+macro:version Version 0.0.64
 
 /{{{title}}}/ {{{version}}} compiled {{{date}}}
 
@@ -6713,17 +6713,16 @@ https://aws.amazon.com/sdk-for-browser/
 :appendix: t
 :END:
 
-** Makefile
+** Makefile                                          :dependencies:env_vars:
 :PROPERTIES:
 :appendix: t
+:dependency1: "make"
+:dependency2: "AWS Account with ~/.aws/credentials and ~/.aws/config"
+:env_var1: ORG_TEMPLATE
+:env_var2: EMACSLOADPATH
+:env_var3: AWS_S3_BUCKET
+:env_var4: GITHUB_TOKEN
 :END:
-
-# curl -i 
-#      -H "authorization: token $token" 
-#      -H "content-type: application/json" 
-#      -X PATCH 
-#      -d '{"homepage":"https://pinecone-forest.com/aws-guide-v0.0.56"}'
-#      https://api.github.com/repos/wlharvey4/AWS-Guide
 
 #+name:Makefile
 #+header: :tangle Makefile
@@ -6732,7 +6731,7 @@ https://aws.amazon.com/sdk-for-browser/
   TEMPLATE = $(ORG_TEMPLATE)
 
   ### PROGRAM
-  REPO   = <<get-org-filename()>>
+  PROJ   = <<get-org-filename()>>
   DIR    = <<get-org-lc-filename()>>
   VERS   = <<get-file-version()>>
   S3VERS = <<get-s3-version()>>
@@ -6743,10 +6742,10 @@ https://aws.amazon.com/sdk-for-browser/
   CMPRPL = $(TOOLS)/cmprpl
 
   ### TEXINFO
-  ORG   = $(REPO).org
-  TEXI  = $(REPO).texi
-  INFO  = $(REPO).info
-  PDF   = $(REPO).pdf
+  ORG   = $(PROJ).org
+  TEXI  = $(PROJ).texi
+  INFO  = $(DIR).info
+  PDF   = $(PROJ).pdf
   HTML  = $(DIR)/index.html
 
   ### HTML DIR
@@ -6775,34 +6774,36 @@ https://aws.amazon.com/sdk-for-browser/
   PHONY: check default all \
 	  texi info html pdf \
 	  open-org open-texi open-html open-pdf \
-	  clean clean-dist help sync update values
+	  clean dist-clean wiped-clean \
+	  help sync update values
 
-  values:
+  values: check
 	  @echo EMACSLOADPATH:	$(EMACSLOADPATH)
-	  @echo AWS_S3_BUCKET:	$(AWS_S3_BUCKET)
-	  @echo GITHUB_TOKEN:	is set
 	  @echo USER:		$(USER)
-	  @echo REPO:		$(REPO)
+	  @echo PROJ:		$(PROJ)
 	  @echo VERS:		$(VERS)
 	  @echo S3VERS:		$(S3VERS)
 	  @echo DIR:		$(DIR)
-	  @echo DIR_OLD:		$(DIR_OLD)
+	  @echo DIR_OLD:	$(DIR_OLD)
 	  @echo SRC:		$(SRC)
 	  @echo DST_OLD:	$(DST_OLD)
 	  @echo DST_NEW:	$(DST_NEW)
 
   check:
-	  [[ -z $${AWS_S3_BUCKET} ]] && \
+	  @[[ -z $${AWS_S3_BUCKET} ]] && \
 	     { printf "$${RED}\$$AWS_S3_BUCKET $${CYAN}must be set.$${CLEAR}\n"; exit 1; } || \
-	     printf "$${GREEN}\$${AWS_S3_BUCKET}: $${CYAN}$${AWS_S3_BUCKET}$${CLEAR}\n";
-	  [[ -z $${GITHUB_TOKEN} ]] && \
-	     { printf "$${RED}\$$GITHUB_TOKEN $${CYAN}must be set.$${CLEAR}\n"; exit 1; } || \
-	     printf "$${GREEN}\$${GITHUB_TOKEN}: set\n";
+	     printf "$${GREEN}AWS_S3_BUCKET: $${CYAN}$${AWS_S3_BUCKET}$${CLEAR}\n";
+	  @[[ -z $${GITHUB_TOKEN} ]] && \
+	     { printf "$${RED}GITHUB_TOKEN $${CYAN}must be set.$${CLEAR}\n"; exit 1; } || \
+	     printf "$${GREEN}GITHUB_TOKEN: set$${CLEAR}\n";
+	  @[ -d ~/.aws -a -f ~/.aws/credentials -a -f ~/.aws/config ] && \
+	     printf "$${GREEN}~/.aws credentials and config: set.$${CLEAR}\n" || \
+	     { printf "$${RED}~/.aws 'credentials' and 'config' must be set.$${CLEAR}\n"; exit 1; }
 
   open-org: $(ORG)
 	  emacsclient $(ORG) &
   $(ORG):
-	  @echo 'DISASTER HAS BEFALLEN YOU AS THERE IS NO $(ORG) FILE!!!'
+	  @echo 'THERE IS NO $(ORG) FILE!!!'
 	  exit 1
 
   texi: $(TEXI)
@@ -6847,7 +6848,7 @@ https://aws.amazon.com/sdk-for-browser/
 	       -H "Content-Type: application/json" \
 	       -X PATCH \
 	       -d '{"homepage":"https://$(AWS_S3_BUCKET)/$(DIR)-$(VERS)"}' \
-	       https://api.github.com/repos/$(USER)/$(REPO)
+	       https://api.github.com/repos/$(USER)/$(PROJ)
 
   update: $(ORG)
 	  emacs -Q --batch --eval \
@@ -6875,8 +6876,11 @@ https://aws.amazon.com/sdk-for-browser/
   clean:
 	  -rm *~
 
-  clean-dist: clean
+  dist-clean: clean
 	  -rm -rf *.{texi*,info*,html*,pdf*} $(DIR) $(TOOLS)
+
+  wiped-clean: dist-clean
+	  -rm -rf Makefile $(DIR_OLD)
 
   help:
 	  @echo '"make default" makes the .texi file, the .info file, \
@@ -6927,14 +6931,22 @@ filename to add to the Makefile.
 #+end_src
 
 ** Get Org Lowercase Filename
-This program simply downcases the buffer filename to use as a directory name
-for the HTML output.
+This code looks for the =#+TEXINFO_FILENAME:= in the =#+TEXINFO EXPORTS=
+subtree.  If it doesn’t exist, then it will use the lower-cased filename as a
+fallback default.
 
 #+caption:Get Org Lowercase Filename program
 #+name:get-org-lc-filename
+#+header: :results value
 #+begin_src emacs-lisp :eval yes
-(downcase (file-name-base))
+  (save-excursion
+    (if
+        (re-search-forward "^[[:space:]]+#\\+texinfo_filename:\\(.*\\)" nil t)
+        (file-name-sans-extension (match-string 1))
+      (downcase (file-name-base))))
 #+end_src
+
+#+RESULTS: get-org-lc-filename
 
 ** Get File Version
 This program scans the current buffer for the version number and places it into
@@ -7067,7 +7079,7 @@ the most benefits from the AWS S3 ~sync~ command.
 	          printf "${GREEN}copying OLD to NEW${CLEAR}: "
 	          cp -vp $oldfile $newfile
 	      else
-	          printf "${MAGENTA}copying NEW to OLD${CLEAR}: "
+	          printf "${PURPLE}copying NEW to OLD${CLEAR}: "
 	          cp -vp $newfile $oldfile
 	      fi
       else
@@ -7079,7 +7091,7 @@ the most benefits from the AWS S3 ~sync~ command.
   for newfile in $DIR_NEW/*
   do
       oldfile=$DIR_OLD/$(basename $newfile)
-      [[ -e $oldfile ]] || { printf "${BLUE}copying NEW to OLD${CLEAR}: "
+      [[ -e $oldfile ]] || { printf "${BLUE}adding NEW to OLD${CLEAR}: "
 			     cp -vp $newfile $oldfile; }
   done
 #+end_src
